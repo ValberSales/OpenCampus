@@ -10,11 +10,18 @@
     padding: 1.5rem;
     align-items: center;
     transition: var(--transition);
+    cursor: pointer; /* Indica que é clicável */
+    position: relative; /* Para posicionamento */
 }
 
 .project-card:hover {
     transform: translateY(-3px);
     border-color: var(--primary);
+}
+
+/* Efeito de clique */
+.project-card:active {
+    transform: scale(0.99);
 }
 
 .project-img-container {
@@ -46,7 +53,6 @@
     color: var(--text-secondary);
     margin-bottom: 0.8rem;
     line-height: 1.5;
-    /* Limita a 2 linhas com ... */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -65,6 +71,7 @@
     flex-direction: column;
     gap: 0.5rem;
     min-width: 120px;
+    z-index: 2; /* Garante que botões fiquem acima se precisar */
 }
 
 /* Responsivo do Card */

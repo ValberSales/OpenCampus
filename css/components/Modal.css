@@ -136,3 +136,18 @@
     .modal-footer { flex-direction: column; }
     .modal-footer button { width: 100%; }
 }
+
+/* ... (estilos anteriores) ... */
+
+/* Ajuste para Textarea no Modal de Mensagem */
+textarea.form-input {
+    resize: vertical; /* Permite redimensionar apenas na vertical */
+    min-height: 100px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+.modal-header {
+    background-color: var(--bg-card);
+    border-radius: var(--radius) var(--radius) 0 0;
+}

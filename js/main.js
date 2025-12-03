@@ -6,15 +6,16 @@ import { CalendarComponent } from './components/Calendar.js';
 import { FooterComponent } from './components/Footer.js';
 import { PaginationComponent } from './components/Pagination.js';
 import { ProjectModalComponent } from './components/ProjectModal.js';
-import { FilterDrawerComponent } from './components/FilterDrawer.js'; // Novo Import
+import { FilterDrawerComponent } from './components/FilterDrawer.js';
+import { MessageModalComponent } from './components/MessageModal.js';
 
 // --- ESTADO DA APLICAÇÃO ---
 const state = {
-    allProjects: [],      // Todos os projetos carregados da API
-    filteredProjects: [], // Projetos exibidos após filtro
+    allProjects: [],      
+    filteredProjects: [], 
     currentPage: 1,
     itemsPerPage: 4,
-    filters: {            // Guarda os filtros ativos
+    filters: {            
         maxHours: 200,
         startDate: null,
         shifts: [],
@@ -31,7 +32,7 @@ async function init() {
     } catch (error) {
         console.error("Erro ao carregar projetos:", error);
         document.getElementById('projects-container').innerHTML = 
-            `<p class="text-center text-secondary p-3">Erro ao carregar dados. Verifique o console.</p>`;
+            `<p class="text-center text-secondary p-3">Erro ao carregar dados. Verifique se o Live Server está rodando.</p>`;
     }
     
     setupEventListeners();
@@ -44,24 +45,22 @@ async function fetchProjects() {
     const data = await response.json();
     
     state.allProjects = data;
-    state.filteredProjects = data; // Inicialmente, todos são mostrados
+    state.filteredProjects = data; 
     
     renderFeed();
 }
 
-// Renderiza estáticos + Gaveta de Filtro
+// Renderiza estrutura fixa
 function renderStaticComponents() {
     document.getElementById('app-header').innerHTML = HeaderComponent();
     document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent();
     document.getElementById('profile-container').innerHTML = ProfileCardComponent();
     document.getElementById('calendar-container').innerHTML = CalendarComponent();
     document.getElementById('app-footer').innerHTML = FooterComponent();
-    
-    // Injeta a Gaveta de Filtros
     document.getElementById('filter-drawer-container').innerHTML = FilterDrawerComponent();
 }
 
-// Renderiza Feed baseado em filteredProjects
+// Renderiza Feed (Cards + Paginação)
 function renderFeed() {
     const projectsContainer = document.getElementById('projects-container');
     
@@ -81,46 +80,170 @@ function renderFeed() {
     projectsContainer.innerHTML = cardsHtml + paginationHtml;
 
     setupPaginationEvents(totalPages);
-    setupModalEvents();
+    setupModalEvents(); // Agora a função existe abaixo!
 }
 
 // --- LÓGICA DE FILTRAGEM ---
 function applyFilters() {
     state.filteredProjects = state.allProjects.filter(project => {
-        // 1. Filtro de Horas
+        // Horas
         if (project.hours > state.filters.maxHours) return false;
-
-        // 2. Filtro de Tema/Tag
+        // Tags
         if (state.filters.tag && !project.tags.some(t => t.label === state.filters.tag)) return false;
-
-        // 3. Filtro de Turno (Se algum turno selecionado bater com os do projeto)
+        // Turnos
         if (state.filters.shifts.length > 0) {
             const hasShift = project.shifts && project.shifts.some(s => state.filters.shifts.includes(s));
             if (!hasShift) return false;
         }
-
-        // 4. Filtro de Data (A partir de...)
+        // Data
         if (state.filters.startDate) {
-            const projDateParts = project.date.start.split('/'); // dd/mm/yyyy
-            // Cria data JS (ano, mês-1, dia)
+            const projDateParts = project.date.start.split('/'); 
             const projectDate = new Date(projDateParts[2], projDateParts[1] - 1, projDateParts[0]);
             const filterDate = new Date(state.filters.startDate);
-            
-            // Se a data do projeto for anterior à data do filtro, esconde
             if (projectDate < filterDate) return false;
         }
-
         return true;
     });
 
-    state.currentPage = 1; // Volta pra pag 1 ao filtrar
+    state.currentPage = 1; 
     renderFeed();
     closeFilterDrawer();
 }
 
-// --- EVENT LISTENERS ---
+// --- GERENCIAMENTO DE MODAIS (DETALHES E MENSAGEM) ---
+function setupModalEvents() {
+    const cards = document.querySelectorAll('.project-card');
+    
+    cards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            const projectId = parseInt(e.currentTarget.dataset.id);
+            const project = state.allProjects.find(p => p.id === projectId);
+
+            // 1. Se clicou no botão "Mensagem", abre o modal de mensagem
+            if (e.target.closest('.btn-message')) {
+                e.stopPropagation(); 
+                if (project) openMessageModal(project);
+                return;
+            }
+
+            // 2. Caso contrário, abre Detalhes do Projeto
+            if (project) {
+                openProjectModal(project);
+            }
+        });
+    });
+}
+
+// Modal de Detalhes
+function openProjectModal(project) { 
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.innerHTML = ProjectModalComponent(project);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+    
+    const btnClose = document.getElementById('btn-modal-close');
+    const btnCancel = document.getElementById('btn-modal-cancel');
+    
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    if(btnCancel) btnCancel.addEventListener('click', closeModal);
+    
+    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+}
+
+// Modal de Mensagem
+function openMessageModal(project) {
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.innerHTML = MessageModalComponent(project);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+
+    document.getElementById('btn-close-msg-modal').addEventListener('click', closeModal);
+    document.getElementById('btn-cancel-msg').addEventListener('click', closeModal);
+    
+    // Lógica de Enviar
+    const btnSend = document.getElementById('btn-send-msg');
+    btnSend.addEventListener('click', () => {
+        const text = document.getElementById('message-text').value;
+        if (!text.trim()) {
+            alert("Por favor, escreva uma mensagem.");
+            return;
+        }
+        
+        saveMessageToStorage(project, text);
+        closeModal();
+        alert("Mensagem enviada com sucesso!");
+    });
+
+    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+}
+
+// Salvar no LocalStorage
+function saveMessageToStorage(project, text) {
+    const storageKey = 'opencampus_conversations';
+    let conversations = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+    let conversationIndex = conversations.findIndex(c => c.projectId === project.id);
+
+    const newMessage = {
+        id: Date.now(),
+        sender: 'student',
+        text: text,
+        timestamp: new Date().toISOString()
+    };
+
+    if (conversationIndex >= 0) {
+        conversations[conversationIndex].messages.push(newMessage);
+        conversations[conversationIndex].lastUpdated = new Date().toISOString();
+    } else {
+        const newConversation = {
+            projectId: project.id,
+            projectTitle: project.title,
+            professorName: project.professor.name,
+            professorAvatar: project.professor.avatar,
+            studentId: 1, 
+            lastUpdated: new Date().toISOString(),
+            messages: [newMessage]
+        };
+        conversations.push(newConversation);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(conversations));
+    console.log("Conversa salva no LocalStorage:", conversations);
+}
+
+function closeModal() { 
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.classList.remove('active');
+    setTimeout(() => overlay.innerHTML = '', 300);
+}
+
+// --- PAGINAÇÃO ---
+function setupPaginationEvents(totalPages) {
+    const prevBtn = document.getElementById('btn-prev');
+    const nextBtn = document.getElementById('btn-next');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (state.currentPage > 1) {
+                state.currentPage--;
+                renderFeed();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (state.currentPage < totalPages) {
+                state.currentPage++;
+                renderFeed();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+}
+
+// --- EVENTOS GERAIS (Menu, Tema, Filtros) ---
 function setupEventListeners() {
-    // Menu e Tema (Existentes)
+    // Menu e Tema
     const btnMenu = document.getElementById('btn-menu-toggle');
     const overlay = document.getElementById('overlay');
     if(btnMenu) btnMenu.addEventListener('click', toggleMenu);
@@ -128,57 +251,48 @@ function setupEventListeners() {
     document.getElementById('btn-theme-toggle').addEventListener('click', toggleTheme);
     document.getElementById('btn-close-sidebar').addEventListener('click', toggleMenu);
 
-    // --- NOVOS EVENTOS DE FILTRO ---
-    
-    // Abrir Gaveta (Botão na UI principal)
-    // Precisamos garantir que esse botão exista no index.html ou seja injetado
-    // No código original, era um botão estático. Vamos adicionar o ID nele no index.html.
+    // Filtros UI
     const btnOpenFilter = document.querySelector('.btn-outline i.ph-funnel')?.parentElement;
     if (btnOpenFilter) {
         btnOpenFilter.addEventListener('click', (e) => {
-            e.preventDefault(); // Evita refresh se for link
+            e.preventDefault();
             openFilterDrawer();
         });
     }
 
-    // Fechar Gaveta
     document.getElementById('btn-close-filter').addEventListener('click', closeFilterDrawer);
     document.getElementById('filter-overlay').addEventListener('click', closeFilterDrawer);
 
-    // Slider de Horas (Atualizar numero visualmente)
     const slider = document.getElementById('filter-hours');
     const display = document.getElementById('hours-display');
-    slider.addEventListener('input', (e) => {
-        display.textContent = e.target.value;
-    });
+    if(slider && display) {
+        slider.addEventListener('input', (e) => { display.textContent = e.target.value; });
+    }
 
-    // Submeter Formulário
     const form = document.getElementById('filter-form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Captura valores
-        state.filters.maxHours = parseInt(document.getElementById('filter-hours').value);
-        state.filters.startDate = document.getElementById('filter-date').value;
-        state.filters.tag = document.getElementById('filter-tag').value;
-        
-        // Checkboxes de Turno
-        const shiftCheckboxes = document.querySelectorAll('input[name="shift"]:checked');
-        state.filters.shifts = Array.from(shiftCheckboxes).map(cb => cb.value);
+    if(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            state.filters.maxHours = parseInt(document.getElementById('filter-hours').value);
+            state.filters.startDate = document.getElementById('filter-date').value;
+            state.filters.tag = document.getElementById('filter-tag').value;
+            
+            const shiftCheckboxes = document.querySelectorAll('input[name="shift"]:checked');
+            state.filters.shifts = Array.from(shiftCheckboxes).map(cb => cb.value);
 
-        applyFilters();
-    });
+            applyFilters();
+        });
+    }
 
-    // Limpar Filtros
     document.getElementById('btn-clear-filters').addEventListener('click', () => {
-        form.reset();
-        document.getElementById('hours-display').textContent = "200";
+        if(form) form.reset();
+        if(display) display.textContent = "200";
         state.filters = { maxHours: 200, startDate: null, shifts: [], tag: "" };
         applyFilters();
     });
 }
 
-// --- FUNÇÕES DE UI AUXILIARES ---
+// Funções Auxiliares UI
 function openFilterDrawer() {
     document.getElementById('filter-drawer-id').classList.add('active');
     document.getElementById('filter-overlay').classList.add('active');
@@ -189,37 +303,13 @@ function closeFilterDrawer() {
     document.getElementById('filter-overlay').classList.remove('active');
 }
 
-// --- (Restante das funções: Modal, Paginação, Tema iguais ao anterior) ---
-// Copie aqui as funções setupPaginationEvents, setupModalEvents, openModal, closeModal, toggleMenu, toggleTheme etc...
-// Para brevidade, estou omitindo a repetição, mas mantenha-as no arquivo final.
-function setupPaginationEvents(totalPages) { /* ... */ }
-function setupModalEvents() { 
-    const btnsOpen = document.querySelectorAll('.btn-open-modal');
-    btnsOpen.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const projectId = parseInt(e.target.dataset.id);
-            const project = state.allProjects.find(p => p.id === projectId); // Muda de state.projects para allProjects
-            if (project) openModal(project);
-        });
-    });
-}
-function openModal(project) { 
-    const overlay = document.getElementById('modal-overlay-container');
-    overlay.innerHTML = ProjectModalComponent(project);
-    requestAnimationFrame(() => overlay.classList.add('active'));
-    document.getElementById('btn-modal-close').addEventListener('click', closeModal);
-    document.getElementById('btn-modal-cancel').addEventListener('click', closeModal);
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-}
-function closeModal() { 
-    const overlay = document.getElementById('modal-overlay-container');
-    overlay.classList.remove('active');
-    setTimeout(() => overlay.innerHTML = '', 300);
-}
 function toggleMenu() {
-    document.getElementById('sidebar').classList.toggle('active');
-    document.getElementById('overlay').classList.toggle('active');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    if(sidebar) sidebar.classList.toggle('active');
+    if(overlay) overlay.classList.toggle('active');
 }
+
 function toggleTheme() {
     const html = document.documentElement;
     const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -227,6 +317,7 @@ function toggleTheme() {
     localStorage.setItem('opencampus-theme', newTheme);
     updateThemeIcon(newTheme);
 }
+
 function loadTheme() {
     const saved = localStorage.getItem('opencampus-theme');
     if (saved) {
@@ -234,6 +325,7 @@ function loadTheme() {
         updateThemeIcon(saved);
     }
 }
+
 function updateThemeIcon(theme) {
     const icon = document.getElementById('theme-icon');
     if (icon) icon.className = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';

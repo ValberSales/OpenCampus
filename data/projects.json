@@ -2,7 +2,7 @@
     {
         "id": 1,
         "title": "Inclusão Digital para Idosos",
-        "image": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=600&q=80",
+        "image": "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=600&q=80",
         "description": "Projeto focado em ensinar o básico de smartphones e computadores para a terceira idade. Os alunos aprenderão a usar WhatsApp, redes sociais, aplicativos de banco e segurança na internet.",
         "tags": [{ "label": "Tecnologia", "class": "badge-tech" }, { "label": "Social", "class": "badge-env" }],
         "professor": {
@@ -19,7 +19,7 @@
     {
         "id": 2,
         "title": "Robótica nas Escolas",
-        "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a782?auto=format&fit=crop&w=600&q=80",
+        "image": "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?auto=format&fit=crop&w=600&q=80",
         "description": "Oficinas semanais de robótica e lógica de programação com Arduino em escolas municipais.",
         "tags": [{ "label": "Educação", "class": "badge-tech" }],
         "professor": {
@@ -36,7 +36,7 @@
     {
         "id": 3,
         "title": "Workshop: UX Design",
-        "image": "https://images.unsplash.com/photo-1586717791821-3f44a5638d0f?auto=format&fit=crop&w=600&q=80",
+        "image": "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=600&q=80",
         "description": "Um dia de imersão em User Experience. Aprenda a criar protótipos de alta fidelidade no Figma.",
         "tags": [{ "label": "Design", "class": "badge-art" }, { "label": "Evento", "class": "badge-tech" }],
         "professor": {
@@ -70,7 +70,7 @@
     {
         "id": 5,
         "title": "Apoio Jurídico Popular",
-        "image": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80",
+        "image": "https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=600&q=80",
         "description": "Orientação jurídica básica sobre direitos do consumidor e trabalhista para a comunidade.",
         "tags": [{ "label": "Direito", "class": "badge-tech" }, { "label": "Social", "class": "badge-env" }],
         "professor": {
@@ -87,7 +87,7 @@
     {
         "id": 6,
         "title": "Feira de Orgânicos",
-        "image": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=600&q=80",
+        "image": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80",
         "description": "Apoio logístico e técnico para a feira semanal da agricultura familiar dentro da universidade.",
         "tags": [{ "label": "Nutrição", "class": "badge-env" }, { "label": "Extensão", "class": "badge-tech" }],
         "professor": {
@@ -104,7 +104,7 @@
     {
         "id": 7,
         "title": "Cursinho Solidário",
-        "image": "https://images.unsplash.com/photo-1524178232363-1fb2b075b955?auto=format&fit=crop&w=600&q=80",
+        "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80",
         "description": "Aulas preparatórias para o ENEM focadas em alunos de escolas públicas da região.",
         "tags": [{ "label": "Educação", "class": "badge-tech" }, { "label": "Voluntariado", "class": "badge-art" }],
         "professor": {
@@ -121,7 +121,7 @@
     {
         "id": 8,
         "title": "Energia Solar",
-        "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=600&q=80",
+        "image": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=600&q=80",
         "description": "Projeto de engenharia para instalação e manutenção de painéis solares em creches públicas.",
         "tags": [{ "label": "Engenharia", "class": "badge-tech" }, { "label": "Sustentável", "class": "badge-env" }],
         "professor": {

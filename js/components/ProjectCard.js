@@ -4,7 +4,7 @@ export function ProjectCardComponent(project) {
     ).join('');
 
     return `
-    <div class="card project-card">
+    <div class="card project-card" data-id="${project.id}">
         <div class="project-img-container">
             <img src="${project.image}" alt="${project.title}" class="project-img">
         </div>
@@ -14,10 +14,10 @@ export function ProjectCardComponent(project) {
             <p class="project-desc">${project.description.substring(0, 100)}...</p>
         </div>
         <div class="project-actions">
-            <button class="btn btn-primary w-full justify-center btn-open-modal" data-id="${project.id}">
+            <button class="btn btn-primary w-full justify-center">
                 Ver Detalhes
             </button>
-            <button class="btn btn-outline w-full justify-center">Mensagem</button>
+            <button class="btn btn-outline w-full justify-center btn-message">Mensagem</button>
         </div>
     </div>
     `;
