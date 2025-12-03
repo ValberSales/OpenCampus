@@ -1,0 +1,10 @@
+# Arquivos de Sistema
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Logs e dependências (se usar Node no futuro)
+node_modules/
+*.log
