@@ -122,26 +122,9 @@
 .dot.filled { background-color: var(--success); }
 .dot.taken { background-color: var(--danger); }
 
-.modal-footer {
-    padding: 1.5rem 2rem;
-    background-color: var(--bg-ground);
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-}
-
-@media (max-width: 600px) {
-    .modal-meta-grid { grid-template-columns: 1fr; }
-    .modal-footer { flex-direction: column; }
-    .modal-footer button { width: 100%; }
-}
-
-/* ... (estilos anteriores) ... */
-
 /* Ajuste para Textarea no Modal de Mensagem */
 textarea.form-input {
-    resize: vertical; /* Permite redimensionar apenas na vertical */
+    resize: vertical;
     min-height: 100px;
     font-family: inherit;
     line-height: 1.5;
@@ -152,18 +135,15 @@ textarea.form-input {
     border-radius: var(--radius) var(--radius) 0 0;
 }
 
-/* Estilo para botão de Sucesso/Inscrito */
 .btn-success {
     background-color: var(--success);
     color: white;
     border: 1px solid var(--success);
     cursor: default;
 }
-.btn-success:hover {
-    transform: none; /* Remove efeito de clique */
-}
+.btn-success:hover { transform: none; }
 
-/* Modal Footer Responsivo (3 Botões) */
+/* Modal Footer */
 .modal-footer {
     padding: 1.5rem 2rem;
     background-color: var(--bg-ground);
@@ -171,21 +151,23 @@ textarea.form-input {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    flex-wrap: wrap; /* Permite quebra de linha */
+    flex-wrap: wrap;
 }
 
+/* RESPONSIVIDADE MOBILE */
 @media (max-width: 600px) {
     .modal-meta-grid { grid-template-columns: 1fr; }
     
-    /* No mobile, os botões ocupam largura total ou grid */
     .modal-footer { 
         display: grid;
-        grid-template-columns: 1fr 1fr; /* 2 colunas */
+        grid-template-columns: 1fr 1fr; /* Força 2 colunas lado a lado */
         gap: 0.8rem;
+        padding: 1rem; /* Reduz padding para ganhar espaço */
     }
 
-    /* O último botão (Confirmar/Inscrito) ocupa a linha inteira de baixo */
-    .modal-footer button:last-child {
+    /* CORREÇÃO: Só aplica span 2 se for o TERCEIRO botão (Modal de Projeto) */
+    /* O Modal de Mensagem tem só 2 botões, então essa regra é ignorada lá */
+    .modal-footer button:nth-child(3) {
         grid-column: span 2;
     }
 }

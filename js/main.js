@@ -53,8 +53,9 @@ async function fetchProjects() {
 
 // Renderiza estrutura fixa
 function renderStaticComponents() {
-    document.getElementById('app-header').innerHTML = HeaderComponent();
-    document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent();
+    // Header e Sidebar recebem 'dashboard' para marcar o ícone ativo
+    document.getElementById('app-header').innerHTML = HeaderComponent('dashboard');
+    document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('dashboard');
     document.getElementById('profile-container').innerHTML = ProfileCardComponent();
     document.getElementById('calendar-container').innerHTML = CalendarComponent();
     document.getElementById('app-footer').innerHTML = FooterComponent();
@@ -81,7 +82,7 @@ function renderFeed() {
     projectsContainer.innerHTML = cardsHtml + paginationHtml;
 
     setupPaginationEvents(totalPages);
-    setupModalEvents(); // Agora a função existe abaixo!
+    setupModalEvents();
 }
 
 // --- LÓGICA DE FILTRAGEM ---
@@ -111,7 +112,7 @@ function applyFilters() {
     closeFilterDrawer();
 }
 
-// --- GERENCIAMENTO DE MODAIS (DETALHES E MENSAGEM) ---
+// --- GERENCIAMENTO DE MODAIS ---
 function setupModalEvents() {
     const cards = document.querySelectorAll('.project-card');
     
@@ -120,12 +121,14 @@ function setupModalEvents() {
             const projectId = parseInt(e.currentTarget.dataset.id);
             const project = state.allProjects.find(p => p.id === projectId);
 
+            // Se clicou no botão "Mensagem"
             if (e.target.closest('.btn-message')) {
                 e.stopPropagation(); 
                 if (project) openMessageModal(project);
                 return;
             }
 
+            // Caso contrário, abre Detalhes
             if (project) {
                 openProjectModal(project);
             }
@@ -134,49 +137,41 @@ function setupModalEvents() {
 }
 
 function openProjectModal(project) { 
-    // 1. Checa se o aluno já está inscrito neste projeto
+    // Checa inscrição no LocalStorage
     const subscriptions = JSON.parse(localStorage.getItem('opencampus_subscriptions')) || [];
     const isSubscribed = subscriptions.includes(project.id);
 
     const overlay = document.getElementById('modal-overlay-container');
-    
-    // 2. Passa o status para o componente renderizar o botão certo
     overlay.innerHTML = ProjectModalComponent(project, isSubscribed);
     requestAnimationFrame(() => overlay.classList.add('active'));
     
-    // Eventos de Fechar
-    const btnClose = document.getElementById('btn-modal-close');
-    const btnCancel = document.getElementById('btn-modal-cancel');
-    if(btnClose) btnClose.addEventListener('click', closeModal);
-    if(btnCancel) btnCancel.addEventListener('click', closeModal);
+    // Eventos
+    document.getElementById('btn-modal-close').addEventListener('click', closeModal);
+    document.getElementById('btn-modal-cancel').addEventListener('click', closeModal);
 
-    // Evento de Mensagem (Dentro do Modal de Detalhes)
+    // Botão Mensagem (dentro do modal)
     const btnMsg = document.getElementById('btn-modal-msg');
     if(btnMsg) {
         btnMsg.addEventListener('click', () => {
-            closeModal(); // Fecha o de detalhes
-            setTimeout(() => openMessageModal(project), 300); // Abre o de mensagem
+            closeModal(); 
+            setTimeout(() => openMessageModal(project), 300); 
         });
     }
 
-    // Evento de Inscrever (Se o botão existir)
+    // Botão Inscrever
     const btnSub = document.getElementById('btn-confirm-sub');
     if(btnSub) {
         btnSub.addEventListener('click', () => {
-            // Salva no LocalStorage
             subscriptions.push(project.id);
             localStorage.setItem('opencampus_subscriptions', JSON.stringify(subscriptions));
-            
-            // Feedback Visual e recarrega modal como "Inscrito"
             alert(`Parabéns! Você se inscreveu em "${project.title}".`);
-            openProjectModal(project); // Reabre para atualizar o botão visualmente
+            openProjectModal(project); // Recarrega para atualizar botão
         });
     }
     
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
-// Modal de Mensagem
 function openMessageModal(project) {
     const overlay = document.getElementById('modal-overlay-container');
     overlay.innerHTML = MessageModalComponent(project);
@@ -185,55 +180,38 @@ function openMessageModal(project) {
     document.getElementById('btn-close-msg-modal').addEventListener('click', closeModal);
     document.getElementById('btn-cancel-msg').addEventListener('click', closeModal);
     
-    // Lógica de Enviar
-    const btnSend = document.getElementById('btn-send-msg');
-    btnSend.addEventListener('click', () => {
+    document.getElementById('btn-send-msg').addEventListener('click', () => {
         const text = document.getElementById('message-text').value;
         if (!text.trim()) {
-            alert("Por favor, escreva uma mensagem.");
+            alert("Escreva uma mensagem.");
             return;
         }
-        
         saveMessageToStorage(project, text);
         closeModal();
-        alert("Mensagem enviada com sucesso!");
+        alert("Mensagem enviada!");
     });
 
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
-// Salvar no LocalStorage
 function saveMessageToStorage(project, text) {
     const storageKey = 'opencampus_conversations';
     let conversations = JSON.parse(localStorage.getItem(storageKey)) || [];
+    let idx = conversations.findIndex(c => c.projectId === project.id);
+    
+    const msg = { id: Date.now(), sender: 'student', text: text, timestamp: new Date().toISOString() };
 
-    let conversationIndex = conversations.findIndex(c => c.projectId === project.id);
-
-    const newMessage = {
-        id: Date.now(),
-        sender: 'student',
-        text: text,
-        timestamp: new Date().toISOString()
-    };
-
-    if (conversationIndex >= 0) {
-        conversations[conversationIndex].messages.push(newMessage);
-        conversations[conversationIndex].lastUpdated = new Date().toISOString();
+    if (idx >= 0) {
+        conversations[idx].messages.push(msg);
+        conversations[idx].lastUpdated = new Date().toISOString();
     } else {
-        const newConversation = {
-            projectId: project.id,
-            projectTitle: project.title,
-            professorName: project.professor.name,
-            professorAvatar: project.professor.avatar,
-            studentId: 1, 
-            lastUpdated: new Date().toISOString(),
-            messages: [newMessage]
-        };
-        conversations.push(newConversation);
+        conversations.push({
+            projectId: project.id, projectTitle: project.title,
+            professorName: project.professor.name, professorAvatar: project.professor.avatar,
+            lastUpdated: new Date().toISOString(), messages: [msg]
+        });
     }
-
     localStorage.setItem(storageKey, JSON.stringify(conversations));
-    console.log("Conversa salva no LocalStorage:", conversations);
 }
 
 function closeModal() { 
@@ -242,7 +220,7 @@ function closeModal() {
     setTimeout(() => overlay.innerHTML = '', 300);
 }
 
-// --- PAGINAÇÃO ---
+// --- CONFIGURAÇÕES GERAIS ---
 function setupPaginationEvents(totalPages) {
     const prevBtn = document.getElementById('btn-prev');
     const nextBtn = document.getElementById('btn-next');
@@ -256,7 +234,6 @@ function setupPaginationEvents(totalPages) {
             }
         });
     }
-
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
             if (state.currentPage < totalPages) {
@@ -268,93 +245,8 @@ function setupPaginationEvents(totalPages) {
     }
 }
 
-// --- EVENTOS GERAIS (Menu, Tema, Filtros) ---
 function setupEventListeners() {
-    // Menu e Tema
-    const btnMenu = document.getElementById('btn-menu-toggle');
-    const overlay = document.getElementById('overlay');
-    if(btnMenu) btnMenu.addEventListener('click', toggleMenu);
-    if(overlay) overlay.addEventListener('click', toggleMenu);
-    document.getElementById('btn-theme-toggle').addEventListener('click', toggleTheme);
-    document.getElementById('btn-close-sidebar').addEventListener('click', toggleMenu);
-
-    // Filtros UI
-    const btnOpenFilter = document.querySelector('.btn-outline i.ph-funnel')?.parentElement;
-    if (btnOpenFilter) {
-        btnOpenFilter.addEventListener('click', (e) => {
-            e.preventDefault();
-            openFilterDrawer();
-        });
-    }
-
-    document.getElementById('btn-close-filter').addEventListener('click', closeFilterDrawer);
-    document.getElementById('filter-overlay').addEventListener('click', closeFilterDrawer);
-
-    const slider = document.getElementById('filter-hours');
-    const display = document.getElementById('hours-display');
-    if(slider && display) {
-        slider.addEventListener('input', (e) => { display.textContent = e.target.value; });
-    }
-
-    const form = document.getElementById('filter-form');
-    if(form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            state.filters.maxHours = parseInt(document.getElementById('filter-hours').value);
-            state.filters.startDate = document.getElementById('filter-date').value;
-            state.filters.tag = document.getElementById('filter-tag').value;
-            
-            const shiftCheckboxes = document.querySelectorAll('input[name="shift"]:checked');
-            state.filters.shifts = Array.from(shiftCheckboxes).map(cb => cb.value);
-
-            applyFilters();
-        });
-    }
-
-    document.getElementById('btn-clear-filters').addEventListener('click', () => {
-        if(form) form.reset();
-        if(display) display.textContent = "200";
-        state.filters = { maxHours: 200, startDate: null, shifts: [], tag: "" };
-        applyFilters();
-    });
-}
-
-// Funções Auxiliares UI
-function openFilterDrawer() {
-    document.getElementById('filter-drawer-id').classList.add('active');
-    document.getElementById('filter-overlay').classList.add('active');
-}
-
-function closeFilterDrawer() {
-    document.getElementById('filter-drawer-id').classList.remove('active');
-    document.getElementById('filter-overlay').classList.remove('active');
-}
-
-function toggleMenu() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    if(sidebar) sidebar.classList.toggle('active');
-    if(overlay) overlay.classList.toggle('active');
-}
-
-function toggleTheme() {
-    const html = document.documentElement;
-    const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('opencampus-theme', newTheme);
-    updateThemeIcon(newTheme);
-}
-
-function loadTheme() {
-    const saved = localStorage.getItem('opencampus-theme');
-    if (saved) {
-        document.documentElement.setAttribute('data-theme', saved);
-        updateThemeIcon(saved);
-    }
-}
-
-function setupEventListeners() {
-    // Menu
+    // Menu Mobile
     const btnMenu = document.getElementById('btn-menu-toggle');
     const overlay = document.getElementById('overlay');
     if(btnMenu) btnMenu.addEventListener('click', toggleMenu);
@@ -369,21 +261,88 @@ function setupEventListeners() {
     const btnThemeSidebar = document.getElementById('sidebar-theme-btn');
     if(btnThemeSidebar) btnThemeSidebar.addEventListener('click', () => {
         toggleTheme();
-        toggleMenu(); // Fecha o menu após trocar o tema
+        toggleMenu(); 
     });
 
-    // ... (Mantenha os listeners de Filtro se houver no arquivo específico) ...
-    // Exemplo para main.js: Mantenha a lógica do filtro aqui.
+    // Filtros
+    const btnOpenFilter = document.querySelector('.btn-outline i.ph-funnel')?.parentElement;
+    if (btnOpenFilter) {
+        btnOpenFilter.addEventListener('click', (e) => {
+            e.preventDefault();
+            openFilterDrawer();
+        });
+    }
+
+    document.getElementById('btn-close-filter').addEventListener('click', closeFilterDrawer);
+    document.getElementById('filter-overlay').addEventListener('click', closeFilterDrawer);
+
+    const slider = document.getElementById('filter-hours');
+    const display = document.getElementById('hours-display');
+    if(slider && display) slider.addEventListener('input', (e) => { display.textContent = e.target.value; });
+
+    const form = document.getElementById('filter-form');
+    if(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            state.filters.maxHours = parseInt(document.getElementById('filter-hours').value);
+            state.filters.startDate = document.getElementById('filter-date').value;
+            state.filters.tag = document.getElementById('filter-tag').value;
+            const shiftCheckboxes = document.querySelectorAll('input[name="shift"]:checked');
+            state.filters.shifts = Array.from(shiftCheckboxes).map(cb => cb.value);
+            applyFilters();
+        });
+    }
+
+    document.getElementById('btn-clear-filters').addEventListener('click', () => {
+        if(form) form.reset();
+        if(display) display.textContent = "200";
+        state.filters = { maxHours: 200, startDate: null, shifts: [], tag: "" };
+        applyFilters();
+    });
 }
 
+function setupProfileEvents() {
+    const profileCard = document.getElementById('profile-card-component');
+    if (profileCard) {
+        profileCard.addEventListener('click', () => {
+            if (window.innerWidth <= 1024) profileCard.classList.toggle('expanded');
+        });
+    }
+}
+
+// Funções Auxiliares UI
+function openFilterDrawer() {
+    document.getElementById('filter-drawer-id').classList.add('active');
+    document.getElementById('filter-overlay').classList.add('active');
+}
+function closeFilterDrawer() {
+    document.getElementById('filter-drawer-id').classList.remove('active');
+    document.getElementById('filter-overlay').classList.remove('active');
+}
+function toggleMenu() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    if(sidebar) sidebar.classList.toggle('active');
+    if(overlay) overlay.classList.toggle('active');
+}
+function toggleTheme() {
+    const html = document.documentElement;
+    const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('opencampus-theme', newTheme);
+    updateThemeIcon(newTheme);
+}
+function loadTheme() {
+    const saved = localStorage.getItem('opencampus-theme');
+    if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        updateThemeIcon(saved);
+    }
+}
 function updateThemeIcon(theme) {
     const iconClass = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
-    
-    // Atualiza ícone do Header
     const iconHeader = document.getElementById('theme-icon-header');
     if (iconHeader) iconHeader.className = iconClass;
-
-    // Atualiza ícone da Sidebar
     const iconSidebar = document.getElementById('theme-icon-sidebar');
     if (iconSidebar) iconSidebar.className = iconClass;
 }

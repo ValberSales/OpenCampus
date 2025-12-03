@@ -23,7 +23,7 @@ export function SidebarComponent(activePage = 'dashboard') {
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-item ${activePage === 'certificates' ? 'active' : ''}">
+                <a href="meus-certificados.html" class="nav-item ${activePage === 'certificates' ? 'active' : ''}">
                     <i class="ph ph-certificate"></i> Meus Certificados
                 </a>
             </li>

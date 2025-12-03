@@ -4,13 +4,9 @@
     height: 90px;
     background-color: var(--bg-card);
     border-bottom: 1px solid var(--border-color);
-    
-    /* Fixação no topo */
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 1000;
-    
-    /* Layout Flexbox: Garante que Logo fique na esq e Perfil na dir */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -25,15 +21,15 @@
     align-items: center; 
     gap: 0.5rem; 
     text-decoration: none;
-    flex-shrink: 0; /* Impede que a logo seja esmagada */
+    flex-shrink: 0;
 }
 
 /* Links Centrais (Desktop) */
 .nav-links-desktop {
     display: flex;
     gap: 2rem;
-    flex: 1; /* Ocupa o espaço disponível no meio */
-    justify-content: center; /* Centraliza os ícones */
+    flex: 1;
+    justify-content: center;
 }
 
 .nav-links-desktop .nav-item {
@@ -42,7 +38,6 @@
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
-    
     color: var(--text-secondary);
     font-weight: 500;
     font-size: 0.75rem;
@@ -63,37 +58,27 @@
     color: var(--primary);
 }
 
-/* Área da Direita (Perfil e Tema) */
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-shrink: 0;
-}
+.menu-toggle { display: none; }
 
-.menu-toggle { display: none; } /* Escondido no Desktop */
-
-/* --- RESPONSIVIDADE DO HEADER --- */
+/* --- RESPONSIVIDADE --- */
 @media (max-width: 1024px) {
     .topbar {
         height: 70px;
-        padding: 0 1.5rem;
+        padding: 0 1rem; /* Padding reduzido para celulares estreitos */
     }
 
-    .nav-links-desktop { display: none; } /* Some o menu central */
-    .menu-toggle { display: block; font-size: 1.5rem; } /* Aparece o hambúrguer */
-}
-
-@media (max-width: 1024px) {
-    .topbar {
-        height: 70px;
-        padding: 0 1rem; /* Reduzi o padding lateral para ganhar espaço */
-    }
+    /* Logo levemente menor no mobile para não estourar */
+    .logo { font-size: 1.3rem; }
 
     .nav-links-desktop { display: none; }
-    .menu-toggle { display: block; font-size: 1.5rem; }
     
-    /* Esconde elementos marcados como desktop-only */
+    .menu-toggle { 
+        display: block; 
+        font-size: 1.5rem;
+        padding: 0.5rem; /* Aumenta a área de toque */
+    }
+    
+    /* Esconde elementos marcados como desktop-only (botão de tema do header) */
     .desktop-only {
         display: none !important;
     }

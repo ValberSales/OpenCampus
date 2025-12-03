@@ -13,18 +13,15 @@ const state = {
 };
 
 async function init() {
-    // CORREÇÃO AQUI: Passamos 'projects' para destacar o ícone
     document.getElementById('app-header').innerHTML = HeaderComponent('projects');
     document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('projects');
-    
     document.getElementById('profile-container').innerHTML = ProfileCardComponent();
     document.getElementById('app-footer').innerHTML = FooterComponent();
 
-    // Carrega dados
     await fetchProjects();
     
-    // Events
     setupEventListeners();
+    setupProfileEvents(); // Perfil Mobile
     loadTheme();
 }
 
@@ -34,7 +31,6 @@ async function fetchProjects() {
         const data = await response.json();
         state.allProjects = data;
 
-        // Filtra pelos IDs salvos
         const subscribedIds = JSON.parse(localStorage.getItem('opencampus_subscriptions')) || [];
         state.myProjects = state.allProjects.filter(p => subscribedIds.includes(p.id));
 
@@ -58,8 +54,6 @@ function renderList() {
     }
 
     container.innerHTML = state.myProjects.map(p => MyProjectCardComponent(p)).join('');
-    
-    // Eventos dos Cards
     setupCardEvents();
 }
 
@@ -75,24 +69,20 @@ function setupCardEvents() {
                 openMessageModal(project);
                 return;
             }
-
-            // Abre modal (sempre como inscrito = true)
             openProjectModal(project);
         });
     });
 }
 
-// Reutilizando lógica de Modal
 function openProjectModal(project) { 
     const overlay = document.getElementById('modal-overlay-container');
-    // Passamos TRUE pois estamos na página de "Meus Projetos"
+    // TRUE porque já está inscrito nesta página
     overlay.innerHTML = ProjectModalComponent(project, true); 
     requestAnimationFrame(() => overlay.classList.add('active'));
     
     document.getElementById('btn-modal-close').addEventListener('click', closeModal);
     document.getElementById('btn-modal-cancel').addEventListener('click', closeModal);
     
-    // Botão Mensagem dentro do modal
     const btnMsg = document.getElementById('btn-modal-msg');
     if(btnMsg) {
         btnMsg.addEventListener('click', () => {
@@ -100,7 +90,6 @@ function openProjectModal(project) {
             setTimeout(() => openMessageModal(project), 300);
         });
     }
-
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
@@ -113,7 +102,6 @@ function openMessageModal(project) {
     document.getElementById('btn-cancel-msg').addEventListener('click', closeModal);
     
     document.getElementById('btn-send-msg').addEventListener('click', () => {
-        // Lógica de salvar mensagem (igual ao main.js)
         const text = document.getElementById('message-text').value;
         if(text) {
             saveMessageToStorage(project, text);
@@ -121,7 +109,6 @@ function openMessageModal(project) {
             closeModal();
         }
     });
-
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
@@ -133,13 +120,12 @@ function saveMessageToStorage(project, text) {
 
     if (idx >= 0) {
         conversations[idx].messages.push(msg);
-        conversations[idx].lastUpdated = new Date().toISOString(); // Atualiza data
+        conversations[idx].lastUpdated = new Date().toISOString();
     } else {
         conversations.push({
             projectId: project.id, projectTitle: project.title,
             professorName: project.professor.name, professorAvatar: project.professor.avatar,
-            lastUpdated: new Date().toISOString(),
-            messages: [msg]
+            lastUpdated: new Date().toISOString(), messages: [msg]
         });
     }
     localStorage.setItem(storageKey, JSON.stringify(conversations));
@@ -151,28 +137,31 @@ function closeModal() {
     setTimeout(() => overlay.innerHTML = '', 300);
 }
 
-// Utils (Menu/Theme)
+// Configurações Comuns
 function setupEventListeners() {
-    // Menu
     const btnMenu = document.getElementById('btn-menu-toggle');
     const overlay = document.getElementById('overlay');
     if(btnMenu) btnMenu.addEventListener('click', toggleMenu);
     if(overlay) overlay.addEventListener('click', toggleMenu);
     document.getElementById('btn-close-sidebar').addEventListener('click', toggleMenu);
 
-    // Tema (Header Desktop)
     const btnThemeHeader = document.getElementById('header-theme-btn');
     if(btnThemeHeader) btnThemeHeader.addEventListener('click', toggleTheme);
 
-    // Tema (Sidebar Mobile)
     const btnThemeSidebar = document.getElementById('sidebar-theme-btn');
     if(btnThemeSidebar) btnThemeSidebar.addEventListener('click', () => {
         toggleTheme();
-        toggleMenu(); // Fecha o menu após trocar o tema
+        toggleMenu();
     });
+}
 
-    // ... (Mantenha os listeners de Filtro se houver no arquivo específico) ...
-    // Exemplo para main.js: Mantenha a lógica do filtro aqui.
+function setupProfileEvents() {
+    const profileCard = document.getElementById('profile-card-component');
+    if (profileCard) {
+        profileCard.addEventListener('click', () => {
+            if (window.innerWidth <= 1024) profileCard.classList.toggle('expanded');
+        });
+    }
 }
 
 function toggleMenu() {
@@ -200,28 +189,10 @@ function loadTheme() {
 
 function updateThemeIcon(theme) {
     const iconClass = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
-    
-    // Atualiza ícone do Header
     const iconHeader = document.getElementById('theme-icon-header');
     if (iconHeader) iconHeader.className = iconClass;
-
-    // Atualiza ícone da Sidebar
     const iconSidebar = document.getElementById('theme-icon-sidebar');
     if (iconSidebar) iconSidebar.className = iconClass;
-}
-
-function setupProfileEvents() {
-    const profileCard = document.getElementById('profile-card-component');
-    
-    if (profileCard) {
-        profileCard.addEventListener('click', () => {
-            // Verifica se está no mobile (opcional, pois o CSS já trata, 
-            // mas bom para evitar cliques desnecessários no desktop)
-            if (window.innerWidth <= 1024) {
-                profileCard.classList.toggle('expanded');
-            }
-        });
-    }
 }
 
 document.addEventListener('DOMContentLoaded', init);

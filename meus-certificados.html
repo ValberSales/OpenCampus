@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Certificados - OpenCampus</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* CSS Inline temporario para o botao flutuante mobile se quiser */
+    </style>
+</head>
+<body>
+    <div id="modal-overlay-container" class="modal-overlay"></div>
+
+    <div id="app-sidebar-mobile"></div>
+    <div id="app-header"></div>
+
+    <main class="main-container">
+        <aside class="left-col" id="profile-container"></aside>
+
+        <section class="center-col" style="grid-column: span 2;">
+            <div class="flex justify-between align-center mb-4">
+                <div>
+                    <h2 class="font-bold" style="font-size: 1.5rem;">Certificados</h2>
+                    <p class="text-secondary">Valide suas atividades complementares.</p>
+                </div>
+                <button class="btn btn-primary" id="btn-add-cert">
+                    <i class="ph ph-plus"></i> <span class="desktop-only" style="display: inline;">Novo Envio</span>
+                </button>
+            </div>
+            
+            <div id="certificates-container" class="certificate-list">
+                <p class="text-secondary">Carregando...</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="app-footer"></div>
+
+    <script type="module" src="js/certificates.js"></script>
+</body>
+</html>
