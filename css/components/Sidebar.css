@@ -1,0 +1,44 @@
+/* css/components/Sidebar.css */
+
+.sidebar-mobile {
+    position: fixed; 
+    top: 0; left: -100%; bottom: 0; 
+    width: 280px;
+    background-color: var(--bg-card);
+    z-index: 2000;
+    box-shadow: var(--shadow);
+    transition: 0.3s ease;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-mobile.active { left: 0; }
+
+.sidebar-mobile .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.sidebar-mobile .nav-item:hover,
+.sidebar-mobile .nav-item.active {
+    background-color: var(--bg-ground);
+    color: var(--primary);
+}
+
+.sidebar-mobile .nav-item i { font-size: 1.2rem; }
+
+/* Overlay Escuro */
+.overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1900;
+    display: none;
+}
+.overlay.active { display: block; }

@@ -1,84 +1,34 @@
 /* =========================================
-   VARIÁVEIS E TEMA
+   UI KIT & UTILITÁRIOS
    ========================================= */
-:root {
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --primary-text: #ffffff;
-    --secondary: #ec4899;
-    
-    --bg-ground: #f8fafc;
-    --bg-card: #ffffff;
-    --border-color: #e2e8f0;
-    
-    --text-main: #0f172a;
-    --text-secondary: #64748b;
-    
-    --success: #22c55e;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --radius: 16px;
-    --transition: 0.2s ease;
-}
 
-[data-theme="dark"] {
-    --bg-ground: #0f172a;
-    --bg-card: #1e293b;
-    --border-color: #334155;
-    --text-main: #f8fafc;
-    --text-secondary: #94a3b8;
-    --primary: #818cf8;
-    --primary-text: #1e1b4b;
-}
-
-/* =========================================
-   RESET E BASE
-   ========================================= */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-ground);
-    color: var(--text-main);
-    transition: background-color var(--transition), color var(--transition);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-a { text-decoration: none; color: inherit; cursor: pointer; }
-ul { list-style: none; }
-button { font-family: inherit; border: none; background: none; cursor: pointer; }
-
-/* =========================================
-   UTILITÁRIOS & COMPONENTES UI
-   ========================================= */
+/* 1. Utilitários */
 .flex { display: flex; }
 .flex-column { flex-direction: column; }
 .align-center { align-items: center; }
 .justify-between { justify-content: space-between; }
 .justify-center { justify-content: center; }
+
 .gap-1 { gap: 0.5rem; }
 .gap-2 { gap: 1rem; }
 .gap-3 { gap: 1.5rem; }
+
 .w-full { width: 100%; }
 .text-center { text-align: center; }
+
 .font-bold { font-weight: 700; }
 .text-sm { font-size: 0.875rem; }
 .text-secondary { color: var(--text-secondary); }
+
 .mb-2 { margin-bottom: 0.5rem; }
 .mb-3 { margin-bottom: 0.75rem; }
 .mb-4 { margin-bottom: 1rem; }
-.mt-1 { margin-top: 0.25rem; }
-.mt-2 { margin-top: 0.5rem; }
-.mt-3 { margin-top: 0.75rem; }
+
 .p-3 { padding: 1rem; }
 .rounded { border-radius: var(--radius); }
 .uppercase { text-transform: uppercase; }
 
-/* Cards */
+/* 2. Cards Genéricos */
 .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -87,7 +37,7 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
     box-shadow: var(--shadow);
 }
 
-/* Buttons */
+/* 3. Botões */
 .btn {
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
@@ -97,15 +47,19 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
     align-items: center;
     gap: 0.5rem;
     justify-content: center;
+    cursor: pointer;
 }
 .btn-primary { background-color: var(--primary); color: var(--primary-text); }
 .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
+
 .btn-outline { border: 1px solid var(--border-color); color: var(--text-secondary); }
 .btn-outline:hover { border-color: var(--primary); color: var(--primary); background-color: var(--bg-ground); }
+
 .btn-icon { padding: 0.5rem; border-radius: 50%; color: var(--text-secondary); }
 .btn-icon:hover { background-color: var(--border-color); color: var(--text-main); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
-/* Badges */
+/* 4. Badges */
 .badge {
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -117,248 +71,60 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
 .badge-tech { background-color: #dbeafe; color: #1e40af; }
 .badge-art { background-color: #fce7f3; color: #9d174d; }
 
-/* =========================================
-   LAYOUT & ESTRUTURA (GRID SYSTEM)
-   ========================================= */
-
-/* Topbar fixa */
-.topbar {
-    height: 70px;
-    background-color: var(--bg-card);
-    border-bottom: 1px solid var(--border-color);
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    padding: 0 2rem;
-}
-
-/* Container Principal com Grid Areas */
-.main-container {
-    margin-top: 70px;
-    padding: 2rem;
-    max-width: 1440px; /* Limite máximo para telas ultrawide */
+/* 5. Inputs & Forms */
+.form-input, 
+.form-select {
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    
-    display: grid;
-    gap: 2rem;
-    
-    /* DEFINIÇÃO DAS ÁREAS (Desktop Padrão: 3 Colunas) */
-    grid-template-columns: 300px 1fr 300px;
-    grid-template-areas: 
-        "sidebar-left feed sidebar-right";
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-ground);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
 }
 
-/* Atribuindo as classes às áreas do Grid */
-.left-col  { grid-area: sidebar-left; }
-.center-col { grid-area: feed; }
-.right-col { grid-area: sidebar-right; }
-
-/* Ajuste para que as colunas laterais não estiquem infinitamente */
-.left-col, .right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    height: fit-content; /* Importante para não bugar o scroll */
-    position: sticky; /* Opcional: faz a sidebar acompanhar o scroll */
-    top: 90px; 
+.form-input:focus, 
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-/* =========================================
-   MEDIA QUERIES (RESPONSIVIDADE)
-   ========================================= */
-
-/* TABLET / LAPTOP PEQUENO (900px até 1200px) 
-   Estratégia: Juntar Perfil e Agenda na esquerda, Feed na direita */
-@media (max-width: 1200px) {
-    .main-container {
-        grid-template-columns: 300px 1fr; /* 2 Colunas */
-        grid-template-areas: 
-            "sidebar-left feed"
-            "sidebar-right feed"; /* Agenda vai para baixo do perfil */
-    }
-    
-    /* Removemos o sticky aqui se a coluna ficar muito alta, 
-       senão o usuário não vê o calendário */
-    .left-col, .right-col {
-        position: static; 
-    }
-    
-    /* Ajuste visual: A agenda (right-col) precisa 'subir' visualmente 
-       para colar no perfil se desejar, mas o gap do grid já resolve */
+/* Custom Icons (Select & Date) */
+.form-select {
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 256 256'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
 }
 
-/* MOBILE (< 900px) 
-   Estratégia: Tudo em 1 coluna */
-@media (max-width: 900px) {
-    .main-container {
-        display: flex;
-        flex-direction: column; /* Vira flexbox simples */
-        padding: 1rem;
-    }
-
-    .topbar { padding: 0 1rem; }
-    
-    .nav-links-desktop { display: none; }
-    .menu-toggle { display: block; font-size: 1.5rem; }
-
-    /* Ajuste nos cards de projeto para mobile */
-    .project-card { 
-        flex-direction: column; 
-        align-items: flex-start; 
-    }
-    .project-img-container { 
-        width: 100%; 
-        height: 180px; 
-    }
-    .project-actions { 
-        flex-direction: row; 
-        width: 100%; 
-    }
-    .project-actions button { 
-        flex: 1; 
-    }
+.form-input[type="date"] {
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%2364748b' viewBox='0 0 256 256'%3E%3Cpath d='M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM48,208V96H208V208Z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    position: relative;
 }
 
-/* =========================================
-   COMPONENTES ESPECÍFICOS
-   ========================================= */
-/* Perfil e Gráfico */
-.profile-card { text-align: center; max-width: 400px; width: 100%; margin: 0 auto; }
-.profile-img {
-    width: 100px; height: 100px; border-radius: 50%;
-    object-fit: cover; border: 3px solid var(--primary); margin-bottom: 1rem;
-}
-.circular-chart {
-    width: 150px; height: 150px; border-radius: 50%;
-    background: conic-gradient(var(--primary) 0% 75%, var(--border-color) 75% 100%);
-    display: flex; align-items: center; justify-content: center;
-    margin: 1.5rem auto; position: relative;
-}
-.circular-chart::before {
-    content: ""; width: 120px; height: 120px;
-    background-color: var(--bg-card); border-radius: 50%; position: absolute;
-}
-.chart-content { position: relative; z-index: 1; }
-.chart-percentage { font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1; }
-.chart-label { font-size: 0.8rem; color: var(--text-secondary); }
-
-/* Badges Grid */
-.badges-grid { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
-.badge-icon {
-    width: 40px; height: 40px; border-radius: 50%;
-    background-color: var(--bg-ground); display: flex; align-items: center;
-    justify-content: center; font-size: 1.2rem; color: var(--warning);
-    border: 1px solid var(--border-color); cursor: help; transition: var(--transition);
-}
-.badge-icon:hover { transform: scale(1.1); background-color: var(--warning); color: white; }
-
-/* Certificados */
-.divider { height: 1px; background-color: var(--border-color); margin: 1.5rem 0; }
-.cert-list { text-align: left; }
-.cert-item {
-    padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color);
-    margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;
-    cursor: pointer; transition: var(--transition); background-color: var(--bg-ground);
-}
-.cert-item:hover { border-color: var(--primary); transform: translateX(5px); }
-.cert-icon { color: var(--success); font-size: 1.2rem; }
-
-/* Cards de Projetos */
-.project-list { display: flex; flex-direction: column; gap: 1.5rem; }
-.project-card { display: flex; gap: 1.5rem; padding: 1.5rem; align-items: center; transition: var(--transition); }
-.project-card:hover { transform: translateY(-3px); border-color: var(--primary); }
-.project-img-container { width: 140px; height: 100px; flex-shrink: 0; border-radius: 12px; overflow: hidden; }
-.project-img { width: 100%; height: 100%; object-fit: cover; }
-.project-content { flex: 1; }
-.project-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
-.project-desc {
-    font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.8rem;
-    line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2;
-    line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-.project-tags { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
-.project-actions { display: flex; flex-direction: column; gap: 0.5rem; min-width: 120px; }
-
-/* Calendário */
-.calendar-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr);
-    gap: 5px; text-align: center; margin-top: 1rem;
-}
-.cal-header { font-size: 0.8rem; font-weight: bold; color: var(--text-secondary); margin-bottom: 0.5rem; }
-.cal-day {
-    aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; font-size: 0.9rem; border-radius: 8px;
-    cursor: pointer; transition: var(--transition); position: relative;
-}
-.cal-day:hover { background-color: var(--bg-ground); }
-.cal-day.today { background-color: var(--primary); color: white; }
-.cal-day.has-event::after {
-    content: ""; width: 4px; height: 4px; background-color: var(--secondary);
-    border-radius: 50%; position: absolute; bottom: 4px;
-}
-.events-list { margin-top: 1.5rem; }
-.event-item { display: flex; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border-color); }
-.event-date-box {
-    background-color: var(--bg-ground); border-radius: 8px;
-    padding: 0.5rem; text-align: center; min-width: 50px;
-}
-.event-day { font-weight: 800; font-size: 1.1rem; display: block; }
-.event-month { font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); }
-
-/* =========================================
-   MEDIA QUERIES (RESPONSIVIDADE)
-   ========================================= */
-
-/* TABLET / LAPTOP PEQUENO (900px até 1200px) 
-   Estratégia: Juntar Perfil e Agenda na esquerda, Feed na direita */
-@media (max-width: 1200px) {
-    .main-container {
-        grid-template-columns: 300px 1fr; /* 2 Colunas */
-        grid-template-areas: 
-            "sidebar-left feed"
-            "sidebar-right feed"; /* Agenda vai para baixo do perfil */
-    }
-    
-    /* Removemos o sticky aqui se a coluna ficar muito alta, 
-       senão o usuário não vê o calendário */
-    .left-col, .right-col {
-        position: static; 
-    }
-    
-    /* Ajuste visual: A agenda (right-col) precisa 'subir' visualmente 
-       para colar no perfil se desejar, mas o gap do grid já resolve */
+.form-input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0; position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; cursor: pointer;
 }
 
-/* MOBILE (< 900px) 
-   Estratégia: Tudo em 1 coluna */
-@media (max-width: 900px) {
-    .main-container {
-        display: flex;
-        flex-direction: column; /* Vira flexbox simples */
-        padding: 1rem;
-    }
+.checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.checkbox-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; }
+.checkbox-item input { accent-color: var(--primary); width: 16px; height: 16px; }
 
-    .topbar { padding: 0 1rem; }
-    
-    .nav-links-desktop { display: none; }
-    .menu-toggle { display: block; font-size: 1.5rem; }
-
-    /* Ajuste nos cards de projeto para mobile */
-    .project-card { 
-        flex-direction: column; 
-        align-items: flex-start; 
-    }
-    .project-img-container { 
-        width: 100%; 
-        height: 180px; 
-    }
-    .project-actions { 
-        flex-direction: row; 
-        width: 100%; 
-    }
-    .project-actions button { 
-        flex: 1; 
-    }
+/* 6. Footer (Global) */
+footer {
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    padding: 2rem;
+    margin-top: auto;
+    text-align: center;
+    width: 100%;
 }

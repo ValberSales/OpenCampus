@@ -11,10 +11,12 @@ export function ProjectCardComponent(project) {
         <div class="project-content">
             <h3 class="project-title">${project.title}</h3>
             <div class="project-tags">${tagsHtml}</div>
-            <p class="project-desc">${project.description}</p>
+            <p class="project-desc">${project.description.substring(0, 100)}...</p>
         </div>
         <div class="project-actions">
-            <button class="btn btn-primary w-full justify-center">Inscrever</button>
+            <button class="btn btn-primary w-full justify-center btn-open-modal" data-id="${project.id}">
+                Ver Detalhes
+            </button>
             <button class="btn btn-outline w-full justify-center">Mensagem</button>
         </div>
     </div>

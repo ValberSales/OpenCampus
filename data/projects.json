@@ -1,0 +1,138 @@
+[
+    {
+        "id": 1,
+        "title": "Inclusão Digital para Idosos",
+        "image": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=600&q=80",
+        "description": "Projeto focado em ensinar o básico de smartphones e computadores para a terceira idade. Os alunos aprenderão a usar WhatsApp, redes sociais, aplicativos de banco e segurança na internet.",
+        "tags": [{ "label": "Tecnologia", "class": "badge-tech" }, { "label": "Social", "class": "badge-env" }],
+        "professor": {
+            "name": "Dra. Ana Souza",
+            "email": "ana.souza@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Ana+Souza&background=ec4899&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "10/03/2026", "end": "10/06/2026", "schedule": "Terças e Quintas, 14h às 16h" },
+        "location": "Lab de Informática 02 - Bloco C",
+        "hours": 40,
+        "shifts": ["Vespertino"],
+        "vacancies": { "total": 10, "available": 3 }
+    },
+    {
+        "id": 2,
+        "title": "Robótica nas Escolas",
+        "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a782?auto=format&fit=crop&w=600&q=80",
+        "description": "Oficinas semanais de robótica e lógica de programação com Arduino em escolas municipais.",
+        "tags": [{ "label": "Educação", "class": "badge-tech" }],
+        "professor": {
+            "name": "Prof. Carlos Mendez",
+            "email": "carlos.m@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Carlos+Mendez&background=6366f1&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "05/04/2026", "end": "05/12/2026", "schedule": "Quartas, 08h às 11h" },
+        "location": "Escola Municipal Vida Nova",
+        "hours": 60,
+        "shifts": ["Matutino"],
+        "vacancies": { "total": 5, "available": 1 }
+    },
+    {
+        "id": 3,
+        "title": "Workshop: UX Design",
+        "image": "https://images.unsplash.com/photo-1586717791821-3f44a5638d0f?auto=format&fit=crop&w=600&q=80",
+        "description": "Um dia de imersão em User Experience. Aprenda a criar protótipos de alta fidelidade no Figma.",
+        "tags": [{ "label": "Design", "class": "badge-art" }, { "label": "Evento", "class": "badge-tech" }],
+        "professor": {
+            "name": "Prof. Juliana Paes",
+            "email": "ju.paes@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Juliana+Paes&background=f59e0b&color=fff"
+        },
+        "date": { "isOneDay": true, "start": "15/05/2026", "end": null, "schedule": "Sábado, 08h às 18h" },
+        "location": "Auditório Principal",
+        "hours": 8,
+        "shifts": ["Matutino", "Vespertino"],
+        "vacancies": { "total": 50, "available": 22 }
+    },
+    {
+        "id": 4,
+        "title": "Horta Comunitária",
+        "image": "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=600&q=80",
+        "description": "Manutenção e expansão da horta orgânica do campus. Todo o alimento produzido é doado.",
+        "tags": [{ "label": "Meio Ambiente", "class": "badge-env" }],
+        "professor": {
+            "name": "Prof. Roberto Green",
+            "email": "r.green@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Roberto+Green&background=22c55e&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "01/02/2026", "end": "01/12/2026", "schedule": "Sextas, 08h às 12h" },
+        "location": "Estufa do Campus",
+        "hours": 100,
+        "shifts": ["Matutino"],
+        "vacancies": { "total": 15, "available": 0 }
+    },
+    {
+        "id": 5,
+        "title": "Apoio Jurídico Popular",
+        "image": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80",
+        "description": "Orientação jurídica básica sobre direitos do consumidor e trabalhista para a comunidade.",
+        "tags": [{ "label": "Direito", "class": "badge-tech" }, { "label": "Social", "class": "badge-env" }],
+        "professor": {
+             "name": "Dra. Marcia Leite",
+             "email": "marcia.leite@utfpr.edu.br",
+             "avatar": "https://ui-avatars.com/api/?name=Marcia+Leite&background=ef4444&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "10/03/2026", "end": "10/11/2026", "schedule": "Segundas, 18h às 22h" },
+        "location": "Núcleo de Prática Jurídica",
+        "hours": 80,
+        "shifts": ["Noturno"],
+        "vacancies": { "total": 8, "available": 4 }
+    },
+    {
+        "id": 6,
+        "title": "Feira de Orgânicos",
+        "image": "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=600&q=80",
+        "description": "Apoio logístico e técnico para a feira semanal da agricultura familiar dentro da universidade.",
+        "tags": [{ "label": "Nutrição", "class": "badge-env" }, { "label": "Extensão", "class": "badge-tech" }],
+        "professor": {
+            "name": "Prof. João Terra",
+            "email": "jterra@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Joao+Terra&background=16a34a&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "01/03/2026", "end": "20/12/2026", "schedule": "Quartas, 06h às 12h" },
+        "location": "Pátio Central",
+        "hours": 120,
+        "shifts": ["Matutino"],
+        "vacancies": { "total": 5, "available": 5 }
+    },
+    {
+        "id": 7,
+        "title": "Cursinho Solidário",
+        "image": "https://images.unsplash.com/photo-1524178232363-1fb2b075b955?auto=format&fit=crop&w=600&q=80",
+        "description": "Aulas preparatórias para o ENEM focadas em alunos de escolas públicas da região.",
+        "tags": [{ "label": "Educação", "class": "badge-tech" }, { "label": "Voluntariado", "class": "badge-art" }],
+        "professor": {
+            "name": "Prof. Paulo Freire Jr",
+            "email": "p.freire@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Paulo+F&background=3b82f6&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "01/04/2026", "end": "30/10/2026", "schedule": "Sábados, 08h às 17h" },
+        "location": "Bloco A - Salas 101 a 104",
+        "hours": 160,
+        "shifts": ["Matutino", "Vespertino"],
+        "vacancies": { "total": 20, "available": 8 }
+    },
+    {
+        "id": 8,
+        "title": "Energia Solar",
+        "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=600&q=80",
+        "description": "Projeto de engenharia para instalação e manutenção de painéis solares em creches públicas.",
+        "tags": [{ "label": "Engenharia", "class": "badge-tech" }, { "label": "Sustentável", "class": "badge-env" }],
+        "professor": {
+            "name": "Dra. Eletra Volts",
+            "email": "eletra@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Eletra+V&background=facc15&color=000"
+        },
+        "date": { "isOneDay": false, "start": "01/06/2026", "end": "30/11/2026", "schedule": "Terças, 13h às 17h" },
+        "location": "Visitas Técnicas Externas",
+        "hours": 80,
+        "shifts": ["Vespertino"],
+        "vacancies": { "total": 6, "available": 2 }
+    }
+]

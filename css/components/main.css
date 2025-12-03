@@ -1,0 +1,16 @@
+/* css/main.css */
+
+/* 1. Base e Configurações (Carregar primeiro!) */
+@import url('./theme.css');   /* Variáveis de cor, fonte */
+@import url('./style.css');   /* Reset, Utilitários, Botões globais */
+@import url('./layout.css');  /* Grid principal e estrutura */
+
+/* 2. Componentes (Carregar depois) */
+@import url('./components/Header.css');
+@import url('./components/Sidebar.css');
+@import url('./components/ProfileCard.css');
+@import url('./components/ProjectCard.css');
+@import url('./components/Calendar.css');
+@import url('./components/Pagination.css');
+@import url('./components/Modal.css');
+@import url('./components/FilterDrawer.css');

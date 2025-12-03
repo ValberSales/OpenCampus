@@ -1,0 +1,85 @@
+/* css/components/Header.css */
+
+.topbar {
+    height: 90px;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    
+    /* Fixação no topo */
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    
+    /* Layout Flexbox: Garante que Logo fique na esq e Perfil na dir */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.logo { 
+    font-size: 1.5rem; 
+    font-weight: 800; 
+    color: var(--primary); 
+    display: flex; 
+    align-items: center; 
+    gap: 0.5rem; 
+    text-decoration: none;
+    flex-shrink: 0; /* Impede que a logo seja esmagada */
+}
+
+/* Links Centrais (Desktop) */
+.nav-links-desktop {
+    display: flex;
+    gap: 2rem;
+    flex: 1; /* Ocupa o espaço disponível no meio */
+    justify-content: center; /* Centraliza os ícones */
+}
+
+.nav-links-desktop .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.nav-links-desktop .nav-item i {
+    font-size: 1.6rem;
+    margin-bottom: 2px;
+}
+
+.nav-links-desktop .nav-item:hover,
+.nav-links-desktop .nav-item.active {
+    background-color: var(--bg-ground);
+    color: var(--primary);
+}
+
+/* Área da Direita (Perfil e Tema) */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.menu-toggle { display: none; } /* Escondido no Desktop */
+
+/* --- RESPONSIVIDADE DO HEADER --- */
+@media (max-width: 1024px) {
+    .topbar {
+        height: 70px;
+        padding: 0 1.5rem;
+    }
+
+    .nav-links-desktop { display: none; } /* Some o menu central */
+    .menu-toggle { display: block; font-size: 1.5rem; } /* Aparece o hambúrguer */
+}

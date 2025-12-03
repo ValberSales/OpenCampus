@@ -1,0 +1,78 @@
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.cal-header {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.cal-day:hover {
+    background-color: var(--bg-ground);
+}
+
+.cal-day.today {
+    background-color: var(--primary);
+    color: white;
+}
+
+.cal-day.has-event::after {
+    content: "";
+    width: 4px;
+    height: 4px;
+    background-color: var(--secondary);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 4px;
+}
+
+/* Lista de Eventos abaixo do calendário */
+.events-list {
+    margin-top: 1.5rem;
+}
+
+.event-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.event-date-box {
+    background-color: var(--bg-ground);
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+    min-width: 50px;
+}
+
+.event-day {
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: block;
+}
+
+.event-month {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
