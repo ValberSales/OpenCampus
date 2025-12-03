@@ -1,4 +1,4 @@
-export function SidebarComponent() {
+export function SidebarComponent(activePage = 'dashboard') {
     return `
     <div class="overlay" id="overlay"></div>
     <div class="sidebar-mobile" id="sidebar">
@@ -7,10 +7,26 @@ export function SidebarComponent() {
             <button class="btn-icon" id="btn-close-sidebar"><i class="ph ph-x"></i></button>
         </div>
         <ul class="flex-column gap-2">
-            <li><a href="#" class="nav-item active"><i class="ph ph-squares-four"></i> Dashboard</a></li>
-            <li><a href="#" class="nav-item"><i class="ph ph-folder-open"></i> Meus Projetos</a></li>
-            <li><a href="#" class="nav-item"><i class="ph ph-chat-circle-text"></i> Mensagens</a></li>
-            <li><a href="#" class="nav-item"><i class="ph ph-certificate"></i> Meus Certificados</a></li>
+            <li>
+                <a href="index.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
+                    <i class="ph ph-squares-four"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="meus-projetos.html" class="nav-item ${activePage === 'projects' ? 'active' : ''}">
+                    <i class="ph ph-folder-open"></i> Meus Projetos
+                </a>
+            </li>
+            <li>
+                <a href="mensagens.html" class="nav-item ${activePage === 'messages' ? 'active' : ''}">
+                    <i class="ph ph-chat-circle-text"></i> Mensagens
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-item ${activePage === 'certificates' ? 'active' : ''}">
+                    <i class="ph ph-certificate"></i> Meus Certificados
+                </a>
+            </li>
         </ul>
     </div>
     `;

@@ -151,3 +151,41 @@ textarea.form-input {
     background-color: var(--bg-card);
     border-radius: var(--radius) var(--radius) 0 0;
 }
+
+/* Estilo para botão de Sucesso/Inscrito */
+.btn-success {
+    background-color: var(--success);
+    color: white;
+    border: 1px solid var(--success);
+    cursor: default;
+}
+.btn-success:hover {
+    transform: none; /* Remove efeito de clique */
+}
+
+/* Modal Footer Responsivo (3 Botões) */
+.modal-footer {
+    padding: 1.5rem 2rem;
+    background-color: var(--bg-ground);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap; /* Permite quebra de linha */
+}
+
+@media (max-width: 600px) {
+    .modal-meta-grid { grid-template-columns: 1fr; }
+    
+    /* No mobile, os botões ocupam largura total ou grid */
+    .modal-footer { 
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2 colunas */
+        gap: 0.8rem;
+    }
+
+    /* O último botão (Confirmar/Inscrito) ocupa a linha inteira de baixo */
+    .modal-footer button:last-child {
+        grid-column: span 2;
+    }
+}

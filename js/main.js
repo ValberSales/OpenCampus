@@ -119,14 +119,12 @@ function setupModalEvents() {
             const projectId = parseInt(e.currentTarget.dataset.id);
             const project = state.allProjects.find(p => p.id === projectId);
 
-            // 1. Se clicou no botão "Mensagem", abre o modal de mensagem
             if (e.target.closest('.btn-message')) {
                 e.stopPropagation(); 
                 if (project) openMessageModal(project);
                 return;
             }
 
-            // 2. Caso contrário, abre Detalhes do Projeto
             if (project) {
                 openProjectModal(project);
             }
@@ -134,17 +132,45 @@ function setupModalEvents() {
     });
 }
 
-// Modal de Detalhes
 function openProjectModal(project) { 
+    // 1. Checa se o aluno já está inscrito neste projeto
+    const subscriptions = JSON.parse(localStorage.getItem('opencampus_subscriptions')) || [];
+    const isSubscribed = subscriptions.includes(project.id);
+
     const overlay = document.getElementById('modal-overlay-container');
-    overlay.innerHTML = ProjectModalComponent(project);
+    
+    // 2. Passa o status para o componente renderizar o botão certo
+    overlay.innerHTML = ProjectModalComponent(project, isSubscribed);
     requestAnimationFrame(() => overlay.classList.add('active'));
     
+    // Eventos de Fechar
     const btnClose = document.getElementById('btn-modal-close');
     const btnCancel = document.getElementById('btn-modal-cancel');
-    
     if(btnClose) btnClose.addEventListener('click', closeModal);
     if(btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    // Evento de Mensagem (Dentro do Modal de Detalhes)
+    const btnMsg = document.getElementById('btn-modal-msg');
+    if(btnMsg) {
+        btnMsg.addEventListener('click', () => {
+            closeModal(); // Fecha o de detalhes
+            setTimeout(() => openMessageModal(project), 300); // Abre o de mensagem
+        });
+    }
+
+    // Evento de Inscrever (Se o botão existir)
+    const btnSub = document.getElementById('btn-confirm-sub');
+    if(btnSub) {
+        btnSub.addEventListener('click', () => {
+            // Salva no LocalStorage
+            subscriptions.push(project.id);
+            localStorage.setItem('opencampus_subscriptions', JSON.stringify(subscriptions));
+            
+            // Feedback Visual e recarrega modal como "Inscrito"
+            alert(`Parabéns! Você se inscreveu em "${project.title}".`);
+            openProjectModal(project); // Reabre para atualizar o botão visualmente
+        });
+    }
     
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }

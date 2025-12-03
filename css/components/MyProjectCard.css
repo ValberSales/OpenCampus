@@ -1,0 +1,55 @@
+.my-project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.my-project-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Para alinhar botões no final */
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.my-project-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.my-project-img-container {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px 12px 0 0; /* Arredonda só em cima */
+    overflow: hidden;
+}
+
+.my-project-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.my-project-card:hover .my-project-img {
+    transform: scale(1.05);
+}
+
+.my-project-content {
+    padding: 1.5rem;
+    flex: 1; /* Empurra o footer para baixo */
+    display: flex;
+    flex-direction: column;
+}
+
+.my-project-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+}
+
+.my-project-footer button {
+    flex: 1; /* Botões dividem o espaço */
+    justify-content: center;
+}

@@ -1,0 +1,93 @@
+/* Layout do Modal de Chat */
+.chat-modal-content {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 500px;
+    height: 80vh; /* Altura fixa para parecer app */
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden; /* Importante para o scroll interno */
+    border: 1px solid var(--border-color);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .chat-modal-content {
+    transform: translateY(0);
+}
+
+/* Header Fixo */
+.chat-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+/* Área de Mensagens (Scrollável) */
+.chat-body {
+    flex: 1;
+    padding: 1.5rem;
+    background-color: var(--bg-ground);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Balões de Mensagem */
+.message-bubble {
+    max-width: 80%;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    position: relative;
+}
+
+.msg-sent {
+    align-self: flex-end; /* Alinha à direita */
+    background-color: var(--primary);
+    color: var(--primary-text);
+    border-bottom-right-radius: 2px;
+}
+
+.msg-received {
+    align-self: flex-start; /* Alinha à esquerda */
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-bottom-left-radius: 2px;
+}
+
+.msg-time {
+    font-size: 0.65rem;
+    opacity: 0.8;
+    margin-top: 0.3rem;
+    text-align: right;
+    display: block;
+}
+
+/* Footer (Input) */
+.chat-footer {
+    padding: 1rem;
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Ajuste mobile */
+@media (max-width: 600px) {
+    .chat-modal-content {
+        height: 100vh;
+        max-width: 100%;
+        border-radius: 0;
+    }
+}
