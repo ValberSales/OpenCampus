@@ -25,10 +25,10 @@ export function HeaderComponent(activePage = 'dashboard') {
         </div>
 
         <div class="flex align-center gap-2">
-            <button class="btn-icon" id="btn-theme-toggle" title="Alternar Tema">
-                <i class="ph ph-moon" id="theme-icon"></i>
+            <button class="btn-icon desktop-only" id="header-theme-btn" title="Alternar Tema">
+                <i class="ph ph-moon" id="theme-icon-header"></i>
             </button>
-            <button class="btn-icon"><i class="ph ph-bell"></i></button>
+            
             <div class="avatar" style="width: 35px; height: 35px; border-radius: 50%; background: #ddd; overflow: hidden;">
                 <img src="https://ui-avatars.com/api/?name=Valber+Sales&background=6366f1&color=fff" alt="Perfil" style="width: 100%;">
             </div>

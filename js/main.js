@@ -36,6 +36,7 @@ async function init() {
     }
     
     setupEventListeners();
+    setupProfileEvents();
     loadTheme();
 }
 
@@ -352,9 +353,39 @@ function loadTheme() {
     }
 }
 
+function setupEventListeners() {
+    // Menu
+    const btnMenu = document.getElementById('btn-menu-toggle');
+    const overlay = document.getElementById('overlay');
+    if(btnMenu) btnMenu.addEventListener('click', toggleMenu);
+    if(overlay) overlay.addEventListener('click', toggleMenu);
+    document.getElementById('btn-close-sidebar').addEventListener('click', toggleMenu);
+
+    // Tema (Header Desktop)
+    const btnThemeHeader = document.getElementById('header-theme-btn');
+    if(btnThemeHeader) btnThemeHeader.addEventListener('click', toggleTheme);
+
+    // Tema (Sidebar Mobile)
+    const btnThemeSidebar = document.getElementById('sidebar-theme-btn');
+    if(btnThemeSidebar) btnThemeSidebar.addEventListener('click', () => {
+        toggleTheme();
+        toggleMenu(); // Fecha o menu após trocar o tema
+    });
+
+    // ... (Mantenha os listeners de Filtro se houver no arquivo específico) ...
+    // Exemplo para main.js: Mantenha a lógica do filtro aqui.
+}
+
 function updateThemeIcon(theme) {
-    const icon = document.getElementById('theme-icon');
-    if (icon) icon.className = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+    const iconClass = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+    
+    // Atualiza ícone do Header
+    const iconHeader = document.getElementById('theme-icon-header');
+    if (iconHeader) iconHeader.className = iconClass;
+
+    // Atualiza ícone da Sidebar
+    const iconSidebar = document.getElementById('theme-icon-sidebar');
+    if (iconSidebar) iconSidebar.className = iconClass;
 }
 
 document.addEventListener('DOMContentLoaded', init);

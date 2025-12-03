@@ -27,6 +27,14 @@ export function SidebarComponent(activePage = 'dashboard') {
                     <i class="ph ph-certificate"></i> Meus Certificados
                 </a>
             </li>
+            
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 0.5rem 0;">
+
+            <li>
+                <button id="sidebar-theme-btn" class="nav-item w-full" style="text-align: left; background: none; border: none; font-family: inherit; cursor: pointer;">
+                    <i class="ph ph-moon" id="theme-icon-sidebar"></i> Alternar Tema
+                </button>
+            </li>
         </ul>
     </div>
     `;
