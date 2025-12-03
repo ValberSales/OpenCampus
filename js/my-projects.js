@@ -13,9 +13,10 @@ const state = {
 };
 
 async function init() {
-    // Renderiza componentes fixos
-    document.getElementById('app-header').innerHTML = HeaderComponent();
-    document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent();
+    // CORREÇÃO AQUI: Passamos 'projects' para destacar o ícone
+    document.getElementById('app-header').innerHTML = HeaderComponent('projects');
+    document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('projects');
+    
     document.getElementById('profile-container').innerHTML = ProfileCardComponent();
     document.getElementById('app-footer').innerHTML = FooterComponent();
 
@@ -132,10 +133,12 @@ function saveMessageToStorage(project, text) {
 
     if (idx >= 0) {
         conversations[idx].messages.push(msg);
+        conversations[idx].lastUpdated = new Date().toISOString(); // Atualiza data
     } else {
         conversations.push({
             projectId: project.id, projectTitle: project.title,
             professorName: project.professor.name, professorAvatar: project.professor.avatar,
+            lastUpdated: new Date().toISOString(),
             messages: [msg]
         });
     }

@@ -17,7 +17,7 @@ export function ChatModalComponent(conversation) {
 
         <div class="chat-footer">
             <input type="text" id="chat-input" class="form-input" placeholder="Digite sua mensagem..." autocomplete="off">
-            <button class="btn btn-primary btn-icon" id="btn-send-chat" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+            <button class="btn btn-primary" id="btn-send-chat" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; padding: 0;">
                 <i class="ph ph-paper-plane-right" style="font-size: 1.2rem;"></i>
             </button>
         </div>
