@@ -1,10 +1,12 @@
-import { HeaderComponent } from '../components/Header.js';
-import { SidebarComponent } from '../components/Sidebar.js';
-import { ProfileCardComponent } from '../components/ProfileCard.js';
-import { FooterComponent } from '../components/Footer.js';
-import { ConversationCardComponent } from '../components/ConversationCard.js';
-import { ChatModalComponent, ChatBubbleComponent } from '../components/ChatModal.js';
-import { BadgeModalComponent } from '../components/BadgeModal.js';
+// js/aluno/messages-aluno.js
+import { HeaderComponent } from '../components/shared/Header.js';
+import { SidebarComponent } from '../components/shared/Sidebar.js';
+import { FooterComponent } from '../components/shared/Footer.js';
+import { ConversationCardComponent } from '../components/shared/ConversationCard.js'; // Atenção: Movi para shared na suposição
+import { ChatModalComponent, ChatBubbleComponent } from '../components/aluno/ChatModal.js'; // Verifique se ChatModal está em shared ou aluno
+
+import { ProfileCardComponent } from '../components/aluno/ProfileCard.js';
+import { BadgeModalComponent } from '../components/aluno/BadgeModal.js';
 
 let conversations = [];
 let currentChatId = null;

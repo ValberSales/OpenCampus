@@ -5,17 +5,27 @@
 @import url('./style.css');
 @import url('./layout.css');
 
-/* 2. Componentes */
-@import url('./components/Header.css');
-@import url('./components/Sidebar.css');
-@import url('./components/Footer.css'); /* <--- Adicionado aqui */
-@import url('./components/ProfileCard.css');
-@import url('./components/ProjectCard.css');
-@import url('./components/Calendar.css');
-@import url('./components/Pagination.css');
-@import url('./components/Modal.css');
-@import url('./components/FilterDrawer.css');
-@import url('./components/MyProjectCard.css');
-@import url('./components/ConversationCard.css');
-@import url('./components/ChatModal.css');
-@import url('./components/CertificateCard.css');
+/* 2. Componentes Compartilhados (Shared) */
+@import url('./shared/Header.css');
+@import url('./shared/Sidebar.css');
+@import url('./shared/Footer.css');
+@import url('./shared/Calendar.css');
+@import url('./shared/Pagination.css');
+@import url('./shared/Modal.css');
+@import url('./shared/FilterDrawer.css');
+@import url('./shared/ConversationCard.css');
+@import url('./shared/ChatModal.css');
+@import url('./shared/ProjectCard.css'); /* ProjectCard parece ser shared */
+
+/* 3. Componentes de Aluno */
+@import url('./aluno/ProfileCard.css');
+@import url('./aluno/MyProjectCard.css');
+@import url('./aluno/CertificateCard.css');
+
+/* 4. Componentes de Landing Page */
+@import url('./landing/PublicHeader.css');
+@import url('./landing/Hero.css');
+@import url('./landing/Impact.css');
+@import url('./landing/Showcase.css');
+@import url('./landing/PublicFooter.css');
+@import url('./landing/CommunityFlip.css');

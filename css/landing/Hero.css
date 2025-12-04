@@ -1,0 +1,113 @@
+/* css/landing/Hero.css */
+
+.hero-section {
+    /* 1. Removemos o gradiente original e deixamos uma cor sólida de segurança */
+    background-color: #1e1e2d;
+    color: white;
+    padding: 6rem 2rem 5rem;
+    
+    /* --- PARALLAX EFFECT (Mantido exato do seu código) --- */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    
+    overflow: hidden;
+    text-align: center;
+    min-height: 500px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- CAMADA 1: A IMAGEM (::before) --- */
+/* Substituímos o gradiente radial pela imagem da UTFPR */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    
+    /* URL da imagem */
+    background-image: url('https://www.utfpr.edu.br/noticias/pato-branco/cursos-da-utfpr-campus-pato-branco-confirmam-excelencia-no-ensino-superior-no-enade-2023/@@images/image-5184-a024089c00cbd1210f26fdd19ecfe02d.jpeg');
+    background-size: cover;
+    background-position: center;
+    
+    /* Efeitos visuais */
+    filter: blur(8px);    /* Desfoque */
+    transform: scale(1.1); /* Escala para esconder bordas do desfoque */
+    
+    pointer-events: none;
+    z-index: -2; /* Joga para o fundo, atrás da máscara */
+}
+
+/* --- CAMADA 2: MÁSCARA ESCURA (::after) --- */
+/* Nova camada para garantir que o texto branco seja legível */
+.hero-section::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 60, 0.7); /* Azul escuro semi-transparente */
+    pointer-events: none;
+    z-index: -1; /* Fica entre a imagem e o texto */
+}
+
+/* --- CONTEÚDO E BOTÕES (Mantidos exatos do seu código) --- */
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    /* Adicionei uma sombra leve para destacar ainda mais sobre a foto */
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    opacity: 0.95;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.btn-white {
+    background: white;
+    color: var(--primary);
+    border: 1px solid white;
+    font-weight: 700;
+    padding: 0.8rem 1.5rem;
+}
+.btn-white:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-outline-white {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.6);
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+}
+.btn-outline-white:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+.hero-content .badge {
+    display: inline-block;
+    margin-bottom: 2rem !important;
+}
+
+@media (max-width: 768px) {
+    .hero-title { font-size: 2.2rem; }
+}

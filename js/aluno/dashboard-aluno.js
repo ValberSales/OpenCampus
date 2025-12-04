@@ -1,18 +1,19 @@
-// ATENÇÃO AOS IMPORTS
-import { HeaderComponent } from '../components/Header.js';
-import { SidebarComponent } from '../components/Sidebar.js';
-import { ProfileCardComponent } from '../components/ProfileCard.js';
-import { ProjectCardComponent } from '../components/ProjectCard.js';
-import { CalendarComponent } from '../components/Calendar.js';
-import { FooterComponent } from '../components/Footer.js';
-import { PaginationComponent } from '../components/Pagination.js';
-import { ProjectModalComponent } from '../components/ProjectModal.js';
-import { FilterDrawerComponent } from '../components/FilterDrawer.js';
-import { MessageModalComponent } from '../components/MessageModal.js';
-import { CertificateDetailsModal } from '../components/CertificateModal.js';
-import { BadgeModalComponent } from '../components/BadgeModal.js';
-// IMPORTAÇÃO NOVA
-import { DatabaseService } from '../services/DatabaseService.js'; 
+// js/aluno/dashboard-aluno.js
+import { HeaderComponent } from '../components/shared/Header.js';
+import { SidebarComponent } from '../components/shared/Sidebar.js';
+import { FooterComponent } from '../components/shared/Footer.js';
+import { CalendarComponent } from '../components/shared/Calendar.js';
+import { PaginationComponent } from '../components/shared/Pagination.js';
+import { FilterDrawerComponent } from '../components/shared/FilterDrawer.js';
+
+import { ProfileCardComponent } from '../components/aluno/ProfileCard.js';
+import { ProjectCardComponent } from '../components/shared/ProjectCard.js';
+import { ProjectModalComponent } from '../components/aluno/ProjectModal.js';
+import { MessageModalComponent } from '../components/aluno/MessageModal.js';
+import { CertificateDetailsModal } from '../components/aluno/CertificateModal.js';
+import { BadgeModalComponent } from '../components/aluno/BadgeModal.js';
+
+import { DatabaseService } from '../services/DatabaseService.js';
 
 const state = {
     allProjects: [],      

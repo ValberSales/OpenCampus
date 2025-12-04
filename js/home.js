@@ -1,9 +1,9 @@
+// js/home.js
 import { DatabaseService } from './services/DatabaseService.js';
 import { PaginationComponent } from './components/shared/Pagination.js';
-import { ProjectCardComponent } from './components/aluno/ProjectCard.js';
-import { CommunityProjectModal, CommunitySubscribeForm, PartnershipFormModal } from './components/landing/CommunityModal.js';
+import { ProjectCardComponent } from './components/shared/ProjectCard.js'; 
 
-// Novos Componentes da Landing Page (Refatoração)
+import { CommunityProjectFlipModal, PartnershipFormModal } from './components/landing/CommunityModal.js';
 import { PublicHeader } from './components/landing/PublicHeader.js';
 import { HeroSection } from './components/landing/Hero.js';
 import { ImpactSection } from './components/landing/Impact.js';
@@ -231,32 +231,36 @@ function setupCardInteractions(container, projects) {
 
 function openCommunityDetails(project) {
     const overlay = document.getElementById('modal-overlay-container') || createOverlay();
-    overlay.innerHTML = CommunityProjectModal(project);
+    
+    // 1. Renderiza o Componente "Flip" (Frente e Verso já no HTML)
+    overlay.innerHTML = CommunityProjectFlipModal(project);
     overlay.classList.add('active');
 
-    // Botão Fechar X
-    const btnClose = document.getElementById('btn-modal-close');
-    if (btnClose) btnClose.addEventListener('click', () => overlay.classList.remove('active'));
-    
-    // Botão Solicitar Inscrição (dentro do modal de detalhes)
-    const btnSub = document.getElementById('btn-open-subscribe');
-    if(btnSub) {
-        btnSub.addEventListener('click', () => {
-            openSubscribeForm(project);
+    const flipContainer = document.getElementById('flip-card-container');
+
+    // 2. Configura botões de FECHAR (X) - Existem dois agora (frente e verso)
+    const closeButtons = overlay.querySelectorAll('.action-close-modal');
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', () => overlay.classList.remove('active'));
+    });
+
+    // 3. Configura botão "Solicitar Inscrição" (Gira para o verso)
+    const btnFlipToForm = document.getElementById('btn-flip-to-form');
+    if(btnFlipToForm) {
+        btnFlipToForm.addEventListener('click', () => {
+            flipContainer.classList.add('flipped');
         });
     }
-    
-    // Fecha ao clicar fora
-    overlay.onclick = (e) => { if (e.target === overlay) overlay.classList.remove('active'); };
-}
 
-function openSubscribeForm(project) {
-    const overlay = document.getElementById('modal-overlay-container');
-    overlay.innerHTML = CommunitySubscribeForm(project);
-    
-    document.getElementById('btn-close-sub-form').addEventListener('click', () => overlay.classList.remove('active'));
-    document.getElementById('btn-cancel-sub').addEventListener('click', () => overlay.classList.remove('active'));
+    // 4. Configura botão "Voltar" (Gira para a frente)
+    const btnFlipBack = document.getElementById('btn-flip-back');
+    if(btnFlipBack) {
+        btnFlipBack.addEventListener('click', () => {
+            flipContainer.classList.remove('flipped');
+        });
+    }
 
+    // 5. Configura o Submit do Formulário
     const form = document.getElementById('community-sub-form');
     if (form) {
         form.addEventListener('submit', (e) => {
@@ -276,6 +280,11 @@ function openSubscribeForm(project) {
             overlay.classList.remove('active');
         });
     }
+    
+    // Fecha ao clicar fora (no overlay escuro)
+    overlay.onclick = (e) => { 
+        if (e.target === overlay) overlay.classList.remove('active'); 
+    };
 }
 
 function setupPartnerModal() {

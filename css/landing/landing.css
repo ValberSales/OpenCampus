@@ -4,8 +4,10 @@
    1. PUBLIC HEADER (Componente: PublicHeader.js)
    ========================================= */
 .sticky-header {
-    position: sticky;
+    position: fixed; /* Mudado de sticky para fixed */
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -99,18 +101,36 @@
 
 .partners-grid {
     display: grid;
-    /* Responsivo: ajusta colunas automaticamente */
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    /* Ajustado minmax para 130px para caber em telas menores */
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 2rem;
     justify-content: center;
     max-width: 1000px;
     margin: 0 auto;
 }
 
-/* Em telas grandes, força 4 colunas para alinhar os cards */
-@media (min-width: 1024px) {
+/* Adicione este bloco específico para Mobile */
+@media (max-width: 600px) {
     .partners-grid {
-        grid-template-columns: repeat(4, 1fr);
+        /* Força 2 colunas em mobile e reduz o espaçamento */
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .partner-item {
+        /* Garante que o item seja flexível e não estoure */
+        flex-direction: column; 
+        text-align: center;
+        min-width: 0; /* Importante para o Grid não estourar */
+    }
+
+    .partner-item .font-bold.text-lg {
+        font-size: 1rem; /* Reduz levemente a fonte do número */
+    }
+    
+    .partner-item .text-xs {
+        font-size: 0.7rem; /* Ajuste fino no texto */
+        word-break: break-word; /* Evita corte de palavras longas */
     }
 }
 

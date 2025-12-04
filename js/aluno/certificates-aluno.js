@@ -1,11 +1,12 @@
-import { HeaderComponent } from '../components/Header.js';
-import { SidebarComponent } from '../components/Sidebar.js';
-import { ProfileCardComponent } from '../components/ProfileCard.js';
-import { FooterComponent } from '../components/Footer.js';
-import { CertificateCardComponent } from '../components/CertificateCard.js';
-import { CertificateFormModal, CertificateDetailsModal } from '../components/CertificateModal.js';
-import { BadgeModalComponent } from '../components/BadgeModal.js';
+// js/aluno/certificates-aluno.js
+import { HeaderComponent } from '../components/shared/Header.js';
+import { SidebarComponent } from '../components/shared/Sidebar.js';
+import { FooterComponent } from '../components/shared/Footer.js';
 
+import { ProfileCardComponent } from '../components/aluno/ProfileCard.js';
+import { CertificateCardComponent } from '../components/aluno/CertificateCard.js';
+import { CertificateFormModal, CertificateDetailsModal } from '../components/aluno/CertificateModal.js';
+import { BadgeModalComponent } from '../components/aluno/BadgeModal.js';
 let certificates = [];
 
 async function init() {

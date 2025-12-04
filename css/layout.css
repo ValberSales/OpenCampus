@@ -8,16 +8,17 @@ body {
 .main-container {
     max-width: 1440px;
     width: 100%;
-    margin: 0 auto; /* Centraliza na tela */
+    margin: 0 auto;
     padding: 2rem;
+    
+    /* ADICIONE ESTA LINHA ABAIXO: */
+    flex: 1; 
     
     display: grid;
     gap: 2rem;
-    /* Grid de 3 Colunas: Sidebar Esq (300px) | Feed (Flexível) | Sidebar Dir (300px) */
     grid-template-columns: 300px 1fr 300px;
     grid-template-areas: "sidebar-left feed sidebar-right";
 }
-
 /* Atribuição das Áreas */
 .left-col  { grid-area: sidebar-left; }
 .center-col { grid-area: feed; }

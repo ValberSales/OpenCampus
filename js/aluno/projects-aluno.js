@@ -1,13 +1,15 @@
-import { HeaderComponent } from '../components/Header.js';
-import { SidebarComponent } from '../components/Sidebar.js';
-import { ProfileCardComponent } from '../components/ProfileCard.js';
-import { FooterComponent } from '../components/Footer.js';
-import { MyProjectCardComponent } from '../components/MyProjectCard.js';
-import { ProjectModalComponent } from '../components/ProjectModal.js';
-import { MessageModalComponent } from '../components/MessageModal.js';
-import { BadgeModalComponent } from '../components/BadgeModal.js';
-import { CertificateDetailsModal } from '../components/CertificateModal.js';
-// IMPORTAÇÃO NOVA
+// js/aluno/projects-aluno.js
+import { HeaderComponent } from '../components/shared/Header.js';
+import { SidebarComponent } from '../components/shared/Sidebar.js';
+import { FooterComponent } from '../components/shared/Footer.js';
+
+import { ProfileCardComponent } from '../components/aluno/ProfileCard.js';
+import { MyProjectCardComponent } from '../components/aluno/MyProjectCard.js';
+import { ProjectModalComponent } from '../components/aluno/ProjectModal.js';
+import { MessageModalComponent } from '../components/aluno/MessageModal.js';
+import { BadgeModalComponent } from '../components/aluno/BadgeModal.js';
+import { CertificateDetailsModal } from '../components/aluno/CertificateModal.js';
+
 import { DatabaseService } from '../services/DatabaseService.js';
 
 const state = {

@@ -1,5 +1,3 @@
-// js/services/DatabaseService.js
-
 const DB_KEYS = {
     PROJECTS: 'opencampus_projects',
     USERS: 'opencampus_users',
@@ -25,7 +23,7 @@ export const DatabaseService = {
                 if (window.location.pathname.includes('/pages/')) {
                     path = '../../data/projects.json';
                 } 
-                // Fallback: se estiver só em /aluno/ (caso mova depois)
+                // Fallback
                 else if (window.location.pathname.includes('/aluno/')) {
                     path = '../data/projects.json';
                 }
@@ -43,7 +41,7 @@ export const DatabaseService = {
         }
     },
 
-    // ... (MANTENHA O RESTANTE DO ARQUIVO IGUAL: getAllProjects, getCurrentUser, etc.)
+    // --- PROJETOS ---
     getAllProjects() {
         const data = localStorage.getItem(DB_KEYS.PROJECTS);
         return data ? JSON.parse(data) : [];
@@ -53,6 +51,7 @@ export const DatabaseService = {
         return this.getAllProjects().find(p => p.id === id);
     },
 
+    // --- USUÁRIO ---
     getCurrentUser() {
         return JSON.parse(localStorage.getItem(DB_KEYS.CURRENT_USER));
     },
@@ -65,6 +64,7 @@ export const DatabaseService = {
         localStorage.removeItem(DB_KEYS.CURRENT_USER);
     },
 
+    // --- INSCRIÇÕES ALUNO ---
     getSubscriptions() {
         return JSON.parse(localStorage.getItem(DB_KEYS.SUBSCRIPTIONS)) || [];
     },
@@ -83,13 +83,19 @@ export const DatabaseService = {
     getCertificates() {
         return JSON.parse(localStorage.getItem(DB_KEYS.CERTIFICATES)) || [];
     },
+
+    saveCertificate(cert) {
+        const list = this.getCertificates();
+        list.unshift(cert);
+        localStorage.setItem(DB_KEYS.CERTIFICATES, JSON.stringify(list));
+        return true;
+    },
+
     // --- COMUNIDADE ---
-    
-    // Salva solicitação de inscrição individual
     saveCommunityApplication(application) {
         const apps = JSON.parse(localStorage.getItem(DB_KEYS.COMMUNITY_REQUESTS)) || [];
         application.id = Date.now();
-        application.status = 'pending'; // pending, approved, rejected
+        application.status = 'pending'; 
         application.date = new Date().toISOString();
         
         apps.push(application);
@@ -98,7 +104,6 @@ export const DatabaseService = {
         return true;
     },
 
-    // Salva solicitação de parceria institucional
     savePartnershipRequest(request) {
         const reqs = JSON.parse(localStorage.getItem(DB_KEYS.PARTNERSHIP_REQUESTS)) || [];
         request.id = Date.now();
