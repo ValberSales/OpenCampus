@@ -13,34 +13,35 @@ export const DatabaseService = {
     
     // --- INICIALIZAÇÃO (SEED) ---
     async init() {
-        // Verifica se já temos projetos no banco local
         if (!localStorage.getItem(DB_KEYS.PROJECTS)) {
             console.log('⚡ Inicializando banco de dados...');
             try {
-                // Tenta ajustar o caminho dependendo de onde o script é chamado
-                // Se estamos em /aluno/, o json está em ../data/
-                // Se estamos na raiz, está em ./data/
-                const path = window.location.pathname.includes('/aluno/') || window.location.pathname.includes('/professor/') 
-                    ? '../data/projects.json' 
-                    : './data/projects.json';
+                // DETECÇÃO DE CAMINHO AJUSTADA PARA A PASTA 'PAGES'
+                let path = './data/projects.json'; // Padrão (raiz)
+                
+                // Se estiver dentro de pages/aluno/ ou pages/professor/
+                if (window.location.pathname.includes('/pages/')) {
+                    path = '../../data/projects.json';
+                } 
+                // Fallback: se estiver só em /aluno/ (caso mova depois)
+                else if (window.location.pathname.includes('/aluno/')) {
+                    path = '../data/projects.json';
+                }
 
                 const response = await fetch(path);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
                 const projects = await response.json();
-                
-                // Salva no LocalStorage
                 localStorage.setItem(DB_KEYS.PROJECTS, JSON.stringify(projects));
-                console.log('✅ Banco de dados inicializado com sucesso.');
+                console.log('✅ Banco de dados inicializado.');
             } catch (error) {
                 console.error('Erro ao buscar JSON inicial:', error);
-                // Fallback para evitar quebrar a tela
                 localStorage.setItem(DB_KEYS.PROJECTS, JSON.stringify([]));
             }
         }
     },
 
-    // --- PROJETOS ---
+    // ... (MANTENHA O RESTANTE DO ARQUIVO IGUAL: getAllProjects, getCurrentUser, etc.)
     getAllProjects() {
         const data = localStorage.getItem(DB_KEYS.PROJECTS);
         return data ? JSON.parse(data) : [];
@@ -50,7 +51,6 @@ export const DatabaseService = {
         return this.getAllProjects().find(p => p.id === id);
     },
 
-    // --- USUÁRIO (CONTEXTO) ---
     getCurrentUser() {
         return JSON.parse(localStorage.getItem(DB_KEYS.CURRENT_USER));
     },
@@ -63,7 +63,6 @@ export const DatabaseService = {
         localStorage.removeItem(DB_KEYS.CURRENT_USER);
     },
 
-    // --- INSCRIÇÕES ---
     getSubscriptions() {
         return JSON.parse(localStorage.getItem(DB_KEYS.SUBSCRIPTIONS)) || [];
     },
@@ -79,7 +78,6 @@ export const DatabaseService = {
         return subs;
     },
     
-    // --- CERTIFICADOS ---
     getCertificates() {
         return JSON.parse(localStorage.getItem(DB_KEYS.CERTIFICATES)) || [];
     }

@@ -1,13 +1,23 @@
 export function HeaderComponent(activePage = 'dashboard') {
+    // Busca dados do usuário logado (ou usa fallback)
+    const user = JSON.parse(localStorage.getItem('opencampus_current_user')) || {
+        avatar: "https://ui-avatars.com/api/?name=V&background=random"
+    };
+
+    // Ajuste de caminho: Se estamos em /pages/aluno/, a raiz está 2 níveis acima.
+    // Se estivéssemos na raiz (improvável para este header), seria ./
+    const isInDeepFolder = window.location.pathname.includes('/pages/');
+    const rootPath = isInDeepFolder ? '../../' : './';
+
     return `
     <nav class="topbar flex justify-between align-center">
         <div class="flex align-center gap-2">
             <button class="menu-toggle btn-icon" id="btn-menu-toggle"><i class="ph ph-list"></i></button>
-            <a href="index.html" class="logo"><i class="ph ph-graduation-cap"></i> OpenCampus</a>
+            <a href="dashboard.html" class="logo"><i class="ph ph-graduation-cap"></i> OpenCampus</a>
         </div>
         
         <div class="nav-links nav-links-desktop">
-            <a href="index.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
+            <a href="dashboard.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
                 <i class="ph ph-squares-four"></i> Dashboard
             </a>
             <a href="meus-projetos.html" class="nav-item ${activePage === 'projects' ? 'active' : ''}">
@@ -26,9 +36,13 @@ export function HeaderComponent(activePage = 'dashboard') {
                 <i class="ph ph-moon" id="theme-icon-header"></i>
             </button>
             
-            <div class="avatar" style="width: 35px; height: 35px; border-radius: 50%; background: #ddd; overflow: hidden;">
-                <img src="https://ui-avatars.com/api/?name=Valber+Sales&background=6366f1&color=fff" alt="Perfil" style="width: 100%;">
+            <div class="avatar" style="width: 35px; height: 35px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border-color);">
+                <img src="${user.avatar}" alt="Perfil" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
+
+            <a href="${rootPath}index.html" class="btn-icon" title="Sair" style="color: var(--danger);">
+                <i class="ph ph-sign-out"></i>
+            </a>
         </div>
     </nav>`;
 }

@@ -1,4 +1,8 @@
 export function SidebarComponent(activePage = 'dashboard') {
+    // Mesma lógica de caminho do Header
+    const isInDeepFolder = window.location.pathname.includes('/pages/');
+    const rootPath = isInDeepFolder ? '../../' : './';
+
     return `
     <div class="overlay" id="overlay"></div>
     <div class="sidebar-mobile" id="sidebar">
@@ -8,7 +12,7 @@ export function SidebarComponent(activePage = 'dashboard') {
         </div>
         <ul class="flex-column gap-2">
             <li>
-                <a href="index.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
+                <a href="dashboard.html" class="nav-item ${activePage === 'dashboard' ? 'active' : ''}">
                     <i class="ph ph-squares-four"></i> Dashboard
                 </a>
             </li>
@@ -34,6 +38,11 @@ export function SidebarComponent(activePage = 'dashboard') {
                 <button id="sidebar-theme-btn" class="nav-item w-full" style="text-align: left; background: none; border: none; font-family: inherit; cursor: pointer;">
                     <i class="ph ph-moon" id="theme-icon-sidebar"></i> Alternar Tema
                 </button>
+            </li>
+            <li>
+                <a href="${rootPath}index.html" class="nav-item" style="color: var(--danger);">
+                    <i class="ph ph-sign-out"></i> Sair
+                </a>
             </li>
         </ul>
     </div>

@@ -1,3 +1,4 @@
+// ATENÇÃO AOS IMPORTS
 import { HeaderComponent } from '../components/Header.js';
 import { SidebarComponent } from '../components/Sidebar.js';
 import { ProfileCardComponent } from '../components/ProfileCard.js';
@@ -9,33 +10,26 @@ import { ProjectModalComponent } from '../components/ProjectModal.js';
 import { FilterDrawerComponent } from '../components/FilterDrawer.js';
 import { MessageModalComponent } from '../components/MessageModal.js';
 import { CertificateDetailsModal } from '../components/CertificateModal.js';
-import { BadgeModalComponent } from '../components/BadgeModal.js'; // Import único agora
+import { BadgeModalComponent } from '../components/BadgeModal.js';
+// IMPORTAÇÃO NOVA
+import { DatabaseService } from '../services/DatabaseService.js'; 
 
-// --- ESTADO DA APLICAÇÃO ---
 const state = {
     allProjects: [],      
     filteredProjects: [], 
     currentPage: 1,
     itemsPerPage: 4,
-    filters: {            
-        maxHours: 200,
-        startDate: null,
-        shifts: [],
-        tag: ""
-    }
+    filters: { maxHours: 200, startDate: null, shifts: [], tag: "" }
 };
 
-// --- INIT ---
 async function init() {
+    // 1. INICIA O SERVIÇO
+    await DatabaseService.init();
+
     renderStaticComponents();
     
-    try {
-        await fetchProjects();
-    } catch (error) {
-        console.error("Erro ao carregar projetos:", error);
-        document.getElementById('projects-container').innerHTML = 
-            `<p class="text-center text-secondary p-3">Erro ao carregar dados. Verifique se o Live Server está rodando.</p>`;
-    }
+    // 2. BUSCA DO SERVIÇO (SEM FETCH)
+    loadProjects();
     
     setupEventListeners();
     setupProfileEvents();
@@ -44,14 +38,11 @@ async function init() {
     loadTheme();
 }
 
-async function fetchProjects() {
-    const response = await fetch('./data/projects.json');
-    if (!response.ok) throw new Error('Falha na rede');
-    const data = await response.json();
-    
+function loadProjects() {
+    // USANDO O SERVIÇO
+    const data = DatabaseService.getAllProjects();
     state.allProjects = data;
     state.filteredProjects = data; 
-    
     renderFeed();
 }
 
