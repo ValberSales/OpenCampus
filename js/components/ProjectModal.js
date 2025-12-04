@@ -1,8 +1,8 @@
 export function ProjectModalComponent(project, isSubscribed = false) {
     // Lógica para Vagas
     let vacanciesHtml = '';
-    const totalSpots = project.vacancies.total;
-    const availableSpots = project.vacancies.available;
+    const totalSpots = project.vacancies.students.total;
+    const availableSpots = project.vacancies.students.available;
     const takenSpots = totalSpots - availableSpots;
 
     if (totalSpots <= 10) {

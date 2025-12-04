@@ -3,25 +3,25 @@ export function BadgeModalComponent(level) {
     const badges = {
         bronze: {
             title: "Nível Bronze",
-            image: "./data/images/bronze.webp",
+            image: "./../../data/images/bronze.webp",
             hours: 10,
             message: "Parabéns! Você deu o pontapé inicial e completou suas primeiras 10 horas de extensão. O caminho é longo, mas você já começou!"
         },
         silver: {
             title: "Nível Prata",
-            image: "./data/images/prata.webp",
+            image: "./../../data/images/prata.webp",
             hours: 50,
             message: "Muito bem! Você já acumulou 50 horas de atividades. Seu engajamento com a comunidade está fazendo a diferença."
         },
         gold: {
             title: "Nível Ouro",
-            image: "./data/images/ouro.webp", // Assumindo que é ouro.webp
+            image: "./../../data/images/ouro.webp", // Assumindo que é ouro.webp
             hours: 100,
             message: "Incrível! Você atingiu a marca de 100 horas. Você já é uma referência em extensão universitária."
         },
         platinum: {
             title: "Nível Platina",
-            image: "./data/images/platina.webp",
+            image: "./../../data/images/platina.webp",
             hours: 200,
             message: "Extraordinário! Você completou 200 horas.<br><br><strong>Parabéns! Você cumpriu integralmente a carga horária de extensão exigida para o seu curso.</strong>"
         }

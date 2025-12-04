@@ -1,68 +1,226 @@
 import { DatabaseService } from './services/DatabaseService.js';
 import { ProjectCardComponent } from './components/ProjectCard.js';
-import { CommunityProjectModal, CommunitySubscribeForm, PartnershipFormModal } from './components/CommunityModals.js';
+import { PaginationComponent } from './components/Pagination.js';
+// CORREÇÃO: Importação no SINGULAR (CommunityModal.js)
+import { CommunityProjectModal, CommunitySubscribeForm, PartnershipFormModal } from './components/CommunityModal.js';
+
+// Estado Local da Página
+const state = {
+    allProjects: [],
+    filteredProjects: [],
+    currentPage: 1,
+    itemsPerPage: 6, // Exibe 6 projetos por vez (Grid 3x2)
+    filters: {
+        search: "",
+        category: ""
+    }
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Inicializa o Banco de Dados
     await DatabaseService.init();
     
-    loadPublicShowcase();
+    // 2. Carrega dados iniciais e filtra para mostrar apenas os públicos
+    const rawProjects = DatabaseService.getAllProjects();
+    state.allProjects = rawProjects.filter(p => p.openToCommunity !== false);
+    state.filteredProjects = [...state.allProjects];
+
+    // 3. Inicializa Componentes da Tela
+    initFilters();      // Preenche o Select de Categorias
+    renderShowcase();   // Renderiza os Cards e a Paginação
+    
+    // 4. Configura Eventos Globais
     setupLoginModal();
-    setupPartnerModal(); // Novo
+    setupPartnerModal();
+    setupFilterEvents();
 });
 
-function loadPublicShowcase() {
-    const projects = DatabaseService.getAllProjects();
-    const container = document.getElementById('public-projects-container');
-    
-    // Filtra apenas projetos abertos à comunidade (opcional, ou mostra todos com flag)
-    const publicProjects = projects.filter(p => p.openToCommunity !== false);
+// =========================================
+// LÓGICA DE RENDERIZAÇÃO E PAGINAÇÃO
+// =========================================
 
-    if (publicProjects.length === 0) {
-        container.innerHTML = '<p class="text-secondary">Nenhum projeto disponível para a comunidade no momento.</p>';
+function renderShowcase() {
+    const container = document.getElementById('public-projects-container');
+    const paginationContainer = document.getElementById('pagination-wrapper');
+    
+    // Caso nenhum projeto seja encontrado
+    if (state.filteredProjects.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="ph ph-magnifying-glass" style="font-size: 2rem; color: var(--text-secondary); opacity: 0.5;"></i>
+                <p class="text-secondary mt-2">Nenhum projeto encontrado com esses termos.</p>
+                <button class="btn btn-outline mt-2" id="btn-reset-filters">Limpar Filtros</button>
+            </div>`;
+        paginationContainer.innerHTML = '';
+        
+        const btnReset = document.getElementById('btn-reset-filters');
+        if(btnReset) btnReset.addEventListener('click', resetFilters);
         return;
     }
 
-    container.innerHTML = publicProjects.map(p => ProjectCardComponent(p)).join('');
+    // Cálculo da Paginação
+    const totalPages = Math.ceil(state.filteredProjects.length / state.itemsPerPage);
+    const start = (state.currentPage - 1) * state.itemsPerPage;
+    const end = start + state.itemsPerPage;
+    const paginatedItems = state.filteredProjects.slice(start, end);
 
-    // Adiciona interatividade aos cards
+    // Renderiza os Cards
+    container.innerHTML = paginatedItems.map(p => ProjectCardComponent(p)).join('');
+    
+    // Renderiza os Controles de Paginação
+    paginationContainer.innerHTML = PaginationComponent(state.currentPage, totalPages);
+
+    // Reconecta os eventos (clicks) após renderizar o HTML novo
+    setupPaginationEvents(totalPages);
+    setupCardInteractions(container, paginatedItems);
+}
+
+function setupPaginationEvents(totalPages) {
+    const prevBtn = document.getElementById('btn-prev');
+    const nextBtn = document.getElementById('btn-next');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (state.currentPage > 1) {
+                state.currentPage--;
+                renderShowcase();
+                scrollToVitrine();
+            }
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (state.currentPage < totalPages) {
+                state.currentPage++;
+                renderShowcase();
+                scrollToVitrine();
+            }
+        });
+    }
+}
+
+function scrollToVitrine() {
+    const section = document.getElementById('vitrine-section');
+    if(section) section.scrollIntoView({ behavior: 'smooth' });
+}
+
+// =========================================
+// LÓGICA DE FILTROS E BUSCA
+// =========================================
+
+function initFilters() {
+    // Cria lista única de categorias baseada nos projetos carregados
+    const categories = new Set();
+    state.allProjects.forEach(p => {
+        p.tags.forEach(t => categories.add(t.label));
+    });
+
+    const select = document.getElementById('category-select');
+    const sortedCategories = Array.from(categories).sort();
+    
+    // Preenche o <select>
+    sortedCategories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+    });
+}
+
+function setupFilterEvents() {
+    const searchInput = document.getElementById('search-input');
+    const categorySelect = document.getElementById('category-select');
+
+    const handleFilter = () => {
+        state.filters.search = searchInput.value.toLowerCase();
+        state.filters.category = categorySelect.value;
+        state.currentPage = 1; // Volta para página 1 ao filtrar
+
+        applyFilters();
+    };
+
+    if(searchInput) searchInput.addEventListener('input', handleFilter);
+    if(categorySelect) categorySelect.addEventListener('change', handleFilter);
+}
+
+function applyFilters() {
+    state.filteredProjects = state.allProjects.filter(p => {
+        // Verifica se texto bate com Título, Descrição ou Nome do Professor
+        const matchesSearch = 
+            p.title.toLowerCase().includes(state.filters.search) ||
+            p.description.toLowerCase().includes(state.filters.search) ||
+            p.professor.name.toLowerCase().includes(state.filters.search);
+
+        // Verifica se categoria bate (ou se está vazio "Todas")
+        const matchesCategory = 
+            state.filters.category === "" || 
+            p.tags.some(t => t.label === state.filters.category);
+
+        return matchesSearch && matchesCategory;
+    });
+
+    renderShowcase();
+}
+
+function resetFilters() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('category-select').value = '';
+    state.filters.search = '';
+    state.filters.category = '';
+    state.currentPage = 1;
+    applyFilters();
+}
+
+// =========================================
+// INTERAÇÕES COM CARDS E MODAIS
+// =========================================
+
+function setupCardInteractions(container, projects) {
     const cards = container.querySelectorAll('.project-card');
     cards.forEach(card => {
         const projectId = parseInt(card.dataset.id);
-        const project = publicProjects.find(p => p.id === projectId);
+        const project = projects.find(p => p.id === projectId);
 
-        // Ajuste visual do botão para "Saiba Mais" em vez de detalhes restritos
+        // Ajuste visual do botão para contexto público
         const btn = card.querySelector('.btn-primary');
         if(btn) {
             btn.innerHTML = 'Saiba Mais';
-            btn.classList.add('btn-outline');
-            btn.classList.remove('btn-primary');
+            // Garante estilo primário para destaque
+            btn.classList.add('btn-primary'); 
         }
 
-        // Ao clicar, abre o Modal da Comunidade
+        // Clique no card abre modal da comunidade
         card.addEventListener('click', (e) => {
             e.preventDefault();
-            if(!e.target.closest('.btn-message')) { // Ignora botão msg se houver
+            // Evita abrir se clicar num botão que não deva disparar (ex: se houvesse outro link)
+            if(!e.target.closest('.no-modal')) {
                 openCommunityDetails(project);
             }
         });
     });
 }
 
-// --- MODAIS DA COMUNIDADE ---
+// --- Modais Específicos da Home ---
 
 function openCommunityDetails(project) {
     const overlay = document.getElementById('modal-overlay-container') || createOverlay();
     overlay.innerHTML = CommunityProjectModal(project);
     overlay.classList.add('active');
 
-    document.getElementById('btn-modal-close').addEventListener('click', () => overlay.classList.remove('active'));
+    // Botão Fechar X
+    const btnClose = document.getElementById('btn-modal-close');
+    if (btnClose) btnClose.addEventListener('click', () => overlay.classList.remove('active'));
     
+    // Botão Solicitar Inscrição
     const btnSub = document.getElementById('btn-open-subscribe');
     if(btnSub) {
         btnSub.addEventListener('click', () => {
             openSubscribeForm(project);
         });
     }
+    
+    // Fecha ao clicar fora
+    overlay.onclick = (e) => { if (e.target === overlay) overlay.classList.remove('active'); };
 }
 
 function openSubscribeForm(project) {
@@ -74,6 +232,7 @@ function openSubscribeForm(project) {
 
     document.getElementById('community-sub-form').addEventListener('submit', (e) => {
         e.preventDefault();
+        
         const app = {
             projectId: project.id,
             projectTitle: project.title,
@@ -90,7 +249,7 @@ function openSubscribeForm(project) {
 }
 
 function setupPartnerModal() {
-    const btnPartner = document.getElementById('btn-partner-request'); // Adicionaremos este ID no index.html
+    const btnPartner = document.getElementById('btn-partner-request');
     if(!btnPartner) return;
 
     btnPartner.addEventListener('click', () => {
@@ -116,25 +275,6 @@ function setupPartnerModal() {
     });
 }
 
-// Helper para criar overlay se não existir (o index.html não tinha o container genérico)
-function createOverlay() {
-    let overlay = document.getElementById('modal-overlay-container');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'modal-overlay-container';
-        overlay.className = 'modal-overlay';
-        document.body.appendChild(overlay);
-        
-        // Fecha ao clicar fora
-        overlay.addEventListener('click', (e) => {
-            if(e.target === overlay) overlay.classList.remove('active');
-        });
-    }
-    return overlay;
-}
-
-// ... Lógica de Login (setupLoginModal) mantém-se igual ...
-// Apenas copie a função setupLoginModal do código anterior para cá.
 function setupLoginModal() {
     const modalOverlay = document.getElementById('login-modal-overlay');
     const btnTrigger = document.getElementById('btn-login-trigger');
@@ -166,4 +306,18 @@ function setupLoginModal() {
             window.location.href = 'pages/aluno/dashboard.html';
         });
     }
+}
+
+function createOverlay() {
+    let overlay = document.getElementById('modal-overlay-container');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'modal-overlay-container';
+        overlay.className = 'modal-overlay';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', (e) => {
+            if(e.target === overlay) overlay.classList.remove('active');
+        });
+    }
+    return overlay;
 }
