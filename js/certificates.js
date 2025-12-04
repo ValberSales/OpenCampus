@@ -11,14 +11,14 @@ async function init() {
     document.getElementById('app-header').innerHTML = HeaderComponent('certificates');
     document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('certificates');
     
-    // Renderiza o profile inicial (vai ser atualizado depois de add certificado)
     renderProfile();
     document.getElementById('app-footer').innerHTML = FooterComponent();
 
     loadCertificates();
     setupEventListeners();
     setupPageEvents();
-    setupProfileEvents();
+    setupProfileEvents(); 
+    setupProfileCertClicks(); // <--- IMPORTANTE: Conecta o clique lateral
     loadTheme();
 }
 
@@ -28,7 +28,6 @@ function renderProfile() {
 
 function loadCertificates() {
     certificates = JSON.parse(localStorage.getItem('opencampus_certificates')) || [];
-    // Ordena do mais recente para o mais antigo
     certificates.sort((a, b) => b.id - a.id);
     renderList();
 }
@@ -43,13 +42,14 @@ function renderList() {
                 <button id="btn-empty-add" class="btn btn-outline">Enviar o primeiro</button>
             </div>
         `;
-        document.getElementById('btn-empty-add')?.addEventListener('click', openFormModal);
+        const btnEmpty = document.getElementById('btn-empty-add');
+        if(btnEmpty) btnEmpty.addEventListener('click', openFormModal);
         return;
     }
 
     container.innerHTML = certificates.map(c => CertificateCardComponent(c)).join('');
     
-    // Click para ver detalhes
+    // Click na lista principal
     document.querySelectorAll('.cert-card-full').forEach(card => {
         card.addEventListener('click', () => {
             const id = parseInt(card.dataset.id);
@@ -65,11 +65,9 @@ function openFormModal() {
     overlay.innerHTML = CertificateFormModal();
     requestAnimationFrame(() => overlay.classList.add('active'));
 
-    // Fechar
     document.getElementById('btn-close-form').addEventListener('click', closeModal);
     document.getElementById('btn-cancel-form').addEventListener('click', closeModal);
 
-    // Lógica do Checkbox de Data
     const checkSingle = document.getElementById('cert-single-day');
     const groupEnd = document.getElementById('end-date-group');
     checkSingle.addEventListener('change', (e) => {
@@ -82,7 +80,6 @@ function openFormModal() {
         }
     });
 
-    // Lógica de Upload de Imagem (Base64)
     const fileInput = document.getElementById('cert-file');
     const trigger = document.getElementById('upload-trigger');
     const preview = document.getElementById('cert-preview');
@@ -100,13 +97,10 @@ function openFormModal() {
                 preview.style.display = 'block';
                 trigger.style.display = 'none';
             };
-            // Tenta ler. Se for muito grande, o LocalStorage pode falhar depois, 
-            // mas para demo ok.
             reader.readAsDataURL(file);
         }
     });
 
-    // Submit
     document.getElementById('cert-form').addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -119,7 +113,7 @@ function openFormModal() {
             startDate: document.getElementById('cert-start').value,
             endDate: checkSingle.checked ? null : document.getElementById('cert-end').value,
             image: imageBase64,
-            status: 'approved' // Simulação de aprovação imediata
+            status: 'approved' 
         };
 
         saveCertificate(newCert);
@@ -130,13 +124,16 @@ function openFormModal() {
 
 function saveCertificate(cert) {
     try {
-        certificates.unshift(cert); // Adiciona no início
+        certificates.unshift(cert);
         localStorage.setItem('opencampus_certificates', JSON.stringify(certificates));
         
         alert("Certificado enviado e aprovado com sucesso!");
         closeModal();
-        loadCertificates(); // Atualiza a lista
-        renderProfile();    // Atualiza o card da esquerda (gráfico e lista)
+        loadCertificates(); 
+        renderProfile();    
+        // Re-conecta os eventos do perfil após renderizar novamente
+        setupProfileCertClicks();
+        setupProfileEvents();
     } catch (e) {
         alert("Erro ao salvar! A imagem pode ser muito grande para o navegador.");
         console.error(e);
@@ -149,9 +146,37 @@ function openDetailsModal(cert) {
     overlay.innerHTML = CertificateDetailsModal(cert);
     requestAnimationFrame(() => overlay.classList.add('active'));
 
-    document.getElementById('btn-modal-close').addEventListener('click', closeModal);
-    document.getElementById('btn-modal-close-action').addEventListener('click', closeModal);
+    const btnClose = document.getElementById('btn-modal-close');
+    const btnAction = document.getElementById('btn-modal-close-action');
+    
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    if(btnAction) btnAction.addEventListener('click', closeModal);
+    
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+}
+
+// --- EVENTOS ---
+function setupPageEvents() {
+    const btnAdd = document.getElementById('btn-add-cert');
+    if(btnAdd) btnAdd.addEventListener('click', openFormModal);
+}
+
+function setupProfileCertClicks() {
+    const certItems = document.querySelectorAll('.profile-card .cert-item');
+    
+    certItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = parseInt(item.dataset.id);
+            // Recarrega do storage para garantir dados frescos
+            const savedCerts = JSON.parse(localStorage.getItem('opencampus_certificates')) || [];
+            const cert = savedCerts.find(c => c.id === id);
+            
+            if (cert) {
+                openDetailsModal(cert);
+            }
+        });
+    });
 }
 
 function closeModal() {
@@ -160,11 +185,7 @@ function closeModal() {
     setTimeout(() => overlay.innerHTML = '', 300);
 }
 
-function setupPageEvents() {
-    document.getElementById('btn-add-cert').addEventListener('click', openFormModal);
-}
-
-// Utils (Menu/Theme) - Copiados dos outros arquivos
+// Utils (Menu/Theme)
 function setupEventListeners() {
     const btnMenu = document.getElementById('btn-menu-toggle');
     const overlay = document.getElementById('overlay');
@@ -215,8 +236,7 @@ function loadTheme() {
 }
 
 function updateThemeIcon(theme) {
-    const icon = document.getElementById('theme-icon');
-    if (icon) icon.className = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+    const iconClass = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
     const iconHeader = document.getElementById('theme-icon-header');
     if (iconHeader) iconHeader.className = iconClass;
     const iconSidebar = document.getElementById('theme-icon-sidebar');

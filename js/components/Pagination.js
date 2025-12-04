@@ -11,7 +11,7 @@ export function PaginationComponent(currentPage, totalPages) {
         </button>
         
         <span class="page-info">
-            Página <strong>${currentPage}</strong> de ${totalPages}
+            <strong>${currentPage}</strong> de ${totalPages}
         </span>
 
         <button type="button" id="btn-next" class="btn btn-outline" ${isLast ? 'disabled' : ''}>

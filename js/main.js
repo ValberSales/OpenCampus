@@ -8,6 +8,8 @@ import { PaginationComponent } from './components/Pagination.js';
 import { ProjectModalComponent } from './components/ProjectModal.js';
 import { FilterDrawerComponent } from './components/FilterDrawer.js';
 import { MessageModalComponent } from './components/MessageModal.js';
+// NOVO IMPORT: Necessário para abrir o modal ao clicar no perfil
+import { CertificateDetailsModal } from './components/CertificateModal.js';
 
 // --- ESTADO DA APLICAÇÃO ---
 const state = {
@@ -36,7 +38,8 @@ async function init() {
     }
     
     setupEventListeners();
-    setupProfileEvents();
+    setupProfileEvents();     // Expansão do perfil no mobile
+    setupProfileCertClicks(); // <--- NOVA CHAMADA: Cliques nos certificados do perfil
     loadTheme();
 }
 
@@ -53,7 +56,6 @@ async function fetchProjects() {
 
 // Renderiza estrutura fixa
 function renderStaticComponents() {
-    // Header e Sidebar recebem 'dashboard' para marcar o ícone ativo
     document.getElementById('app-header').innerHTML = HeaderComponent('dashboard');
     document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('dashboard');
     document.getElementById('profile-container').innerHTML = ProfileCardComponent();
@@ -88,16 +90,12 @@ function renderFeed() {
 // --- LÓGICA DE FILTRAGEM ---
 function applyFilters() {
     state.filteredProjects = state.allProjects.filter(project => {
-        // Horas
         if (project.hours > state.filters.maxHours) return false;
-        // Tags
         if (state.filters.tag && !project.tags.some(t => t.label === state.filters.tag)) return false;
-        // Turnos
         if (state.filters.shifts.length > 0) {
             const hasShift = project.shifts && project.shifts.some(s => state.filters.shifts.includes(s));
             if (!hasShift) return false;
         }
-        // Data
         if (state.filters.startDate) {
             const projDateParts = project.date.start.split('/'); 
             const projectDate = new Date(projDateParts[2], projDateParts[1] - 1, projDateParts[0]);
@@ -121,14 +119,12 @@ function setupModalEvents() {
             const projectId = parseInt(e.currentTarget.dataset.id);
             const project = state.allProjects.find(p => p.id === projectId);
 
-            // Se clicou no botão "Mensagem"
             if (e.target.closest('.btn-message')) {
                 e.stopPropagation(); 
                 if (project) openMessageModal(project);
                 return;
             }
 
-            // Caso contrário, abre Detalhes
             if (project) {
                 openProjectModal(project);
             }
@@ -137,7 +133,6 @@ function setupModalEvents() {
 }
 
 function openProjectModal(project) { 
-    // Checa inscrição no LocalStorage
     const subscriptions = JSON.parse(localStorage.getItem('opencampus_subscriptions')) || [];
     const isSubscribed = subscriptions.includes(project.id);
 
@@ -145,11 +140,9 @@ function openProjectModal(project) {
     overlay.innerHTML = ProjectModalComponent(project, isSubscribed);
     requestAnimationFrame(() => overlay.classList.add('active'));
     
-    // Eventos
     document.getElementById('btn-modal-close').addEventListener('click', closeModal);
     document.getElementById('btn-modal-cancel').addEventListener('click', closeModal);
 
-    // Botão Mensagem (dentro do modal)
     const btnMsg = document.getElementById('btn-modal-msg');
     if(btnMsg) {
         btnMsg.addEventListener('click', () => {
@@ -158,14 +151,13 @@ function openProjectModal(project) {
         });
     }
 
-    // Botão Inscrever
     const btnSub = document.getElementById('btn-confirm-sub');
     if(btnSub) {
         btnSub.addEventListener('click', () => {
             subscriptions.push(project.id);
             localStorage.setItem('opencampus_subscriptions', JSON.stringify(subscriptions));
             alert(`Parabéns! Você se inscreveu em "${project.title}".`);
-            openProjectModal(project); // Recarrega para atualizar botão
+            openProjectModal(project);
         });
     }
     
@@ -194,6 +186,40 @@ function openMessageModal(project) {
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
+// --- NOVO: Lógica para abrir modal de Certificado via ProfileCard ---
+function setupProfileCertClicks() {
+    const certItems = document.querySelectorAll('.profile-card .cert-item');
+    
+    certItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation(); // Impede toggle do card no mobile
+            
+            const id = parseInt(item.dataset.id);
+            const savedCerts = JSON.parse(localStorage.getItem('opencampus_certificates')) || [];
+            const cert = savedCerts.find(c => c.id === id);
+            
+            if (cert) {
+                openCertificateDetailsModal(cert);
+            }
+        });
+    });
+}
+
+function openCertificateDetailsModal(cert) {
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.innerHTML = CertificateDetailsModal(cert);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+
+    const btnClose = document.getElementById('btn-modal-close');
+    const btnAction = document.getElementById('btn-modal-close-action');
+    
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    if(btnAction) btnAction.addEventListener('click', closeModal);
+    
+    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+}
+
+// --- FUNÇÕES DE SUPORTE ---
 function saveMessageToStorage(project, text) {
     const storageKey = 'opencampus_conversations';
     let conversations = JSON.parse(localStorage.getItem(storageKey)) || [];
@@ -220,7 +246,6 @@ function closeModal() {
     setTimeout(() => overlay.innerHTML = '', 300);
 }
 
-// --- CONFIGURAÇÕES GERAIS ---
 function setupPaginationEvents(totalPages) {
     const prevBtn = document.getElementById('btn-prev');
     const nextBtn = document.getElementById('btn-next');
@@ -246,25 +271,21 @@ function setupPaginationEvents(totalPages) {
 }
 
 function setupEventListeners() {
-    // Menu Mobile
     const btnMenu = document.getElementById('btn-menu-toggle');
     const overlay = document.getElementById('overlay');
     if(btnMenu) btnMenu.addEventListener('click', toggleMenu);
     if(overlay) overlay.addEventListener('click', toggleMenu);
     document.getElementById('btn-close-sidebar').addEventListener('click', toggleMenu);
 
-    // Tema (Header Desktop)
     const btnThemeHeader = document.getElementById('header-theme-btn');
     if(btnThemeHeader) btnThemeHeader.addEventListener('click', toggleTheme);
 
-    // Tema (Sidebar Mobile)
     const btnThemeSidebar = document.getElementById('sidebar-theme-btn');
     if(btnThemeSidebar) btnThemeSidebar.addEventListener('click', () => {
         toggleTheme();
         toggleMenu(); 
     });
 
-    // Filtros
     const btnOpenFilter = document.querySelector('.btn-outline i.ph-funnel')?.parentElement;
     if (btnOpenFilter) {
         btnOpenFilter.addEventListener('click', (e) => {
@@ -310,7 +331,6 @@ function setupProfileEvents() {
     }
 }
 
-// Funções Auxiliares UI
 function openFilterDrawer() {
     document.getElementById('filter-drawer-id').classList.add('active');
     document.getElementById('filter-overlay').classList.add('active');

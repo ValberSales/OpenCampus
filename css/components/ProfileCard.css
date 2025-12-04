@@ -7,7 +7,7 @@
 
 /* Esconde o header mobile no desktop */
 .profile-mobile-header {
-    display: none; 
+    display: none;
 }
 
 /* Mantém os detalhes visíveis no desktop */
@@ -16,25 +16,116 @@
 }
 
 /* ... (Mantenha os estilos existentes de .profile-img, .circular-chart, etc...) ... */
-.profile-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 1rem; }
-.circular-chart { width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(var(--primary) 0% 75%, var(--border-color) 75% 100%); display: flex; align-items: center; justify-content: center; margin: 1.5rem auto; position: relative; }
-.circular-chart::before { content: ""; width: 120px; height: 120px; background-color: var(--bg-card); border-radius: 50%; position: absolute; }
-.chart-content { position: relative; z-index: 1; }
-.chart-percentage { font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1; }
-.badges-grid { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
-.badge-icon { width: 40px; height: 40px; border-radius: 50%; background-color: var(--bg-ground); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--warning); border: 1px solid var(--border-color); cursor: help; transition: var(--transition); }
-.cert-list { text-align: left; }
-.cert-item { padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; transition: var(--transition); background-color: var(--bg-ground); }
-.cert-icon { color: var(--success); font-size: 1.2rem; }
-.divider { height: 1px; background-color: var(--border-color); margin: 1.5rem 0; }
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+    margin-bottom: 1rem;
+}
+
+.circular-chart {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary) 0% 75%, var(--border-color) 75% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem auto;
+    position: relative;
+}
+
+.circular-chart::before {
+    content: "";
+    width: 120px;
+    height: 120px;
+    background-color: var(--bg-card);
+    border-radius: 50%;
+    position: absolute;
+}
+
+.chart-content {
+    position: relative;
+    z-index: 1;
+}
+
+.chart-percentage {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.badges-grid {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.badge-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--bg-ground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--warning);
+    border: 1px solid var(--border-color);
+    cursor: help;
+    transition: var(--transition);
+}
+
+.cert-list {
+    text-align: left;
+}
+
+.cert-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    /* <--- Mudança aqui */
+    transition: var(--transition);
+    background-color: var(--bg-ground);
+}
+
+.cert-item:hover {
+    border-color: var(--primary);
+    transform: translateX(5px);
+    background-color: var(--bg-card);
+    /* Destaque visual */
+}
+
+.cert-icon {
+    color: var(--success);
+    font-size: 1.2rem;
+}
+
+.divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 1.5rem 0;
+}
 
 
 /* --- RESPONSIVIDADE MOBILE (Nova Lógica) --- */
 @media (max-width: 1024px) {
     .profile-card {
         text-align: left;
-        cursor: pointer; /* Indica clique */
-        padding: 1rem; /* Menor padding no estado fechado */
+        cursor: pointer;
+        /* Indica clique */
+        padding: 1rem;
+        /* Menor padding no estado fechado */
     }
 
     /* HEADER MOBILE: Layout Flex Linha */
@@ -56,15 +147,27 @@
         justify-content: center;
         position: relative;
     }
+
     .mini-circular-chart::before {
-        content: ""; width: 32px; height: 32px; background-color: var(--bg-card); border-radius: 50%; position: absolute;
+        content: "";
+        width: 32px;
+        height: 32px;
+        background-color: var(--bg-card);
+        border-radius: 50%;
+        position: absolute;
     }
+
     .mini-chart-text {
-        position: relative; z-index: 1; font-size: 0.7rem; font-weight: 800; color: var(--text-main);
+        position: relative;
+        z-index: 1;
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: var(--text-main);
     }
 
     .profile-mobile-info {
-        flex: 1; /* Ocupa o meio */
+        flex: 1;
+        /* Ocupa o meio */
     }
 
     /* Ícone de Seta (Caret) */
@@ -80,7 +183,8 @@
         margin-top: 1.5rem;
         border-top: 1px dashed var(--border-color);
         padding-top: 1.5rem;
-        text-align: center; /* Volta ao centro quando expandido */
+        text-align: center;
+        /* Volta ao centro quando expandido */
         animation: slideDown 0.3s ease-out;
     }
 
@@ -95,6 +199,13 @@
 }
 
 @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

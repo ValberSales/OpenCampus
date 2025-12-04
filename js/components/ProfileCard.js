@@ -8,13 +8,12 @@ export function ProfileCardComponent() {
     const percentage = Math.min(Math.round((currentHours / totalHoursRequired) * 100), 100);
 
     // 3. Pega os últimos 2 certificados
-    // Ordena por data de criação (ID descrescente ou data)
-    const recentCerts = [...savedCerts].reverse().slice(0, 2);
+    const recentCerts = savedCerts.slice(0, 2);
 
     // 4. Gera HTML da lista mini
     const certsHtml = recentCerts.length > 0 
         ? recentCerts.map(cert => `
-            <div class="cert-item">
+            <div class="cert-item" data-id="${cert.id}">
                 <i class="ph ph-certificate cert-icon"></i>
                 <div style="flex: 1; overflow: hidden;">
                     <div class="font-bold text-sm" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${cert.title}</div>
@@ -24,8 +23,15 @@ export function ProfileCardComponent() {
           `).join('')
         : `<p class="text-secondary text-sm text-center p-3">Nenhum certificado enviado ainda.</p>`;
 
-    // 5. Calcula o Gradiente do Gráfico Dinamicamente
     const gradient = `conic-gradient(var(--primary) 0% ${percentage}%, var(--border-color) ${percentage}% 100%)`;
+
+    // --- CORES DOS RANKINGS ---
+    const rankColors = {
+        bronze: '#cd7f32',   // Bronze
+        silver: '#64748b',   // Prata (Slate Grey)
+        gold: '#eab308',     // Ouro (Yellow-500)
+        platinum: '#8b5cf6'  // Platina/Místico (Violet-500)
+    };
 
     return `
     <div class="card profile-card" id="profile-card-component">
@@ -34,10 +40,12 @@ export function ProfileCardComponent() {
             <div class="mini-circular-chart" style="background: ${gradient}">
                 <span class="mini-chart-text">${percentage}%</span>
             </div>
+            
             <div class="profile-mobile-info">
                 <div class="font-bold">Valber Sales</div>
                 <div class="text-xs text-secondary">${currentHours}h / ${totalHoursRequired}h</div>
             </div>
+
             <i class="ph ph-caret-down caret-icon"></i>
         </div>
 
@@ -53,18 +61,35 @@ export function ProfileCardComponent() {
                     <div class="chart-label">${currentHours}h / ${totalHoursRequired}h</div>
                 </div>
             </div>
-            <p class="text-sm font-bold mt-2 text-secondary uppercase">Minhas Conquistas</p>
+            <p class="text-sm font-bold mt-2 text-secondary uppercase">Meu Ranking</p>
 
             <div class="badges-grid mb-4">
-                <div class="badge-icon" title="Iniciante"><i class="ph ph-star"></i></div>
-                <div class="badge-icon" title="Extensionista 50h" style="${currentHours >= 50 ? 'color: var(--primary); border-color: var(--primary);' : 'opacity: 0.3'}"><i class="ph ph-medal"></i></div>
-                <div class="badge-icon" title="Extensionista 100h" style="${currentHours >= 100 ? 'color: var(--primary); border-color: var(--primary);' : 'opacity: 0.3'}"><i class="ph ph-trophy"></i></div>
-                <div class="badge-icon" title="Concluído" style="${currentHours >= 200 ? 'color: var(--primary); border-color: var(--primary);' : 'opacity: 0.3'}"><i class="ph ph-crown"></i></div>
+                
+                <div class="badge-icon" title="Bronze: 10H " 
+                     style="${currentHours >= 10 ? `color: ${rankColors.bronze}; border-color: ${rankColors.bronze}; background-color: #fff7ed;` : 'opacity: 0.3; color: gray'}">
+                    <i class="ph ph-star"></i>
+                </div>
+                
+                <div class="badge-icon" title="Prata: 50H" 
+                     style="${currentHours >= 50 ? `color: ${rankColors.silver}; border-color: ${rankColors.silver}; background-color: #f8fafc;` : 'opacity: 0.3; color: gray'}">
+                    <i class="ph ph-medal"></i>
+                </div>
+                
+                <div class="badge-icon" title="Ouro: 100H" 
+                     style="${currentHours >= 100 ? `color: ${rankColors.gold}; border-color: ${rankColors.gold}; background-color: #fefce8;` : 'opacity: 0.3; color: gray'}">
+                    <i class="ph ph-trophy"></i>
+                </div>
+                
+                <div class="badge-icon" title="Platina: 200H" 
+                     style="${currentHours >= 200 ? `color: ${rankColors.platinum}; border-color: ${rankColors.platinum}; background-color: #f5f3ff;` : 'opacity: 0.3; color: gray'}">
+                    <i class="ph ph-crown"></i>
+                </div>
+
             </div>
 
             <div class="divider"></div>
 
-            <h3 class="font-bold mb-3 text-sm text-secondary uppercase text-left">Últimos Enviados</h3>
+            <h3 class="font-bold mb-3 text-sm text-secondary uppercase text-left">Certificados Submetidos</h3>
             <div class="cert-list">
                 ${certsHtml}
             </div>
