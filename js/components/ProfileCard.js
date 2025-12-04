@@ -1,5 +1,5 @@
 export function ProfileCardComponent() {
-    // 1. Busca dados
+    // 1. Busca dados do LocalStorage
     const savedCerts = JSON.parse(localStorage.getItem('opencampus_certificates')) || [];
     
     // 2. Calcula Horas
@@ -7,8 +7,10 @@ export function ProfileCardComponent() {
     const currentHours = savedCerts.reduce((acc, curr) => acc + parseInt(curr.hours), 0);
     const percentage = Math.min(Math.round((currentHours / totalHoursRequired) * 100), 100);
 
-    // 3. Recentes
+    // 3. Pega os últimos 2 certificados
     const recentCerts = savedCerts.slice(0, 2);
+
+    // 4. Gera HTML da lista mini
     const certsHtml = recentCerts.length > 0 
         ? recentCerts.map(cert => `
             <div class="cert-item" data-id="${cert.id}">
@@ -23,23 +25,25 @@ export function ProfileCardComponent() {
 
     const gradient = `conic-gradient(var(--primary) 0% ${percentage}%, var(--border-color) ${percentage}% 100%)`;
 
-    // Cores
+    // --- CORES DOS RANKINGS ---
     const rankColors = {
-        bronze: '#cd7f32',
-        silver: '#64748b',
-        gold: '#eab308',
-        platinum: '#8b5cf6'
+        bronze: '#cd7f32',   // Bronze
+        silver: '#64748b',   // Prata (Slate Grey)
+        gold: '#eab308',     // Ouro (Yellow-500)
+        platinum: '#8b5cf6'  // Platina (Violet-500)
     };
 
     // Helper para gerar estilo do badge
     const getBadgeStyle = (hours, threshold, color) => {
         if (currentHours >= hours) {
+            // CONQUISTADO: Cor viva, fundo sutil, cursor clique
             return `color: ${color}; border-color: ${color}; background-color: var(--bg-ground); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05);`;
         }
-        return 'opacity: 0.3; cursor: not-allowed;';
+        // NÃO CONQUISTADO: Cinza, sem fundo, opacidade baixa
+        return `color: var(--text-secondary); border-color: var(--border-color); background-color: transparent; opacity: 0.4; cursor: not-allowed; filter: grayscale(100%);`;
     };
 
-    // Helper para classe de trigger (só adiciona se desbloqueado)
+    // Helper para classe de trigger
     const getTriggerClass = (hours) => currentHours >= hours ? 'trophy-trigger' : '';
 
     return `
@@ -49,10 +53,12 @@ export function ProfileCardComponent() {
             <div class="mini-circular-chart" style="background: ${gradient}">
                 <span class="mini-chart-text">${percentage}%</span>
             </div>
+            
             <div class="profile-mobile-info">
                 <div class="font-bold">Valber Sales</div>
                 <div class="text-xs text-secondary">${currentHours}h / ${totalHoursRequired}h</div>
             </div>
+
             <i class="ph ph-caret-down caret-icon"></i>
         </div>
 
