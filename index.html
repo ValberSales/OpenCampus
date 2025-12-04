@@ -9,105 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/home.css">
-    <link rel="stylesheet" href="css/components/Pagination.css"> 
+    <link rel="stylesheet" href="css/landing.css"> <link rel="stylesheet" href="css/components/Pagination.css">
 </head>
 <body>
+    <div id="app"></div>
 
-    <nav class="topbar flex justify-between align-center sticky-header">
-        <div class="flex align-center gap-2">
-            <a href="#" class="logo"><i class="ph ph-graduation-cap"></i> OpenCampus</a>
-        </div>
-        <div>
-            <button id="btn-login-trigger" class="btn btn-primary">
-                <i class="ph ph-user"></i> Sou Aluno / Professor
-            </button>
-        </div>
-    </nav>
-
-    <header class="hero-section">
-        <div class="hero-content text-center">
-            <span class="badge badge-tech" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4);">UTFPR Pato Branco</span>
-            <h1 class="hero-title">Conectando Saberes,<br>Transformando a Comunidade</h1>
-            <p class="hero-subtitle">
-                A plataforma oficial de extensão universitária. Descubra como nossos alunos e professores estão impactando escolas e instituições locais através da tecnologia e inovação.
-            </p>
-            <div class="flex justify-center gap-2 mt-4">
-                <button class="btn btn-white" onclick="document.getElementById('vitrine-section').scrollIntoView({behavior: 'smooth'})">
-                    Ver Projetos Ativos
-                </button>
-                <button id="btn-partner-request" class="btn btn-outline-white">
-                    Seja um Parceiro
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <section class="impact-strip">
-        <div class="main-container py-0">
-            <p class="text-center text-sm font-bold uppercase mb-4" style="opacity: 0.7;">Impacto na Região Sudoeste</p>
-            
-            <div class="partners-grid">
-                <div class="partner-item">
-                    <i class="ph ph-chalkboard-teacher partner-icon"></i>
-                    <div>
-                        <div class="font-bold text-lg">12</div>
-                        <div class="text-xs">Escolas Estaduais</div>
-                    </div>
-                </div>
-                <div class="partner-item">
-                    <i class="ph ph-buildings partner-icon"></i>
-                    <div>
-                        <div class="font-bold text-lg">08</div>
-                        <div class="text-xs">Instituições Sociais</div>
-                    </div>
-                </div>
-                <div class="partner-item">
-                    <i class="ph ph-users-three partner-icon"></i>
-                    <div>
-                        <div class="font-bold text-lg">+1.500</div>
-                        <div class="text-xs">Pessoas Impactadas</div>
-                    </div>
-                </div>
-                <div class="partner-item">
-                    <i class="ph ph-student partner-icon"></i>
-                    <div>
-                        <div class="font-bold text-lg">200</div>
-                        <div class="text-xs">Alunos Extensionistas</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <main class="home-container" id="vitrine-section">
-        <div class="mb-4">
-            <h2 class="font-bold mb-1" style="font-size: 1.8rem; color: var(--text-main);">Projetos em Destaque</h2>
-            <p class="text-secondary mb-4">Conheça as iniciativas que estão fazendo a diferença agora.</p>
-            
-            <div class="controls-bar card p-3 flex gap-2 align-center wrap-mobile">
-                <div class="input-wrapper flex-1">
-                    <i class="ph ph-magnifying-glass input-icon"></i>
-                    <input type="text" id="search-input" class="form-input pl-5" placeholder="Buscar por nome, professor ou área...">
-                </div>
-                <div class="select-wrapper" style="min-width: 200px;">
-                    <select id="category-select" class="form-select">
-                        <option value="">Todas as Categorias</option>
-                        </select>
-                </div>
-            </div>
-        </div>
-        
-        <div id="public-projects-container" class="project-list showcase-grid">
-            <div class="card p-3 text-center w-full">
-                <div class="spinner"></div>
-                <p class="text-secondary mt-2">Carregando vitrine...</p>
-            </div>
-        </div>
-
-        <div id="pagination-wrapper" class="mt-4"></div>
-    </main>
-
+    <div id="modal-overlay-container" class="modal-overlay"></div>
+    
     <div id="login-modal-overlay" class="modal-overlay">
         <div class="modal-content" style="max-width: 400px;">
             <button class="btn-close-modal" id="btn-close-login"><i class="ph ph-x"></i></button>
@@ -117,51 +25,24 @@
                         <i class="ph ph-user-circle" style="font-size: 2rem; color: var(--primary);"></i>
                     </div>
                     <h3 class="font-bold text-lg mt-2">Área Restrita</h3>
-                    <p class="text-secondary text-sm">Acesso para comunidade acadêmica</p>
                 </div>
-
                 <form id="login-form" class="text-left">
                     <div class="form-group mb-3">
                         <label class="filter-label">Seu Nome Completo</label>
                         <input type="text" id="username" class="form-input" placeholder="Ex: Valber Sales" required>
                     </div>
-                    
                     <div class="form-group mb-4">
                         <label class="filter-label">Vínculo</label>
                         <select id="usercourse" class="form-select">
                             <option value="Análise e Des. de Sistemas">Aluno - ADS</option>
-                            <option value="Engenharia de Software">Aluno - Eng. Software</option>
-                            <option value="Professor">Professor / Coordenador</option>
+                            <option value="Professor">Professor</option>
                         </select>
                     </div>
-
-                    <button type="submit" class="btn btn-primary w-full justify-center py-3">
-                        Acessar Painel <i class="ph ph-arrow-right"></i>
-                    </button>
+                    <button type="submit" class="btn btn-primary w-full justify-center py-3">Acessar Painel</button>
                 </form>
             </div>
         </div>
     </div>
-
-    <footer class="home-footer">
-        <div class="main-container footer-centered">
-            
-            <div class="footer-brand">
-                <h4 class="font-bold text-lg flex align-center justify-center gap-2" style="color: var(--primary);">
-                    <i class="ph ph-graduation-cap"></i> OpenCampus
-                </h4>
-                <p class="text-secondary text-sm">Plataforma de gestão extensionista integrada.</p>
-            </div>
-
-            <div class="footer-institution">
-                <img src="https://www.utfpr.edu.br/icones/cabecalho/logo-utfpr/@@images/image-1024-b81cb1614d9ff77734c703bafc92519e.png" alt="Logo UTFPR" title="Universidade Tecnológica Federal do Paraná">
-                <div class="separator"></div>
-                <span class="text-xs text-secondary">Campus Pato Branco &copy; 2025</span>
-            </div>
-
-        </div>
-    </footer>
-    <div id="modal-overlay-container" class="modal-overlay"></div>
 
     <script type="module" src="js/home.js"></script>
 </body>

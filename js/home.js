@@ -1,8 +1,14 @@
 import { DatabaseService } from './services/DatabaseService.js';
-import { ProjectCardComponent } from './components/ProjectCard.js';
-import { PaginationComponent } from './components/Pagination.js';
-// CORREÇÃO: Importação no SINGULAR (CommunityModal.js)
-import { CommunityProjectModal, CommunitySubscribeForm, PartnershipFormModal } from './components/CommunityModal.js';
+import { PaginationComponent } from './components/shared/Pagination.js';
+import { ProjectCardComponent } from './components/aluno/ProjectCard.js';
+import { CommunityProjectModal, CommunitySubscribeForm, PartnershipFormModal } from './components/landing/CommunityModal.js';
+
+// Novos Componentes da Landing Page (Refatoração)
+import { PublicHeader } from './components/landing/PublicHeader.js';
+import { HeroSection } from './components/landing/Hero.js';
+import { ImpactSection } from './components/landing/Impact.js';
+import { ShowcaseSection } from './components/landing/Showcase.js';
+import { PublicFooter } from './components/landing/PublicFooter.js';
 
 // Estado Local da Página
 const state = {
@@ -17,19 +23,31 @@ const state = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Inicializa o Banco de Dados
+    // 1. Renderiza a Estrutura Estática da Página (Montagem dos Componentes)
+    const app = document.getElementById('app');
+    if (app) {
+        app.innerHTML = `
+            ${PublicHeader()}
+            ${HeroSection()}
+            ${ImpactSection()}
+            ${ShowcaseSection()}
+            ${PublicFooter()}
+        `;
+    }
+
+    // 2. Inicializa o Banco de Dados
     await DatabaseService.init();
     
-    // 2. Carrega dados iniciais e filtra para mostrar apenas os públicos
+    // 3. Carrega dados e filtra apenas os públicos
     const rawProjects = DatabaseService.getAllProjects();
     state.allProjects = rawProjects.filter(p => p.openToCommunity !== false);
     state.filteredProjects = [...state.allProjects];
 
-    // 3. Inicializa Componentes da Tela
+    // 4. Inicializa Lógicas da Vitrine
     initFilters();      // Preenche o Select de Categorias
-    renderShowcase();   // Renderiza os Cards e a Paginação
+    renderShowcase();   // Renderiza os Cards e a Paginação no container criado pelo ShowcaseSection
     
-    // 4. Configura Eventos Globais
+    // 5. Configura Eventos Globais (Modais e Filtros)
     setupLoginModal();
     setupPartnerModal();
     setupFilterEvents();
@@ -43,6 +61,9 @@ function renderShowcase() {
     const container = document.getElementById('public-projects-container');
     const paginationContainer = document.getElementById('pagination-wrapper');
     
+    // Proteção caso o componente ShowcaseSection não tenha sido renderizado ainda
+    if (!container || !paginationContainer) return;
+
     // Caso nenhum projeto seja encontrado
     if (state.filteredProjects.length === 0) {
         container.innerHTML = `
@@ -70,7 +91,7 @@ function renderShowcase() {
     // Renderiza os Controles de Paginação
     paginationContainer.innerHTML = PaginationComponent(state.currentPage, totalPages);
 
-    // Reconecta os eventos (clicks) após renderizar o HTML novo
+    // Reconecta os eventos após renderizar o HTML novo
     setupPaginationEvents(totalPages);
     setupCardInteractions(container, paginatedItems);
 }
@@ -116,6 +137,8 @@ function initFilters() {
     });
 
     const select = document.getElementById('category-select');
+    if (!select) return;
+
     const sortedCategories = Array.from(categories).sort();
     
     // Preenche o <select>
@@ -163,8 +186,12 @@ function applyFilters() {
 }
 
 function resetFilters() {
-    document.getElementById('search-input').value = '';
-    document.getElementById('category-select').value = '';
+    const searchInput = document.getElementById('search-input');
+    const categorySelect = document.getElementById('category-select');
+    
+    if(searchInput) searchInput.value = '';
+    if(categorySelect) categorySelect.value = '';
+    
     state.filters.search = '';
     state.filters.category = '';
     state.currentPage = 1;
@@ -211,7 +238,7 @@ function openCommunityDetails(project) {
     const btnClose = document.getElementById('btn-modal-close');
     if (btnClose) btnClose.addEventListener('click', () => overlay.classList.remove('active'));
     
-    // Botão Solicitar Inscrição
+    // Botão Solicitar Inscrição (dentro do modal de detalhes)
     const btnSub = document.getElementById('btn-open-subscribe');
     if(btnSub) {
         btnSub.addEventListener('click', () => {
@@ -230,25 +257,30 @@ function openSubscribeForm(project) {
     document.getElementById('btn-close-sub-form').addEventListener('click', () => overlay.classList.remove('active'));
     document.getElementById('btn-cancel-sub').addEventListener('click', () => overlay.classList.remove('active'));
 
-    document.getElementById('community-sub-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const app = {
-            projectId: project.id,
-            projectTitle: project.title,
-            name: document.getElementById('comm-name').value,
-            phone: document.getElementById('comm-phone').value,
-            email: document.getElementById('comm-email').value,
-            reason: document.getElementById('comm-reason').value
-        };
+    const form = document.getElementById('community-sub-form');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const app = {
+                projectId: project.id,
+                projectTitle: project.title,
+                name: document.getElementById('comm-name').value,
+                phone: document.getElementById('comm-phone').value,
+                email: document.getElementById('comm-email').value,
+                reason: document.getElementById('comm-reason').value
+            };
 
-        DatabaseService.saveCommunityApplication(app);
-        alert(`Inscrição solicitada com sucesso para ${project.title}! Entraremos em contato.`);
-        overlay.classList.remove('active');
-    });
+            DatabaseService.saveCommunityApplication(app);
+            alert(`Inscrição solicitada com sucesso para ${project.title}! Entraremos em contato.`);
+            overlay.classList.remove('active');
+        });
+    }
 }
 
 function setupPartnerModal() {
+    // O botão pode não existir se o componente Hero não estiver renderizado ainda,
+    // mas como chamamos isso no DOMContentLoaded após o innerHTML do app, deve funcionar.
     const btnPartner = document.getElementById('btn-partner-request');
     if(!btnPartner) return;
 
@@ -281,15 +313,20 @@ function setupLoginModal() {
     const btnClose = document.getElementById('btn-close-login');
     const loginForm = document.getElementById('login-form');
 
+    // Botão do Header Público
     if(btnTrigger) btnTrigger.addEventListener('click', () => modalOverlay.classList.add('active'));
+    
+    // Botão Fechar Modal
     if(btnClose) btnClose.addEventListener('click', () => modalOverlay.classList.remove('active'));
     
+    // Fechar ao clicar fora
     if(modalOverlay) {
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) modalOverlay.classList.remove('active');
         });
     }
 
+    // Submit do Login
     if(loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -308,6 +345,7 @@ function setupLoginModal() {
     }
 }
 
+// Função auxiliar para criar o container de modais caso ele não exista no HTML base
 function createOverlay() {
     let overlay = document.getElementById('modal-overlay-container');
     if (!overlay) {

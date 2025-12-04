@@ -1,0 +1,318 @@
+/* css/landing.css */
+
+/* =========================================
+   1. PUBLIC HEADER (Componente: PublicHeader.js)
+   ========================================= */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+/* =========================================
+   2. HERO SECTION (Componente: Hero.js)
+   ========================================= */
+.hero-section {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    color: white;
+    padding: 6rem 2rem 5rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Efeito de fundo sutil */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(circle at 20% 150%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    opacity: 0.95;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+/* Botões específicos do Hero */
+.btn-white {
+    background: white;
+    color: var(--primary);
+    border: 1px solid white;
+    font-weight: 700;
+    padding: 0.8rem 1.5rem;
+}
+.btn-white:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-outline-white {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.6);
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+}
+.btn-outline-white:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+/* =========================================
+   3. IMPACT SECTION (Componente: Impact.js)
+   ========================================= */
+.impact-strip {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 2.5rem 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    position: relative;
+    margin-top: -2rem; /* Sobe um pouco para sobrepor o Hero */
+    z-index: 3;
+    border-radius: 24px 24px 0 0;
+}
+
+.partners-grid {
+    display: grid;
+    /* Responsivo: ajusta colunas automaticamente */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 2rem;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Em telas grandes, força 4 colunas para alinhar os cards */
+@media (min-width: 1024px) {
+    .partners-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.partner-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    padding: 0.5rem;
+    text-align: left;
+    transition: transform 0.2s;
+}
+
+.partner-item:hover {
+    transform: translateY(-2px);
+}
+
+.partner-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    opacity: 0.8;
+}
+
+/* =========================================
+   4. SHOWCASE SECTION (Componente: Showcase.js)
+   ========================================= */
+.home-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+/* Barra de Filtros */
+.controls-bar {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    pointer-events: none;
+}
+
+/* Ajuste no input para dar espaço ao ícone */
+.form-input.pl-5 {
+    padding-left: 2.8rem;
+    border-color: transparent;
+    background: var(--bg-ground);
+}
+.form-input.pl-5:focus {
+    background: var(--bg-card);
+    border-color: var(--primary);
+}
+
+/* GRID DA VITRINE */
+.showcase-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* --- OVERRIDES DO CARD NA VITRINE --- */
+/* Estes estilos alteram o ProjectCard padrão para ficar vertical na Home */
+
+.showcase-grid .project-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: var(--bg-card);
+}
+
+.showcase-grid .project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px -10px rgba(0,0,0,0.15);
+    border-color: var(--primary);
+}
+
+/* Imagem Full Width no topo */
+.showcase-grid .project-img-container {
+    width: 100%;
+    height: 200px;
+    border-radius: 0;
+    flex-shrink: 0;
+}
+
+/* Conteúdo interno */
+.showcase-grid .project-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.showcase-grid .project-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.showcase-grid .project-tags {
+    margin-bottom: 1rem;
+}
+
+/* Rodapé do Card (Botão) */
+.showcase-grid .project-actions {
+    padding: 1rem 1.5rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-ground);
+    flex-direction: row;
+    margin-top: auto;
+}
+
+.showcase-grid .project-actions button {
+    width: 100%;
+}
+
+/* Esconde o botão de mensagem na vitrine pública */
+.showcase-grid .btn-message {
+    display: none !important;
+}
+
+/* =========================================
+   5. PUBLIC FOOTER (Componente: PublicFooter.js)
+   ========================================= */
+.home-footer {
+    background: var(--bg-card);
+    padding: 4rem 0 3rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 6rem;
+    text-align: center;
+}
+
+.footer-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.footer-brand h4 {
+    margin-bottom: 0.5rem;
+}
+
+.footer-institution {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--border-color);
+    width: 100%;
+}
+
+.footer-institution img {
+    height: 36px;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: 0.3s;
+}
+.footer-institution img:hover {
+    filter: none;
+    opacity: 1;
+}
+
+.footer-institution .separator {
+    width: 1px;
+    height: 24px;
+    background-color: var(--border-color);
+}
+
+/* =========================================
+   RESPONSIVIDADE GERAL
+   ========================================= */
+@media (max-width: 768px) {
+    .hero-title { font-size: 2.2rem; }
+    .home-container { padding: 2rem 1rem; }
+    
+    .partners-grid { gap: 1rem; }
+    .partner-item { flex-direction: column; text-align: center; }
+    
+    .wrap-mobile { flex-direction: column; }
+    .input-wrapper, .select-wrapper { width: 100%; }
+    
+    .footer-institution { flex-direction: column; gap: 1rem; }
+    .footer-institution .separator { display: none; }
+}
