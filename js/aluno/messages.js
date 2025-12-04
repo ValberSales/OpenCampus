@@ -1,10 +1,10 @@
-import { HeaderComponent } from './components/Header.js';
-import { SidebarComponent } from './components/Sidebar.js';
-import { ProfileCardComponent } from './components/ProfileCard.js';
-import { FooterComponent } from './components/Footer.js';
-import { ConversationCardComponent } from './components/ConversationCard.js';
-import { ChatModalComponent, ChatBubbleComponent } from './components/ChatModal.js';
-import { BadgeModalComponent } from './components/BadgeModal.js';
+import { HeaderComponent } from '../components/Header.js';
+import { SidebarComponent } from '../components/Sidebar.js';
+import { ProfileCardComponent } from '../components/ProfileCard.js';
+import { FooterComponent } from '../components/Footer.js';
+import { ConversationCardComponent } from '../components/ConversationCard.js';
+import { ChatModalComponent, ChatBubbleComponent } from '../components/ChatModal.js';
+import { BadgeModalComponent } from '../components/BadgeModal.js';
 
 let conversations = [];
 let currentChatId = null;

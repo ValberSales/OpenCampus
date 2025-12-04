@@ -1,10 +1,10 @@
-import { HeaderComponent } from './components/Header.js';
-import { SidebarComponent } from './components/Sidebar.js';
-import { ProfileCardComponent } from './components/ProfileCard.js';
-import { FooterComponent } from './components/Footer.js';
-import { CertificateCardComponent } from './components/CertificateCard.js';
-import { CertificateFormModal, CertificateDetailsModal } from './components/CertificateModal.js';
-import { BadgeModalComponent } from './components/BadgeModal.js';
+import { HeaderComponent } from '../components/Header.js';
+import { SidebarComponent } from '../components/Sidebar.js';
+import { ProfileCardComponent } from '../components/ProfileCard.js';
+import { FooterComponent } from '../components/Footer.js';
+import { CertificateCardComponent } from '../components/CertificateCard.js';
+import { CertificateFormModal, CertificateDetailsModal } from '../components/CertificateModal.js';
+import { BadgeModalComponent } from '../components/BadgeModal.js';
 
 let certificates = [];
 

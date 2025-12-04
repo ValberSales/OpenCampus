@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenCampus - Dashboard</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div id="modal-overlay-container" class="modal-overlay"></div>
+
+    <div id="filter-overlay" class="filter-drawer-overlay"></div>
+    <aside id="filter-drawer-id" class="filter-drawer">
+        <div id="filter-drawer-container" style="height: 100%;"></div> 
+    </aside>
+    <div id="modal-overlay-container" class="modal-overlay"></div>
+
+    <div id="app-sidebar-mobile"></div>
+
+    <div id="app-sidebar-mobile"></div>
+    <div id="app-header"></div>
+
+    <main class="main-container">
+        
+        <aside class="left-col" id="profile-container"></aside>
+
+        <section class="center-col">
+            <div class="flex justify-between align-center mb-4">
+                <h2 class="font-bold" style="font-size: 1.5rem;">Projetos Recomendados</h2>
+                <button class="btn btn-outline text-sm"><i class="ph ph-funnel"></i> Filtros</button>
+            </div>
+            <div id="projects-container" class="project-list"></div>
+        </section>
+
+        <aside class="right-col" id="calendar-container"></aside>
+
+    </main>
+
+    <div id="app-footer"></div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

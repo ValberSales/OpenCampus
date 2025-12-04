@@ -1,15 +1,15 @@
-import { HeaderComponent } from './components/Header.js';
-import { SidebarComponent } from './components/Sidebar.js';
-import { ProfileCardComponent } from './components/ProfileCard.js';
-import { ProjectCardComponent } from './components/ProjectCard.js';
-import { CalendarComponent } from './components/Calendar.js';
-import { FooterComponent } from './components/Footer.js';
-import { PaginationComponent } from './components/Pagination.js';
-import { ProjectModalComponent } from './components/ProjectModal.js';
-import { FilterDrawerComponent } from './components/FilterDrawer.js';
-import { MessageModalComponent } from './components/MessageModal.js';
-import { CertificateDetailsModal } from './components/CertificateModal.js';
-import { BadgeModalComponent } from './components/BadgeModal.js'; // Import único agora
+import { HeaderComponent } from '../components/Header.js';
+import { SidebarComponent } from '../components/Sidebar.js';
+import { ProfileCardComponent } from '../components/ProfileCard.js';
+import { ProjectCardComponent } from '../components/ProjectCard.js';
+import { CalendarComponent } from '../components/Calendar.js';
+import { FooterComponent } from '../components/Footer.js';
+import { PaginationComponent } from '../components/Pagination.js';
+import { ProjectModalComponent } from '../components/ProjectModal.js';
+import { FilterDrawerComponent } from '../components/FilterDrawer.js';
+import { MessageModalComponent } from '../components/MessageModal.js';
+import { CertificateDetailsModal } from '../components/CertificateModal.js';
+import { BadgeModalComponent } from '../components/BadgeModal.js'; // Import único agora
 
 // --- ESTADO DA APLICAÇÃO ---
 const state = {
