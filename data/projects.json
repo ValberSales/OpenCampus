@@ -3,7 +3,7 @@
         "id": 1,
         "title": "Inclusão Digital para Idosos",
         "image": "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=600&q=80",
-        "description": "Projeto focado em ensinar o básico de smartphones e computadores para a terceira idade. Os alunos aprenderão a usar WhatsApp, redes sociais, aplicativos de banco e segurança na internet.",
+        "description": "Projeto focado em ensinar o básico de smartphones e computadores para a terceira idade. Os alunos atuarão como tutores, ensinando o uso de WhatsApp, redes sociais, aplicativos de banco e segurança na internet.",
         "tags": [{ "label": "Tecnologia", "class": "badge-tech" }, { "label": "Social", "class": "badge-env" }],
         "professor": {
             "name": "Dra. Ana Souza",
@@ -14,14 +14,18 @@
         "location": "Lab de Informática 02 - Bloco C",
         "hours": 40,
         "shifts": ["Vespertino"],
-        "vacancies": { "total": 10, "available": 3 }
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 10, "available": 2 },
+            "community": { "total": 20, "available": 5 }
+        }
     },
     {
         "id": 2,
         "title": "Robótica nas Escolas",
         "image": "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?auto=format&fit=crop&w=600&q=80",
-        "description": "Oficinas semanais de robótica e lógica de programação com Arduino em escolas municipais.",
-        "tags": [{ "label": "Educação", "class": "badge-tech" }],
+        "description": "Oficinas semanais de robótica e lógica de programação com Arduino aplicadas em escolas municipais da região. Exclusivo para alunos da engenharia e computação atuarem como instrutores.",
+        "tags": [{ "label": "Educação", "class": "badge-tech" }, { "label": "Engenharia", "class": "badge-tech" }],
         "professor": {
             "name": "Prof. Carlos Mendez",
             "email": "carlos.m@utfpr.edu.br",
@@ -31,13 +35,17 @@
         "location": "Escola Municipal Vida Nova",
         "hours": 60,
         "shifts": ["Matutino"],
-        "vacancies": { "total": 5, "available": 1 }
+        "openToCommunity": false,
+        "vacancies": {
+            "students": { "total": 8, "available": 1 },
+            "community": { "total": 0, "available": 0 }
+        }
     },
     {
         "id": 3,
         "title": "Workshop: UX Design",
         "image": "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=600&q=80",
-        "description": "Um dia de imersão em User Experience. Aprenda a criar protótipos de alta fidelidade no Figma.",
+        "description": "Um dia de imersão em User Experience aberto a todos. Aprenda os princípios de design centrado no usuário e crie protótipos de alta fidelidade no Figma.",
         "tags": [{ "label": "Design", "class": "badge-art" }, { "label": "Evento", "class": "badge-tech" }],
         "professor": {
             "name": "Prof. Juliana Paes",
@@ -48,13 +56,17 @@
         "location": "Auditório Principal",
         "hours": 8,
         "shifts": ["Matutino", "Vespertino"],
-        "vacancies": { "total": 50, "available": 22 }
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 50, "available": 15 },
+            "community": { "total": 30, "available": 12 }
+        }
     },
     {
         "id": 4,
         "title": "Horta Comunitária",
         "image": "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=600&q=80",
-        "description": "Manutenção e expansão da horta orgânica do campus. Todo o alimento produzido é doado.",
+        "description": "Manutenção e expansão da horta orgânica do campus. Todo o alimento produzido é doado para o lar dos idosos. Venha colocar a mão na terra!",
         "tags": [{ "label": "Meio Ambiente", "class": "badge-env" }],
         "professor": {
             "name": "Prof. Roberto Green",
@@ -65,13 +77,17 @@
         "location": "Estufa do Campus",
         "hours": 100,
         "shifts": ["Matutino"],
-        "vacancies": { "total": 15, "available": 0 }
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 15, "available": 0 },
+            "community": { "total": 10, "available": 4 }
+        }
     },
     {
         "id": 5,
         "title": "Apoio Jurídico Popular",
         "image": "https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=600&q=80",
-        "description": "Orientação jurídica básica sobre direitos do consumidor e trabalhista para a comunidade.",
+        "description": "Atendimento gratuito para a comunidade sobre direitos do consumidor, trabalhista e previdenciário. Alunos de Direito realizam a triagem sob supervisão.",
         "tags": [{ "label": "Direito", "class": "badge-tech" }, { "label": "Social", "class": "badge-env" }],
         "professor": {
              "name": "Dra. Marcia Leite",
@@ -82,13 +98,17 @@
         "location": "Núcleo de Prática Jurídica",
         "hours": 80,
         "shifts": ["Noturno"],
-        "vacancies": { "total": 8, "available": 4 }
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 12, "available": 3 },
+            "community": { "total": 50, "available": 0 }
+        }
     },
     {
         "id": 6,
         "title": "Feira de Orgânicos",
         "image": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80",
-        "description": "Apoio logístico e técnico para a feira semanal da agricultura familiar dentro da universidade.",
+        "description": "Apoio logístico e técnico para a feira semanal da agricultura familiar dentro da universidade. Aproximando produtores locais e consumidores.",
         "tags": [{ "label": "Nutrição", "class": "badge-env" }, { "label": "Extensão", "class": "badge-tech" }],
         "professor": {
             "name": "Prof. João Terra",
@@ -99,13 +119,17 @@
         "location": "Pátio Central",
         "hours": 120,
         "shifts": ["Matutino"],
-        "vacancies": { "total": 5, "available": 5 }
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 5, "available": 5 },
+            "community": { "total": 10, "available": 8 }
+        }
     },
     {
         "id": 7,
-        "title": "Cursinho Solidário",
+        "title": "Cursinho Solidário ENEM",
         "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80",
-        "description": "Aulas preparatórias para o ENEM focadas em alunos de escolas públicas da região.",
+        "description": "Aulas preparatórias para o ENEM focadas em alunos de escolas públicas da região. Vagas para professores voluntários (alunos) e estudantes (comunidade).",
         "tags": [{ "label": "Educação", "class": "badge-tech" }, { "label": "Voluntariado", "class": "badge-art" }],
         "professor": {
             "name": "Prof. Paulo Freire Jr",
@@ -116,13 +140,17 @@
         "location": "Bloco A - Salas 101 a 104",
         "hours": 160,
         "shifts": ["Matutino", "Vespertino"],
-        "vacancies": { "total": 20, "available": 8 }
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 20, "available": 8 },
+            "community": { "total": 100, "available": 15 }
+        }
     },
     {
         "id": 8,
-        "title": "Energia Solar",
+        "title": "Energia Solar nas Creches",
         "image": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=600&q=80",
-        "description": "Projeto de engenharia para instalação e manutenção de painéis solares em creches públicas.",
+        "description": "Projeto de engenharia para dimensionamento, instalação e manutenção de painéis solares em creches públicas municipais.",
         "tags": [{ "label": "Engenharia", "class": "badge-tech" }, { "label": "Sustentável", "class": "badge-env" }],
         "professor": {
             "name": "Dra. Eletra Volts",
@@ -133,6 +161,157 @@
         "location": "Visitas Técnicas Externas",
         "hours": 80,
         "shifts": ["Vespertino"],
-        "vacancies": { "total": 6, "available": 2 }
+        "openToCommunity": false,
+        "vacancies": {
+            "students": { "total": 6, "available": 2 },
+            "community": { "total": 0, "available": 0 }
+        }
+    },
+    {
+        "id": 9,
+        "title": "Coral Universitário",
+        "image": "https://images.unsplash.com/photo-1516280440614-6697288d5d38?auto=format&fit=crop&w=600&q=80",
+        "description": "Grupo de canto coral aberto a toda comunidade. Repertório de música popular brasileira e internacional. Não é necessário saber ler partitura.",
+        "tags": [{ "label": "Cultura", "class": "badge-art" }, { "label": "Música", "class": "badge-art" }],
+        "professor": {
+            "name": "Maestro Villa",
+            "email": "villa@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Maestro+Villa&background=7c3aed&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "15/02/2026", "end": "15/12/2026", "schedule": "Segundas e Quartas, 19h às 21h" },
+        "location": "Anfiteatro Bloco B",
+        "hours": 100,
+        "shifts": ["Noturno"],
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 20, "available": 10 },
+            "community": { "total": 30, "available": 25 }
+        }
+    },
+    {
+        "id": 10,
+        "title": "Escolinha de Atletismo",
+        "image": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80",
+        "description": "Treinamento funcional e iniciação ao atletismo para crianças e adolescentes da comunidade. Monitores de Educação Física conduzirão as atividades.",
+        "tags": [{ "label": "Esporte", "class": "badge-env" }, { "label": "Saúde", "class": "badge-tech" }],
+        "professor": {
+            "name": "Prof. Bolt Silva",
+            "email": "bolt@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Bolt+Silva&background=f97316&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "01/03/2026", "end": "30/11/2026", "schedule": "Sábados, 09h às 11h" },
+        "location": "Pista de Atletismo",
+        "hours": 60,
+        "shifts": ["Matutino"],
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 10, "available": 4 },
+            "community": { "total": 40, "available": 0 }
+        }
+    },
+    {
+        "id": 11,
+        "title": "Inglês para Iniciantes",
+        "image": "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=600&q=80",
+        "description": "Curso básico de língua inglesa focado em conversação para viagens e mercado de trabalho. Material didático incluso.",
+        "tags": [{ "label": "Idiomas", "class": "badge-tech" }, { "label": "Educação", "class": "badge-art" }],
+        "professor": {
+            "name": "Prof. Mary Poppins",
+            "email": "mary.p@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Mary+Poppins&background=db2777&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "10/03/2026", "end": "10/07/2026", "schedule": "Terças e Quintas, 17h às 18:30" },
+        "location": "Sala 304 - Bloco de Letras",
+        "hours": 45,
+        "shifts": ["Vespertino"],
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 10, "available": 0 },
+            "community": { "total": 15, "available": 2 }
+        }
+    },
+    {
+        "id": 12,
+        "title": "Análise de Solo Rural",
+        "image": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=600&q=80",
+        "description": "Serviço de coleta e análise química de solo para pequenos agricultores da região, visando a correção de acidez e adubação eficiente.",
+        "tags": [{ "label": "Agronomia", "class": "badge-env" }, { "label": "Técnico", "class": "badge-tech" }],
+        "professor": {
+            "name": "Dr. Ceres Campo",
+            "email": "ceres@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Ceres+Campo&background=65a30d&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "01/04/2026", "end": "30/09/2026", "schedule": "Agendamento Prévio" },
+        "location": "Laboratório de Solos / Campo",
+        "hours": 120,
+        "shifts": ["Integral"],
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 8, "available": 2 },
+            "community": { "total": 50, "available": 45 }
+        }
+    },
+    {
+        "id": 13,
+        "title": "Clube do Livro",
+        "image": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=600&q=80",
+        "description": "Encontros quinzenais para debate de obras clássicas e contemporâneas da literatura brasileira. Aberto a leitores de todas as idades.",
+        "tags": [{ "label": "Literatura", "class": "badge-art" }, { "label": "Cultura", "class": "badge-art" }],
+        "professor": {
+            "name": "Prof. Machado Neto",
+            "email": "machado@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Machado+Neto&background=78350f&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "05/03/2026", "end": "05/12/2026", "schedule": "Quintas, 18h às 20h" },
+        "location": "Biblioteca Central - Sala de Estudos",
+        "hours": 40,
+        "shifts": ["Noturno"],
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 15, "available": 10 },
+            "community": { "total": 15, "available": 8 }
+        }
+    },
+    {
+        "id": 14,
+        "title": "Reciclagem de Eletrônicos",
+        "image": "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&w=600&q=80",
+        "description": "Mutirão para coleta e destinação correta de lixo eletrônico (e-lixo) da comunidade. Alunos farão a triagem e pequenos reparos para doação.",
+        "tags": [{ "label": "Sustentável", "class": "badge-env" }, { "label": "Tecnologia", "class": "badge-tech" }],
+        "professor": {
+            "name": "Prof. Silício Vale",
+            "email": "silicio@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Silicio+Vale&background=475569&color=fff"
+        },
+        "date": { "isOneDay": true, "start": "05/06/2026", "end": null, "schedule": "Sábado, 09h às 16h" },
+        "location": "Estacionamento Bloco E",
+        "hours": 8,
+        "shifts": ["Matutino", "Vespertino"],
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 40, "available": 35 },
+            "community": { "total": 999, "available": 999 }
+        }
+    },
+    {
+        "id": 15,
+        "title": "Consultoria Jr. Negócios",
+        "image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=600&q=80",
+        "description": "Alunos de administração prestam consultoria gratuita para microempreendedores locais (MEI) sobre fluxo de caixa e marketing digital.",
+        "tags": [{ "label": "Negócios", "class": "badge-tech" }, { "label": "Empreendedorismo", "class": "badge-env" }],
+        "professor": {
+            "name": "Dra. Vania Business",
+            "email": "vania@utfpr.edu.br",
+            "avatar": "https://ui-avatars.com/api/?name=Vania+Bus&background=0d9488&color=fff"
+        },
+        "date": { "isOneDay": false, "start": "01/04/2026", "end": "30/06/2026", "schedule": "Agendado com o Cliente" },
+        "location": "Incubadora Tecnológica",
+        "hours": 60,
+        "shifts": ["Vespertino"],
+        "openToCommunity": true,
+        "vacancies": {
+            "students": { "total": 6, "available": 0 },
+            "community": { "total": 10, "available": 3 }
+        }
     }
 ]

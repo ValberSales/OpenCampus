@@ -6,7 +6,9 @@ const DB_KEYS = {
     CERTIFICATES: 'opencampus_certificates',
     CONVERSATIONS: 'opencampus_conversations',
     SUBSCRIPTIONS: 'opencampus_subscriptions',
-    CURRENT_USER: 'opencampus_current_user'
+    CURRENT_USER: 'opencampus_current_user',
+    COMMUNITY_REQUESTS: 'opencampus_community_requests',
+    PARTNERSHIP_REQUESTS: 'opencampus_partnership_requests'
 };
 
 export const DatabaseService = {
@@ -80,5 +82,31 @@ export const DatabaseService = {
     
     getCertificates() {
         return JSON.parse(localStorage.getItem(DB_KEYS.CERTIFICATES)) || [];
+    },
+    // --- COMUNIDADE ---
+    
+    // Salva solicitação de inscrição individual
+    saveCommunityApplication(application) {
+        const apps = JSON.parse(localStorage.getItem(DB_KEYS.COMMUNITY_REQUESTS)) || [];
+        application.id = Date.now();
+        application.status = 'pending'; // pending, approved, rejected
+        application.date = new Date().toISOString();
+        
+        apps.push(application);
+        localStorage.setItem(DB_KEYS.COMMUNITY_REQUESTS, JSON.stringify(apps));
+        console.log("✅ Inscrição da comunidade salva:", application);
+        return true;
+    },
+
+    // Salva solicitação de parceria institucional
+    savePartnershipRequest(request) {
+        const reqs = JSON.parse(localStorage.getItem(DB_KEYS.PARTNERSHIP_REQUESTS)) || [];
+        request.id = Date.now();
+        request.date = new Date().toISOString();
+        
+        reqs.push(request);
+        localStorage.setItem(DB_KEYS.PARTNERSHIP_REQUESTS, JSON.stringify(reqs));
+        console.log("✅ Solicitação de parceria salva:", request);
+        return true;
     }
 };
