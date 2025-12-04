@@ -8,8 +8,10 @@ import { PaginationComponent } from './components/Pagination.js';
 import { ProjectModalComponent } from './components/ProjectModal.js';
 import { FilterDrawerComponent } from './components/FilterDrawer.js';
 import { MessageModalComponent } from './components/MessageModal.js';
+import { BadgeModalComponent } from './components/BadgeModal.js';
 // NOVO IMPORT: Necessário para abrir o modal ao clicar no perfil
 import { CertificateDetailsModal } from './components/CertificateModal.js';
+import { BadgeModalComponent } from './components/BadgeModal.js';
 
 // --- ESTADO DA APLICAÇÃO ---
 const state = {
@@ -40,6 +42,7 @@ async function init() {
     setupEventListeners();
     setupProfileEvents();     // Expansão do perfil no mobile
     setupProfileCertClicks(); // <--- NOVA CHAMADA: Cliques nos certificados do perfil
+    setupBadgeEvents();
     loadTheme();
 }
 
@@ -329,6 +332,32 @@ function setupProfileEvents() {
             if (window.innerWidth <= 1024) profileCard.classList.toggle('expanded');
         });
     }
+}
+
+function setupBadgeEvents() {
+    const badges = document.querySelectorAll('.trophy-trigger');
+    
+    badges.forEach(badge => {
+        badge.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evita expandir perfil no mobile
+            const level = badge.dataset.level;
+            openBadgeModal(level);
+        });
+    });
+}
+
+function openBadgeModal(level) {
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.innerHTML = BadgeModalComponent(level);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+
+    const btnClose = document.getElementById('btn-modal-close');
+    const btnAction = document.getElementById('btn-modal-close-action');
+    
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    if(btnAction) btnAction.addEventListener('click', closeModal);
+    
+    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
 function openFilterDrawer() {

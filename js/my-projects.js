@@ -5,6 +5,7 @@ import { FooterComponent } from './components/Footer.js';
 import { MyProjectCardComponent } from './components/MyProjectCard.js';
 import { ProjectModalComponent } from './components/ProjectModal.js';
 import { MessageModalComponent } from './components/MessageModal.js';
+import { BadgeModalComponent } from './components/BadgeModal.js';
 
 // Estado
 const state = {
@@ -22,6 +23,7 @@ async function init() {
     
     setupEventListeners();
     setupProfileEvents(); // Perfil Mobile
+    setupBadgeEvents();
     loadTheme();
 }
 
@@ -162,6 +164,32 @@ function setupProfileEvents() {
             if (window.innerWidth <= 1024) profileCard.classList.toggle('expanded');
         });
     }
+}
+
+function setupBadgeEvents() {
+    const badges = document.querySelectorAll('.trophy-trigger');
+    
+    badges.forEach(badge => {
+        badge.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evita expandir perfil no mobile
+            const level = badge.dataset.level;
+            openBadgeModal(level);
+        });
+    });
+}
+
+function openBadgeModal(level) {
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.innerHTML = BadgeModalComponent(level);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+
+    const btnClose = document.getElementById('btn-modal-close');
+    const btnAction = document.getElementById('btn-modal-close-action');
+    
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    if(btnAction) btnAction.addEventListener('click', closeModal);
+    
+    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
 function toggleMenu() {
