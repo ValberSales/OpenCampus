@@ -1,0 +1,128 @@
+/* css/home.css */
+
+/* --- HERO BANNER --- */
+.hero-section {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); /* Gradiente Azul Institucional */
+    color: white;
+    padding: 6rem 2rem 5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de fundo sutil (opcional) */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(circle at 20% 150%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    opacity: 0.9;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+/* Botões do Hero */
+.btn-white {
+    background: white;
+    color: var(--primary);
+    border: 1px solid white;
+    font-weight: 700;
+}
+.btn-white:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+}
+
+.btn-outline-white {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.6);
+    font-weight: 600;
+}
+.btn-outline-white:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+/* --- SEÇÃO DE ABRANGÊNCIA (IMPACT STRIP) --- */
+.impact-strip {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 2rem 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    position: relative;
+    margin-top: -2rem; /* Sobe um pouco pra encostar no hero visualmente */
+    z-index: 3;
+    border-radius: 20px 20px 0 0; /* Arredonda o topo */
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    justify-content: center;
+}
+
+.partner-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    padding: 0.5rem;
+    /* transition: transform 0.2s; */
+}
+
+.partner-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    opacity: 0.8;
+}
+
+/* --- VITRINE GRID --- */
+.showcase-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* Ajustes Footer */
+.home-footer {
+    background: var(--bg-card);
+    padding: 3rem 0;
+    border-top: 1px solid var(--border-color);
+    margin-top: 4rem;
+}
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+.text-right-desktop { text-align: right; }
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .hero-title { font-size: 2rem; }
+    .footer-grid { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+    .text-right-desktop { text-align: center; }
+    .display-none-mobile { display: none; }
+}

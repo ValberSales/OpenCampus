@@ -6,42 +6,43 @@ import { MyProjectCardComponent } from '../components/MyProjectCard.js';
 import { ProjectModalComponent } from '../components/ProjectModal.js';
 import { MessageModalComponent } from '../components/MessageModal.js';
 import { BadgeModalComponent } from '../components/BadgeModal.js';
-import { CertificateDetailsModal } from '../components/CertificateModal.js'; // Precisa disso pro profile
+import { CertificateDetailsModal } from '../components/CertificateModal.js';
+// IMPORTAÇÃO NOVA
+import { DatabaseService } from '../services/DatabaseService.js';
 
-// Estado
 const state = {
-    allProjects: [],
     myProjects: []
 };
 
 async function init() {
+    // 1. INICIALIZA O BANCO (Garante que os dados existem)
+    await DatabaseService.init();
+
     document.getElementById('app-header').innerHTML = HeaderComponent('projects');
     document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('projects');
     document.getElementById('profile-container').innerHTML = ProfileCardComponent();
     document.getElementById('app-footer').innerHTML = FooterComponent();
 
-    await fetchProjects();
+    // 2. CARREGA PROJETOS VIA SERVIÇO
+    loadMyProjects();
     
     setupEventListeners();
     setupProfileEvents();
-    setupBadgeEvents(); // Agora a função existe abaixo!
+    setupBadgeEvents();
     setupProfileCertClicks();
     loadTheme();
 }
 
-async function fetchProjects() {
-    try {
-        const response = await fetch('./data/projects.json');
-        const data = await response.json();
-        state.allProjects = data;
+function loadMyProjects() {
+    // Busca todos os projetos
+    const allProjects = DatabaseService.getAllProjects();
+    // Busca inscrições
+    const subIds = DatabaseService.getSubscriptions();
+    
+    // Cruza os dados: Projetos onde o ID está na lista de inscrições
+    state.myProjects = allProjects.filter(p => subIds.includes(p.id));
 
-        const subscribedIds = JSON.parse(localStorage.getItem('opencampus_subscriptions')) || [];
-        state.myProjects = state.allProjects.filter(p => subscribedIds.includes(p.id));
-
-        renderList();
-    } catch (error) {
-        console.error(error);
-    }
+    renderList();
 }
 
 function renderList() {
@@ -50,7 +51,7 @@ function renderList() {
         container.innerHTML = `
             <div class="card p-3 text-center" style="grid-column: 1 / -1;">
                 <p class="text-secondary mb-2">Você ainda não se inscreveu em nenhum projeto.</p>
-                <a href="index.html" class="btn btn-primary">Explorar Projetos</a>
+                <a href="dashboard.html" class="btn btn-primary">Explorar Projetos</a>
             </div>
         `;
         return;
