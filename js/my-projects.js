@@ -6,6 +6,7 @@ import { MyProjectCardComponent } from './components/MyProjectCard.js';
 import { ProjectModalComponent } from './components/ProjectModal.js';
 import { MessageModalComponent } from './components/MessageModal.js';
 import { BadgeModalComponent } from './components/BadgeModal.js';
+import { CertificateDetailsModal } from './components/CertificateModal.js'; // Precisa disso pro profile
 
 // Estado
 const state = {
@@ -22,8 +23,9 @@ async function init() {
     await fetchProjects();
     
     setupEventListeners();
-    setupProfileEvents(); // Perfil Mobile
-    setupBadgeEvents();
+    setupProfileEvents();
+    setupBadgeEvents(); // Agora a função existe abaixo!
+    setupProfileCertClicks();
     loadTheme();
 }
 
@@ -44,7 +46,6 @@ async function fetchProjects() {
 
 function renderList() {
     const container = document.getElementById('my-projects-container');
-    
     if (state.myProjects.length === 0) {
         container.innerHTML = `
             <div class="card p-3 text-center" style="grid-column: 1 / -1;">
@@ -54,7 +55,6 @@ function renderList() {
         `;
         return;
     }
-
     container.innerHTML = state.myProjects.map(p => MyProjectCardComponent(p)).join('');
     setupCardEvents();
 }
@@ -78,7 +78,6 @@ function setupCardEvents() {
 
 function openProjectModal(project) { 
     const overlay = document.getElementById('modal-overlay-container');
-    // TRUE porque já está inscrito nesta página
     overlay.innerHTML = ProjectModalComponent(project, true); 
     requestAnimationFrame(() => overlay.classList.add('active'));
     
@@ -114,6 +113,52 @@ function openMessageModal(project) {
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
+function setupProfileCertClicks() {
+    const certItems = document.querySelectorAll('.profile-card .cert-item');
+    certItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = parseInt(item.dataset.id);
+            const savedCerts = JSON.parse(localStorage.getItem('opencampus_certificates')) || [];
+            const cert = savedCerts.find(c => c.id === id);
+            if (cert) openCertificateDetailsModal(cert);
+        });
+    });
+}
+
+function openCertificateDetailsModal(cert) {
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.innerHTML = CertificateDetailsModal(cert);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+    const btnClose = document.getElementById('btn-modal-close');
+    const btnAction = document.getElementById('btn-modal-close-action');
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    if(btnAction) btnAction.addEventListener('click', closeModal);
+    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+}
+
+function setupBadgeEvents() {
+    const badges = document.querySelectorAll('.trophy-trigger');
+    badges.forEach(badge => {
+        badge.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const level = badge.dataset.level;
+            openBadgeModal(level);
+        });
+    });
+}
+
+function openBadgeModal(level) {
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.innerHTML = BadgeModalComponent(level);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+    const btnClose = document.getElementById('btn-modal-close');
+    const btnAction = document.getElementById('btn-modal-close-action');
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    if(btnAction) btnAction.addEventListener('click', closeModal);
+    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+}
+
 function saveMessageToStorage(project, text) {
     const storageKey = 'opencampus_conversations';
     let conversations = JSON.parse(localStorage.getItem(storageKey)) || [];
@@ -139,7 +184,6 @@ function closeModal() {
     setTimeout(() => overlay.innerHTML = '', 300);
 }
 
-// Configurações Comuns
 function setupEventListeners() {
     const btnMenu = document.getElementById('btn-menu-toggle');
     const overlay = document.getElementById('overlay');
@@ -164,32 +208,6 @@ function setupProfileEvents() {
             if (window.innerWidth <= 1024) profileCard.classList.toggle('expanded');
         });
     }
-}
-
-function setupBadgeEvents() {
-    const badges = document.querySelectorAll('.trophy-trigger');
-    
-    badges.forEach(badge => {
-        badge.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita expandir perfil no mobile
-            const level = badge.dataset.level;
-            openBadgeModal(level);
-        });
-    });
-}
-
-function openBadgeModal(level) {
-    const overlay = document.getElementById('modal-overlay-container');
-    overlay.innerHTML = BadgeModalComponent(level);
-    requestAnimationFrame(() => overlay.classList.add('active'));
-
-    const btnClose = document.getElementById('btn-modal-close');
-    const btnAction = document.getElementById('btn-modal-close-action');
-    
-    if(btnClose) btnClose.addEventListener('click', closeModal);
-    if(btnAction) btnAction.addEventListener('click', closeModal);
-    
-    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
 function toggleMenu() {

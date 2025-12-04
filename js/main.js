@@ -8,10 +8,8 @@ import { PaginationComponent } from './components/Pagination.js';
 import { ProjectModalComponent } from './components/ProjectModal.js';
 import { FilterDrawerComponent } from './components/FilterDrawer.js';
 import { MessageModalComponent } from './components/MessageModal.js';
-import { BadgeModalComponent } from './components/BadgeModal.js';
-// NOVO IMPORT: Necessário para abrir o modal ao clicar no perfil
 import { CertificateDetailsModal } from './components/CertificateModal.js';
-import { BadgeModalComponent } from './components/BadgeModal.js';
+import { BadgeModalComponent } from './components/BadgeModal.js'; // Import único agora
 
 // --- ESTADO DA APLICAÇÃO ---
 const state = {
@@ -40,8 +38,8 @@ async function init() {
     }
     
     setupEventListeners();
-    setupProfileEvents();     // Expansão do perfil no mobile
-    setupProfileCertClicks(); // <--- NOVA CHAMADA: Cliques nos certificados do perfil
+    setupProfileEvents();
+    setupProfileCertClicks();
     setupBadgeEvents();
     loadTheme();
 }
@@ -57,7 +55,6 @@ async function fetchProjects() {
     renderFeed();
 }
 
-// Renderiza estrutura fixa
 function renderStaticComponents() {
     document.getElementById('app-header').innerHTML = HeaderComponent('dashboard');
     document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('dashboard');
@@ -67,7 +64,6 @@ function renderStaticComponents() {
     document.getElementById('filter-drawer-container').innerHTML = FilterDrawerComponent();
 }
 
-// Renderiza Feed (Cards + Paginação)
 function renderFeed() {
     const projectsContainer = document.getElementById('projects-container');
     
@@ -90,7 +86,6 @@ function renderFeed() {
     setupModalEvents();
 }
 
-// --- LÓGICA DE FILTRAGEM ---
 function applyFilters() {
     state.filteredProjects = state.allProjects.filter(project => {
         if (project.hours > state.filters.maxHours) return false;
@@ -113,10 +108,9 @@ function applyFilters() {
     closeFilterDrawer();
 }
 
-// --- GERENCIAMENTO DE MODAIS ---
+// --- MODAIS ---
 function setupModalEvents() {
     const cards = document.querySelectorAll('.project-card');
-    
     cards.forEach(card => {
         card.addEventListener('click', (e) => {
             const projectId = parseInt(e.currentTarget.dataset.id);
@@ -127,7 +121,6 @@ function setupModalEvents() {
                 if (project) openMessageModal(project);
                 return;
             }
-
             if (project) {
                 openProjectModal(project);
             }
@@ -189,21 +182,16 @@ function openMessageModal(project) {
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
-// --- NOVO: Lógica para abrir modal de Certificado via ProfileCard ---
+// --- CLIQUE NOS CERTIFICADOS E TROFÉUS (PROFILE) ---
 function setupProfileCertClicks() {
     const certItems = document.querySelectorAll('.profile-card .cert-item');
-    
     certItems.forEach(item => {
         item.addEventListener('click', (e) => {
-            e.stopPropagation(); // Impede toggle do card no mobile
-            
+            e.stopPropagation();
             const id = parseInt(item.dataset.id);
             const savedCerts = JSON.parse(localStorage.getItem('opencampus_certificates')) || [];
             const cert = savedCerts.find(c => c.id === id);
-            
-            if (cert) {
-                openCertificateDetailsModal(cert);
-            }
+            if (cert) openCertificateDetailsModal(cert);
         });
     });
 }
@@ -215,14 +203,35 @@ function openCertificateDetailsModal(cert) {
 
     const btnClose = document.getElementById('btn-modal-close');
     const btnAction = document.getElementById('btn-modal-close-action');
-    
     if(btnClose) btnClose.addEventListener('click', closeModal);
     if(btnAction) btnAction.addEventListener('click', closeModal);
-    
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
-// --- FUNÇÕES DE SUPORTE ---
+function setupBadgeEvents() {
+    const badges = document.querySelectorAll('.trophy-trigger');
+    badges.forEach(badge => {
+        badge.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const level = badge.dataset.level;
+            openBadgeModal(level);
+        });
+    });
+}
+
+function openBadgeModal(level) {
+    const overlay = document.getElementById('modal-overlay-container');
+    overlay.innerHTML = BadgeModalComponent(level);
+    requestAnimationFrame(() => overlay.classList.add('active'));
+
+    const btnClose = document.getElementById('btn-modal-close');
+    const btnAction = document.getElementById('btn-modal-close-action');
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    if(btnAction) btnAction.addEventListener('click', closeModal);
+    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+}
+
+// --- HELPERS ---
 function saveMessageToStorage(project, text) {
     const storageKey = 'opencampus_conversations';
     let conversations = JSON.parse(localStorage.getItem(storageKey)) || [];
@@ -332,32 +341,6 @@ function setupProfileEvents() {
             if (window.innerWidth <= 1024) profileCard.classList.toggle('expanded');
         });
     }
-}
-
-function setupBadgeEvents() {
-    const badges = document.querySelectorAll('.trophy-trigger');
-    
-    badges.forEach(badge => {
-        badge.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita expandir perfil no mobile
-            const level = badge.dataset.level;
-            openBadgeModal(level);
-        });
-    });
-}
-
-function openBadgeModal(level) {
-    const overlay = document.getElementById('modal-overlay-container');
-    overlay.innerHTML = BadgeModalComponent(level);
-    requestAnimationFrame(() => overlay.classList.add('active'));
-
-    const btnClose = document.getElementById('btn-modal-close');
-    const btnAction = document.getElementById('btn-modal-close-action');
-    
-    if(btnClose) btnClose.addEventListener('click', closeModal);
-    if(btnAction) btnAction.addEventListener('click', closeModal);
-    
-    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
 function openFilterDrawer() {
