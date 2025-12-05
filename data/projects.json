@@ -98,7 +98,7 @@
     {
         "id": 9,
         "title": "Coral Universitário",
-        "image": "https://images.unsplash.com/photo-1516280440614-6697288d5d38?auto=format&fit=crop&w=600&q=80",
+        "image": "https://college.lclark.edu/live/image/scale/2x/gid/76/width/879/height/569/109620_Choir_Fa2024.webp",
         "description": "Grupo de canto coral aberto a toda comunidade.",
         "tags": [{ "label": "Cultura", "class": "badge-art" }],
         "professor": { "name": "Maestro Villa", "email": "villa@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Maestro+Villa&background=7c3aed&color=fff" },
