@@ -9,3 +9,20 @@
     border-bottom: 1px solid rgba(0,0,0,0.05);
     transition: all 0.3s ease;
 }
+
+/* NOVO: Ajustes para Mobile */
+@media (max-width: 600px) {
+    /* Esconde o texto, deixando só o ícone */
+    .login-text {
+        display: none;
+    }
+    
+    /* Transforma o botão em um quadrado (ícone) */
+    #btn-login-trigger {
+        padding: 0.7rem;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

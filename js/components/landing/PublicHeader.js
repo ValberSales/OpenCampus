@@ -6,7 +6,7 @@ export function PublicHeader() {
         </div>
         <div>
             <button id="btn-login-trigger" class="btn btn-primary">
-                <i class="ph ph-user"></i> Sou Aluno / Professor
+                <i class="ph ph-user"></i> <span class="login-text">Sou Aluno / Professor</span>
             </button>
         </div>
     </nav>`;

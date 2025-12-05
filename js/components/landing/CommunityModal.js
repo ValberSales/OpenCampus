@@ -9,7 +9,8 @@ export function CommunityProjectFlipModal(project) {
         ? `<span class="badge badge-env"><i class="ph ph-check"></i> Vagas Abertas</span>`
         : `<span class="badge badge-art">Lista de Espera</span>`;
 
-    const buttonText = hasSpots ? 'Solicitar Minha Inscrição' : 'Entrar na Lista de Espera';
+    // ALTERADO: Texto do botão simplificado
+    const buttonText = hasSpots ? 'Solicitar Inscrição' : 'Entrar na Lista de Espera';
     const buttonState = !hasSpots ? 'disabled' : '';
 
     return `
@@ -73,7 +74,7 @@ export function CommunityProjectFlipModal(project) {
                         <input type="tel" id="comm-phone" class="form-input" required placeholder="(XX) 9XXXX-XXXX">
                     </div>
                     <div class="form-group mb-3">
-                        <label class="filter-label">Email (Opcional)</label>
+                        <label class="filter-label">Email</label>
                         <input type="email" id="comm-email" class="form-input" placeholder="seu@email.com">
                     </div>
                     <div class="form-group">
@@ -94,7 +95,7 @@ export function CommunityProjectFlipModal(project) {
     </div>`;
 }
 
-// (Mantenha a função PartnershipFormModal logo abaixo, como estava antes)
+// (Mantenha a função PartnershipFormModal igual)
 export function PartnershipFormModal() {
     return `
     <div class="modal-content" style="max-width: 500px;">
@@ -104,20 +105,24 @@ export function PartnershipFormModal() {
         </div>
         
         <form id="partner-form" class="modal-body">
-            <p class="text-secondary text-sm mb-4">Tem uma escola, ONG ou empresa e quer levar projetos da UTFPR para ela? Preencha abaixo.</p>
+            <p class="text-secondary text-sm mb-3">Tem uma escola, ONG ou empresa e quer levar projetos da UTFPR para ela? Preencha abaixo.</p>
             <div class="form-group mb-3">
                 <label class="filter-label">Nome da Instituição</label>
                 <input type="text" id="part-org" class="form-input" required placeholder="Ex: Escola Estadual X">
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-2">
                 <label class="filter-label">Responsável pelo Contato</label>
                 <input type="text" id="part-name" class="form-input" required>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-2">
                 <label class="filter-label">Telefone</label>
                 <input type="tel" id="part-phone" class="form-input" required>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-2">
+                <label class="filter-label">Email</label>
+                <input type="email" id="comm-email" class="form-input" placeholder="seu@email.com">
+            </div>
+            <div class="form-group mb-2">
                 <label class="filter-label">Tipo de Interesse</label>
                 <select id="part-type" class="form-select">
                     <option value="Receber Projetos">Receber Projetos (Palestras/Oficinas)</option>

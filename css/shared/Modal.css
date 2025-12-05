@@ -159,15 +159,17 @@ textarea.form-input {
     .modal-meta-grid { grid-template-columns: 1fr; }
     
     .modal-footer { 
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Força 2 colunas lado a lado */
+        /* ALTERADO: Coluna para empilhar os botões */
+        display: flex;
+        flex-direction: column;
         gap: 0.8rem;
-        padding: 1rem; /* Reduz padding para ganhar espaço */
+        padding: 1rem;
     }
 
-    /* CORREÇÃO: Só aplica span 2 se for o TERCEIRO botão (Modal de Projeto) */
-    /* O Modal de Mensagem tem só 2 botões, então essa regra é ignorada lá */
-    .modal-footer button:nth-child(3) {
-        grid-column: span 2;
+    /* ALTERADO: Botões ocupam 100% da largura */
+    .modal-footer button {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
     }
 }
