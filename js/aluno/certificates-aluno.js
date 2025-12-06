@@ -20,7 +20,7 @@ async function init() {
     setupEventListeners();
     setupPageEvents();
     setupProfileEvents(); 
-    setupProfileCertClicks(); // <--- IMPORTANTE: Conecta o clique lateral
+    setupProfileCertClicks(); 
     setupBadgeEvents();
     loadTheme();
 }
@@ -131,12 +131,10 @@ function saveCertificate(cert) {
         localStorage.setItem('opencampus_certificates', JSON.stringify(certificates));
         
         alert("Certificado enviado e aprovado com sucesso!");
-        closeModal();
-        loadCertificates(); 
-        renderProfile();    
-        // Re-conecta os eventos do perfil após renderizar novamente
-        setupProfileCertClicks();
-        setupProfileEvents();
+        
+        // MUDANÇA AQUI: Força o reload da página após salvar para atualizar tudo
+        window.location.reload();
+        
     } catch (e) {
         alert("Erro ao salvar! A imagem pode ser muito grande para o navegador.");
         console.error(e);

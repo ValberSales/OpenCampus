@@ -15,7 +15,7 @@ export function BadgeModalComponent(level) {
         },
         gold: {
             title: "Nível Ouro",
-            image: "./../../data/images/ouro.webp", // Assumindo que é ouro.webp
+            image: "./../../data/images/ouro.webp",
             hours: 100,
             message: "Incrível! Você atingiu a marca de 100 horas. Você já é uma referência em extensão universitária."
         },
@@ -30,6 +30,10 @@ export function BadgeModalComponent(level) {
     const data = badges[level];
 
     if (!data) return '';
+
+    // Lógica para definir o texto do botão
+    const isFinalLevel = level === 'platinum';
+    const buttonText = isFinalLevel ? 'Missão Cumprida!' : 'Que venha o próximo!';
 
     return `
     <div class="modal-content" style="max-width: 400px; text-align: center;">
@@ -53,7 +57,7 @@ export function BadgeModalComponent(level) {
         </div>
 
         <div class="modal-footer" style="justify-content: center;">
-            <button class="btn btn-primary w-full justify-center" id="btn-modal-close-action">Que venha o próximo!</button>
+            <button class="btn btn-primary w-full justify-center" id="btn-modal-close-action">${buttonText}</button>
         </div>
     </div>
     `;
