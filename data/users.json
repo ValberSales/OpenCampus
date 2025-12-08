@@ -1,0 +1,18 @@
+[
+    { "id": 101, "name": "Dra. Ana Souza", "role": "professor", "email": "ana.souza@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Ana+Souza&background=ec4899&color=fff" },
+    { "id": 102, "name": "Prof. Carlos Mendez", "role": "professor", "email": "carlos.m@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Carlos+Mendez&background=6366f1&color=fff" },
+    { "id": 103, "name": "Prof. Juliana Paes", "role": "professor", "email": "ju.paes@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Juliana+Paes&background=f59e0b&color=fff" },
+    { "id": 104, "name": "Prof. Roberto Green", "role": "professor", "email": "r.green@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Roberto+Green&background=22c55e&color=fff" },
+    { "id": 105, "name": "Dra. Marcia Leite", "role": "professor", "email": "marcia.leite@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Marcia+Leite&background=ef4444&color=fff" },
+    { "id": 106, "name": "Prof. João Terra", "role": "professor", "email": "jterra@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Joao+Terra&background=16a34a&color=fff" },
+    { "id": 107, "name": "Prof. Paulo Freire Jr", "role": "professor", "email": "p.freire@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Paulo+F&background=3b82f6&color=fff" },
+    { "id": 108, "name": "Dra. Eletra Volts", "role": "professor", "email": "eletra@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Eletra+V&background=facc15&color=000" },
+    { "id": 109, "name": "Maestro Villa", "role": "professor", "email": "villa@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Maestro+Villa&background=7c3aed&color=fff" },
+    { "id": 110, "name": "Prof. Bolt Silva", "role": "professor", "email": "bolt@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Bolt+Silva&background=f97316&color=fff" },
+    { "id": 111, "name": "Prof. Mary Poppins", "role": "professor", "email": "mary.p@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Mary+Poppins&background=db2777&color=fff" },
+    { "id": 112, "name": "Dr. Ceres Campo", "role": "professor", "email": "ceres@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Ceres+Campo&background=65a30d&color=fff" },
+    { "id": 113, "name": "Prof. Machado Neto", "role": "professor", "email": "machado@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Machado+Neto&background=78350f&color=fff" },
+    { "id": 114, "name": "Prof. Silício Vale", "role": "professor", "email": "silicio@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Silicio+Vale&background=475569&color=fff" },
+    { "id": 115, "name": "Dra. Vania Business", "role": "professor", "email": "vania@utfpr.edu.br", "avatar": "https://ui-avatars.com/api/?name=Vania+Bus&background=0d9488&color=fff" },
+    { "id": 1, "name": "Valber Sales", "role": "student", "course": "Análise e Des. de Sistemas", "avatar": "https://ui-avatars.com/api/?name=Valber+Sales&background=6366f1&color=fff" }
+]

@@ -335,41 +335,43 @@ function setupLoginModal() {
         });
     }
 
-    // --- LÓGICA DE LOGIN INTELIGENTE ---
     if(loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
             const nameInput = document.getElementById('username');
-            const selectLink = document.getElementById('usercourse'); // Select de Vínculo/Curso
+            const selectLink = document.getElementById('usercourse');
             
             const name = nameInput.value.trim();
             const selection = selectLink.value;
 
             if (!name) return;
 
-            // Define padrões (Default: Aluno)
+            // Configuração do Login
             let role = 'student';
             let targetUrl = 'pages/aluno/dashboard.html';
-            let avatarColor = '6366f1'; // Indigo (Aluno)
+            let avatarColor = '6366f1';
 
-            // Verifica se selecionou Professor
             if (selection === 'Professor') {
                 role = 'professor';
                 targetUrl = 'pages/professor/dashboard.html';
-                avatarColor = '0d9488'; // Teal (Professor - para diferenciar visualmente)
+                avatarColor = '0d9488';
             }
 
-            const user = {
+            const credentials = {
                 name: name,
-                role: role,       // Salva a role para usarmos depois na lógica de permissão
-                course: selection, // Salva o curso ou "Professor"
+                role: role,
+                course: selection,
                 avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${avatarColor}&color=fff`
             };
 
-            // Salva no LocalStorage e Redireciona
-            DatabaseService.login(user);
-            window.location.href = targetUrl;
+            // Tenta logar
+            const success = DatabaseService.login(credentials);
+
+            if (success) {
+                window.location.href = targetUrl;
+            }
+            // Se falhar (ex: professor não encontrado), o Service já emitiu o alert(), não precisa fazer nada aqui.
         });
     }
 }
