@@ -1,12 +1,26 @@
 /* css/professor/professor.css */
 
-/* --- SISTEMA DE ABAS (TABS) --- */
+/* =========================================
+   1. SISTEMA DE ABAS (TABS) - SCROLLÁVEL
+   ========================================= */
 .tabs-nav {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     border-bottom: 1px solid var(--border-color);
     padding: 0 1.5rem;
     margin-bottom: 0;
+    
+    /* Scroll Horizontal para Mobile */
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch; /* Scroll suave no iOS */
+    
+    /* Esconde barra de rolagem mas mantém funcionalidade */
+    scrollbar-width: none; /* Firefox */
+}
+
+.tabs-nav::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
 }
 
 .tab-btn {
@@ -19,120 +33,293 @@
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    white-space: nowrap; /* Impede quebra de texto no botão */
+    flex-shrink: 0; /* Impede que o botão encolha */
 }
 
-.tab-btn:hover {
-    color: var(--primary);
-}
+.tab-btn:hover { color: var(--primary); }
 
 .tab-btn.active {
     color: var(--primary);
     border-bottom-color: var(--primary);
 }
 
-/* Conteúdo das Abas */
 .tab-content {
-    display: none; /* Escondido por padrão */
+    display: none;
     animation: fadeIn 0.3s ease;
 }
-
-.tab-content.active {
-    display: block; /* Visível quando ativo */
-}
+.tab-content.active { display: block; }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- LISTAS DE USUÁRIOS (MOCK) --- */
+/* =========================================
+   2. FORMULÁRIO E IMAGEM
+   ========================================= */
+   
+/* Container da Imagem de Upload */
+.modal-img-upload {
+    width: 100%;
+    height: 250px; /* Altura fixa maior */
+    cursor: pointer;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--bg-ground);
+    border: 2px dashed var(--border-color);
+    transition: border-color 0.2s;
+}
+
+.modal-img-upload:hover {
+    border-color: var(--primary);
+}
+
+.modal-img-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.2s;
+}
+
+.modal-img-upload:hover img {
+    opacity: 0.7;
+}
+
+/* Grid para alinhar inputs (Vagas) */
+.form-row-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: start; /* Alinha pelo topo para lidar com quebras de linha */
+}
+
+/* =========================================
+   3. LISTAS DE CHAMADA (ESTILO TABELA)
+   ========================================= */
 .user-list {
     display: flex;
     flex-direction: column;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden; /* Para os cantos arredondados */
 }
 
-.user-list .user-item {
+.user-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem 0;
+    padding: 1rem 1.5rem;
+    background-color: var(--bg-card);
     border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
 }
 
-.user-list .user-item:last-child {
-    border-bottom: none;
+.user-item:last-child { border-bottom: none; }
+.user-item:hover { background-color: var(--bg-ground); }
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.rounded-circle {
+.user-avatar {
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid var(--border-color);
 }
 
-/* --- LISTAS COLAPSÁVEIS (DETAILS/SUMMARY) --- */
-details {
-    background-color: var(--bg-ground);
-    border-radius: 8px;
+/* Toggle de Presença (Switch) */
+.attendance-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    user-select: none;
+}
+
+.attendance-toggle input {
+    appearance: none;
+    width: 36px;
+    height: 20px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.attendance-toggle input::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.attendance-toggle input:checked { background: var(--success); }
+.attendance-toggle input:checked::after { left: 18px; }
+
+/* Ações (Botões pequenos) */
+.user-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+.btn-mini {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid var(--border-color);
-    margin-bottom: 0.8rem;
-    overflow: hidden;
+    color: var(--text-secondary);
+    transition: 0.2s;
+}
+.btn-mini:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: white;
+}
+.btn-mini.danger:hover {
+    border-color: var(--danger);
+    color: var(--danger);
 }
 
-details summary {
-    list-style: none; /* Remove triângulo padrão */
+/* =========================================
+   4. LAYOUT GERAL
+   ========================================= */
+.professor-container {
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    display: block;
+}
+
+.professor-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* Card Vertical do Professor */
+.professor-projects-grid .project-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.professor-projects-grid .project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    border-color: var(--primary);
+}
+.professor-projects-grid .project-img-container {
+    width: 100%;
+    height: 180px;
+    border-radius: 0;
+    flex-shrink: 0;
+}
+.professor-projects-grid .project-img { width: 100%; height: 100%; object-fit: cover; }
+.professor-projects-grid .project-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.professor-projects-grid .project-actions {
+    padding: 1rem 1.5rem 1.5rem;
+    background-color: var(--bg-ground);
+    border-top: 1px solid var(--border-color);
+    flex-direction: row;
+    gap: 0.8rem;
+    margin-top: auto;
+    width: 100%;
+}
+.professor-projects-grid .project-actions button {
+    flex: 1;
+    justify-content: center;
+    white-space: nowrap;
+    padding: 0.6rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .professor-container { padding: 1rem; }
+    .user-item { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .user-actions { margin-left: 0; width: 100%; justify-content: flex-end; border-top: 1px dashed var(--border-color); padding-top: 0.5rem; }
+    .attendance-toggle { width: 100%; justify-content: space-between; }
+}
+
+/* Lista de Aulas (Log) */
+.class-log-item {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    cursor: pointer;
-    font-weight: 700;
+    transition: var(--transition);
+}
+
+.class-log-item:hover {
+    border-color: var(--primary);
+    transform: translateX(3px);
+}
+
+.date-box {
     background-color: var(--bg-ground);
-    transition: background-color 0.2s;
+    border-radius: 6px;
+    padding: 0.5rem 0.8rem;
+    text-align: center;
+    min-width: 60px;
+    border: 1px solid var(--border-color);
 }
 
-details summary:hover {
-    background-color: var(--bg-card);
-}
+.date-day { font-size: 1.2rem; font-weight: 800; line-height: 1; }
+.date-month { font-size: 0.7rem; text-transform: uppercase; color: var(--text-secondary); }
 
-details summary::after {
-    content: '\f0d7'; /* Código FontAwesome ou similar, mas usaremos CSS puro */
-    content: '▼';
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    transition: transform 0.2s;
-}
-
-details[open] summary::after {
-    transform: rotate(180deg);
-}
-
-/* Remove a seta padrão do Chrome/Safari */
-details summary::-webkit-details-marker {
-    display: none;
-}
-
-details .details-content {
-    padding: 1rem;
+/* Sticky Footer para o Formulário de Chamada */
+.sticky-form-footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-color: var(--bg-card);
     border-top: 1px solid var(--border-color);
-}
-
-/* Item de Checklist */
-.checklist-item {
+    padding: 1rem 1.5rem;
+    z-index: 10;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.8rem;
-    padding: 0.6rem;
-    border-radius: 6px;
-    transition: background-color 0.2s;
-    cursor: pointer;
 }
 
-.checklist-item:hover {
-    background-color: var(--bg-ground);
-}
-
-.checklist-item input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--success);
+/* Scroll Container para o Form */
+.attendance-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    padding-bottom: 0; /* O footer dá o espaço final */
 }

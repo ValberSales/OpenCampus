@@ -5,7 +5,7 @@
 @import url('./style.css');
 @import url('./layout.css');
 
-/* 2. Componentes Compartilhados (Shared) */
+/* 2. Componentes Compartilhados */
 @import url('./shared/Header.css');
 @import url('./shared/Sidebar.css');
 @import url('./shared/Footer.css');
@@ -22,7 +22,7 @@
 @import url('./aluno/MyProjectCard.css');
 @import url('./aluno/CertificateCard.css');
 
-/* 4. Componentes da Landing Page */
+/* 4. Componentes da Landing Page (Use APENAS estes se os arquivos existirem individualmente) */
 @import url('./landing/PublicHeader.css');
 @import url('./landing/Hero.css');
 @import url('./landing/Impact.css');
@@ -30,5 +30,5 @@
 @import url('./landing/PublicFooter.css');
 @import url('./landing/CommunityFlip.css');
 
-/* 5. Área do Professor (NOVO) */
+/* 5. Área do Professor */
 @import url('./professor/professor.css');

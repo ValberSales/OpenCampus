@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../../css/main.css">
-    
     </head>
 <body>
     <div id="modal-overlay-container" class="modal-overlay"></div>
@@ -17,9 +16,9 @@
     <div id="app-sidebar-mobile"></div>
     <div id="app-header"></div>
 
-    <main class="main-container">
+    <main class="professor-container">
         
-        <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <div>
                 <h2 class="font-bold" style="font-size: 1.5rem;">Meus Projetos</h2>
                 <p class="text-secondary">Gerencie suas atividades, equipe e participantes.</p>
@@ -29,9 +28,12 @@
             </button>
         </div>
 
-        <section style="grid-column: 1 / -1;">
-            <div id="professor-projects-grid" class="my-project-grid">
-                <p class="text-secondary">Carregando seus projetos...</p>
+        <section>
+            <div id="professor-projects-grid" class="professor-projects-grid">
+                <div class="card p-3 text-center">
+                    <div class="spinner"></div>
+                    <p class="text-secondary mt-2">Carregando seus projetos...</p>
+                </div>
             </div>
         </section>
 

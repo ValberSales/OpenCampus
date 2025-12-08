@@ -113,5 +113,32 @@ export const DatabaseService = {
         localStorage.setItem(DB_KEYS.PARTNERSHIP_REQUESTS, JSON.stringify(reqs));
         console.log("✅ Solicitação de parceria salva:", request);
         return true;
+    },
+
+    getProjectClasses(projectId) {
+        const key = 'opencampus_classes';
+        const allClasses = JSON.parse(localStorage.getItem(key)) || [];
+        // Filtra aulas deste projeto e ordena por data (mais recente primeiro)
+        return allClasses
+            .filter(c => c.projectId === projectId)
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+    },
+
+    saveProjectClass(classData) {
+        const key = 'opencampus_classes';
+        let allClasses = JSON.parse(localStorage.getItem(key)) || [];
+        
+        if (classData.id) {
+            // Edição
+            const index = allClasses.findIndex(c => c.id === classData.id);
+            if (index !== -1) allClasses[index] = classData;
+        } else {
+            // Criação
+            classData.id = Date.now();
+            allClasses.push(classData);
+        }
+        
+        localStorage.setItem(key, JSON.stringify(allClasses));
+        return true;
     }
 };
