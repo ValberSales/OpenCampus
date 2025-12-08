@@ -1,0 +1,138 @@
+/* css/professor/professor.css */
+
+/* --- SISTEMA DE ABAS (TABS) --- */
+.tabs-nav {
+    display: flex;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 1.5rem;
+    margin-bottom: 0;
+}
+
+.tab-btn {
+    padding: 1rem 0.5rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    color: var(--primary);
+}
+
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+/* Conteúdo das Abas */
+.tab-content {
+    display: none; /* Escondido por padrão */
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block; /* Visível quando ativo */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- LISTAS DE USUÁRIOS (MOCK) --- */
+.user-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-list .user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-list .user-item:last-child {
+    border-bottom: none;
+}
+
+.rounded-circle {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* --- LISTAS COLAPSÁVEIS (DETAILS/SUMMARY) --- */
+details {
+    background-color: var(--bg-ground);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.8rem;
+    overflow: hidden;
+}
+
+details summary {
+    list-style: none; /* Remove triângulo padrão */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+    font-weight: 700;
+    background-color: var(--bg-ground);
+    transition: background-color 0.2s;
+}
+
+details summary:hover {
+    background-color: var(--bg-card);
+}
+
+details summary::after {
+    content: '\f0d7'; /* Código FontAwesome ou similar, mas usaremos CSS puro */
+    content: '▼';
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    transition: transform 0.2s;
+}
+
+details[open] summary::after {
+    transform: rotate(180deg);
+}
+
+/* Remove a seta padrão do Chrome/Safari */
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+details .details-content {
+    padding: 1rem;
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Item de Checklist */
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.checklist-item:hover {
+    background-color: var(--bg-ground);
+}
+
+.checklist-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--success);
+}

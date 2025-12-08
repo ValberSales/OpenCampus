@@ -9,23 +9,26 @@
 @import url('./shared/Header.css');
 @import url('./shared/Sidebar.css');
 @import url('./shared/Footer.css');
-@import url('./shared/Calendar.css');
-@import url('./shared/Pagination.css');
 @import url('./shared/Modal.css');
+@import url('./shared/ProjectCard.css');
+@import url('./shared/Pagination.css');
+@import url('./shared/Calendar.css');
 @import url('./shared/FilterDrawer.css');
-@import url('./shared/ConversationCard.css');
 @import url('./shared/ChatModal.css');
-@import url('./shared/ProjectCard.css'); /* ProjectCard parece ser shared */
+@import url('./shared/ConversationCard.css');
 
-/* 3. Componentes de Aluno */
+/* 3. Componentes do Aluno */
 @import url('./aluno/ProfileCard.css');
 @import url('./aluno/MyProjectCard.css');
 @import url('./aluno/CertificateCard.css');
 
-/* 4. Componentes de Landing Page */
+/* 4. Componentes da Landing Page */
 @import url('./landing/PublicHeader.css');
 @import url('./landing/Hero.css');
 @import url('./landing/Impact.css');
 @import url('./landing/Showcase.css');
 @import url('./landing/PublicFooter.css');
 @import url('./landing/CommunityFlip.css');
+
+/* 5. Área do Professor (NOVO) */
+@import url('./professor/professor.css');

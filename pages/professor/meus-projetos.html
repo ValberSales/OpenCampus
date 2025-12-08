@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Projetos - Professor</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../css/main.css">
+    
+    </head>
+<body>
+    <div id="modal-overlay-container" class="modal-overlay"></div>
+
+    <div id="app-sidebar-mobile"></div>
+    <div id="app-header"></div>
+
+    <main class="main-container">
+        
+        <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+                <h2 class="font-bold" style="font-size: 1.5rem;">Meus Projetos</h2>
+                <p class="text-secondary">Gerencie suas atividades, equipe e participantes.</p>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Funcionalidade de criar projeto em breve!')">
+                <i class="ph ph-plus-circle"></i> Criar Novo Projeto
+            </button>
+        </div>
+
+        <section style="grid-column: 1 / -1;">
+            <div id="professor-projects-grid" class="my-project-grid">
+                <p class="text-secondary">Carregando seus projetos...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="app-footer"></div>
+
+    <script type="module" src="../../js/professor/projects-professor.js"></script>
+</body>
+</html>

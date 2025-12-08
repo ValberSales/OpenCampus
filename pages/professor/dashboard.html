@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Professor - OpenCampus</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div id="app-sidebar-mobile"></div>
+    <div id="app-header"></div>
+
+    <main class="main-container">
+        
+        <aside class="left-col">
+            <div class="card p-3 text-center">
+                <div style="width: 80px; height: 80px; margin: 0 auto 1rem; border-radius: 50%; overflow: hidden; border: 3px solid var(--primary);">
+                    <img id="prof-avatar-img" src="" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <h3 class="font-bold" id="prof-name-display">Professor</h3>
+                <p class="text-secondary text-sm">Docente Orientador</p>
+                <div style="margin-top: 1.5rem; text-align: left;">
+                    <div class="flex justify-between mb-2 text-sm">
+                        <span>Projetos Ativos</span>
+                        <strong id="stat-active-projects">0</strong>
+                    </div>
+                    <div class="flex justify-between mb-2 text-sm">
+                        <span>Total de Alunos</span>
+                        <strong id="stat-total-students">0</strong>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="center-col">
+            <div class="mb-4">
+                <h2 class="font-bold" style="font-size: 1.5rem;">Visão Geral</h2>
+                <p class="text-secondary">Acompanhe o andamento das suas atividades.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div class="card p-3 flex align-center gap-2">
+                    <div class="btn-icon" style="background: #dbeafe; color: #1e40af;"><i class="ph ph-user-plus"></i></div>
+                    <div>
+                        <div class="text-xs text-secondary uppercase">Solicitações</div>
+                        <div class="font-bold text-lg" id="stat-pending-requests">0</div>
+                    </div>
+                </div>
+                <div class="card p-3 flex align-center gap-2">
+                    <div class="btn-icon" style="background: #fce7f3; color: #9d174d;"><i class="ph ph-stamp"></i></div>
+                    <div>
+                        <div class="text-xs text-secondary uppercase">Certificados Pendentes</div>
+                        <div class="font-bold text-lg">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="font-bold mb-3">Ações Rápidas</h3>
+            <div class="card p-3">
+                <div class="flex gap-2">
+                    <a href="meus-projetos.html" class="btn btn-primary flex-1 justify-center">
+                        <i class="ph ph-plus"></i> Novo Projeto
+                    </a>
+                    <a href="solicitacoes.html" class="btn btn-outline flex-1 justify-center">
+                        <i class="ph ph-list-checks"></i> Ver Solicitações
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <aside class="right-col" id="calendar-container"></aside>
+
+    </main>
+
+    <div id="app-footer"></div>
+
+    <script type="module" src="../../js/professor/dashboard-professor.js"></script>
+</body>
+</html>

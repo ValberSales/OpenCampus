@@ -335,21 +335,41 @@ function setupLoginModal() {
         });
     }
 
-    // Submit do Login
+    // --- LÓGICA DE LOGIN INTELIGENTE ---
     if(loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = document.getElementById('username').value;
-            const course = document.getElementById('usercourse').value;
-            if (!name.trim()) return;
+            
+            const nameInput = document.getElementById('username');
+            const selectLink = document.getElementById('usercourse'); // Select de Vínculo/Curso
+            
+            const name = nameInput.value.trim();
+            const selection = selectLink.value;
+
+            if (!name) return;
+
+            // Define padrões (Default: Aluno)
+            let role = 'student';
+            let targetUrl = 'pages/aluno/dashboard.html';
+            let avatarColor = '6366f1'; // Indigo (Aluno)
+
+            // Verifica se selecionou Professor
+            if (selection === 'Professor') {
+                role = 'professor';
+                targetUrl = 'pages/professor/dashboard.html';
+                avatarColor = '0d9488'; // Teal (Professor - para diferenciar visualmente)
+            }
 
             const user = {
                 name: name,
-                course: course,
-                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff`
+                role: role,       // Salva a role para usarmos depois na lógica de permissão
+                course: selection, // Salva o curso ou "Professor"
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${avatarColor}&color=fff`
             };
+
+            // Salva no LocalStorage e Redireciona
             DatabaseService.login(user);
-            window.location.href = 'pages/aluno/dashboard.html';
+            window.location.href = targetUrl;
         });
     }
 }
