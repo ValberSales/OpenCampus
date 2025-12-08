@@ -1,5 +1,3 @@
-// js/services/DatabaseService.js
-
 const DB_KEYS = {
     PROJECTS: 'opencampus_projects',
     USERS: 'opencampus_users',
@@ -14,9 +12,8 @@ const DB_KEYS = {
 
 export const DatabaseService = {
     
-    // --- INICIALIZAÇÃO (SEED MÚLTIPLO) ---
+    // --- INICIALIZAÇÃO ---
     async init() {
-        // Detecta caminho relativo correto
         let basePath = './data/';
         if (window.location.pathname.includes('/pages/')) {
             basePath = '../../data/';
@@ -24,7 +21,7 @@ export const DatabaseService = {
             basePath = '../data/';
         }
 
-        // Carrega USERS se não existir
+        // Carrega USERS
         if (!localStorage.getItem(DB_KEYS.USERS)) {
             try {
                 const res = await fetch(`${basePath}users.json`);
@@ -33,7 +30,7 @@ export const DatabaseService = {
             } catch (e) { console.error('Erro ao carregar users:', e); }
         }
 
-        // Carrega PROJECTS se não existir
+        // Carrega PROJECTS
         if (!localStorage.getItem(DB_KEYS.PROJECTS)) {
             try {
                 const res = await fetch(`${basePath}projects.json`);
@@ -42,24 +39,20 @@ export const DatabaseService = {
             } catch (e) { console.error('Erro ao carregar projects:', e); }
         }
 
-        // Carrega ENROLLMENTS se não existir
+        // Inicializa ENROLLMENTS vazio
         if (!localStorage.getItem(DB_KEYS.ENROLLMENTS)) {
             localStorage.setItem(DB_KEYS.ENROLLMENTS, JSON.stringify([]));
         }
     },
 
-    // --- QUERY: GET ALL PROJECTS (COM JOIN) ---
+    // --- QUERY ---
     getAllProjects() {
         const projects = JSON.parse(localStorage.getItem(DB_KEYS.PROJECTS)) || [];
         const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS)) || [];
 
-        // FAZ O "JOIN" MANUALMENTE
-        // O front-end espera project.professor.name, então montamos isso aqui
+        // Join manual para trazer dados do professor
         return projects.map(p => {
-            const prof = users.find(u => u.id === p.professorId) || { 
-                name: "Desconhecido", avatar: "", email: "" 
-            };
-            
+            const prof = users.find(u => u.id === p.professorId) || { name: "Desconhecido", avatar: "", email: "" };
             return {
                 ...p,
                 professor: {
@@ -72,28 +65,27 @@ export const DatabaseService = {
         });
     },
 
-    // --- PROJETOS (CRUD) ---
     getProjectById(id) {
         return this.getAllProjects().find(p => p.id === id);
     },
 
-    // --- USUÁRIO ---
+    // --- AUTH ---
     getCurrentUser() {
         return JSON.parse(localStorage.getItem(DB_KEYS.CURRENT_USER));
     },
 
-    // Login "Real" (Busca no users.json)
     login(credentials) {
-        // credentials pode ser { name, role } vindo do form da Home
         const allUsers = JSON.parse(localStorage.getItem(DB_KEYS.USERS)) || [];
         
-        // Tenta achar usuário existente
+        // CORREÇÃO: Comparação Flexível
+        // Verifica se o nome digitado está contido no nome do banco (ex: "Ana" em "Dra. Ana Souza")
+        // E verifica se a role (papel) é a mesma (professor ou student)
         let user = allUsers.find(u => 
-            u.name.toLowerCase() === credentials.name.toLowerCase() && 
+            u.name.toLowerCase().includes(credentials.name.toLowerCase()) && 
             u.role === credentials.role
         );
 
-        // Se não achar e for aluno, cria um novo (Cadastro automático simplificado)
+        // Se não achar e for aluno, cadastra automaticamente (Simulação)
         if (!user && credentials.role === 'student') {
             user = {
                 id: Date.now(),
@@ -106,45 +98,38 @@ export const DatabaseService = {
             localStorage.setItem(DB_KEYS.USERS, JSON.stringify(allUsers));
         }
 
-        // Se não achar e for professor, bloqueia (Segurança simulada)
+        // Se não achar e for professor, bloqueia
         if (!user && credentials.role === 'professor') {
-            alert("Professor não encontrado na base de dados. Tente 'Dra. Ana Souza' ou 'Prof. Carlos Mendez'.");
-            return false; // Falha no login
+            alert("Professor não encontrado. Verifique se o nome corresponde ao cadastro (ex: 'Ana Souza' ou 'Carlos Mendez').");
+            return false;
         }
 
+        // Salva sessão
         localStorage.setItem(DB_KEYS.CURRENT_USER, JSON.stringify(user));
-        return true; // Sucesso
+        return true; 
     },
 
     logout() {
         localStorage.removeItem(DB_KEYS.CURRENT_USER);
     },
 
-    // --- INSCRIÇÕES (ENROLLMENTS) ---
-    // Substitui a lógica antiga de array de IDs por tabela relacional
+    // --- ENROLLMENTS (Inscrições) ---
     getSubscriptions() {
         const currentUser = this.getCurrentUser();
         if (!currentUser) return [];
-
         const enrollments = JSON.parse(localStorage.getItem(DB_KEYS.ENROLLMENTS)) || [];
-        // Retorna apenas os IDs dos projetos que o user atual segue
-        return enrollments
-            .filter(e => e.userId === currentUser.id)
-            .map(e => e.projectId);
+        return enrollments.filter(e => e.userId === currentUser.id).map(e => e.projectId);
     },
 
     toggleSubscription(projectId) {
         const currentUser = this.getCurrentUser();
         if (!currentUser) return;
-
         let enrollments = JSON.parse(localStorage.getItem(DB_KEYS.ENROLLMENTS)) || [];
         const existingIndex = enrollments.findIndex(e => e.userId === currentUser.id && e.projectId === projectId);
 
         if (existingIndex !== -1) {
-            // Remove (Unsubscribe)
             enrollments.splice(existingIndex, 1);
         } else {
-            // Adiciona (Subscribe)
             enrollments.push({
                 id: Date.now(),
                 userId: currentUser.id,
@@ -156,7 +141,7 @@ export const DatabaseService = {
         localStorage.setItem(DB_KEYS.ENROLLMENTS, JSON.stringify(enrollments));
     },
     
-    // --- OUTROS MÉTODOS MANTIDOS (Certificados, Aulas, etc) ---
+    // --- CERTIFICADOS ---
     getCertificates() {
         return JSON.parse(localStorage.getItem(DB_KEYS.CERTIFICATES)) || [];
     },
@@ -166,11 +151,12 @@ export const DatabaseService = {
         localStorage.setItem(DB_KEYS.CERTIFICATES, JSON.stringify(list));
         return true;
     },
+
+    // --- COMUNIDADE ---
     saveCommunityApplication(application) {
         const apps = JSON.parse(localStorage.getItem(DB_KEYS.COMMUNITY_REQUESTS)) || [];
         application.id = Date.now();
         application.status = 'pending';
-        application.date = new Date().toISOString();
         apps.push(application);
         localStorage.setItem(DB_KEYS.COMMUNITY_REQUESTS, JSON.stringify(apps));
         return true;
@@ -182,6 +168,8 @@ export const DatabaseService = {
         localStorage.setItem(DB_KEYS.PARTNERSHIP_REQUESTS, JSON.stringify(reqs));
         return true;
     },
+
+    // --- DIÁRIO DE CLASSE ---
     getProjectClasses(projectId) {
         const allClasses = JSON.parse(localStorage.getItem(DB_KEYS.CLASSES)) || [];
         return allClasses.filter(c => c.projectId === projectId).sort((a, b) => new Date(b.date) - new Date(a.date));
