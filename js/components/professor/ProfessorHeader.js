@@ -7,7 +7,14 @@ export function ProfessorHeaderComponent(activePage = 'dashboard') {
     <nav class="topbar flex justify-between align-center">
         <div class="flex align-center gap-2">
             <button class="menu-toggle btn-icon" id="btn-menu-toggle"><i class="ph ph-list"></i></button>
-            <a href="dashboard.html" class="logo"><i class="ph ph-graduation-cap"></i> OpenCampus <span class="badge badge-tech" style="font-size: 0.6rem; margin-left: 5px;">Docente</span></a>
+            
+            <a href="dashboard.html" class="logo" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="ph ph-graduation-cap" style="font-size: 2rem;"></i>
+                <div style="display: flex; flex-direction: column; line-height: 1;">
+                    <span>OpenCampus</span>
+                    <span class="badge badge-tech" style="font-size: 0.6rem; padding: 2px 6px; width: fit-content;"> Docente </span>
+                </div>
+            </a>
         </div>
         
         <div class="nav-links nav-links-desktop">
@@ -19,6 +26,9 @@ export function ProfessorHeaderComponent(activePage = 'dashboard') {
             </a>
             <a href="solicitacoes.html" class="nav-item ${activePage === 'requests' ? 'active' : ''}">
                 <i class="ph ph-user-plus"></i> Solicitações
+            </a>
+            <a href="mensagens.html" class="nav-item ${activePage === 'messages' ? 'active' : ''}">
+                <i class="ph ph-chat-circle-text"></i> Mensagens
             </a>
             <a href="validar-certificados.html" class="nav-item ${activePage === 'validation' ? 'active' : ''}">
                 <i class="ph ph-stamp"></i> Validar Horas

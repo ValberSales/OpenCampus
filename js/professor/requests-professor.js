@@ -7,7 +7,8 @@ import { DatabaseService } from '../services/DatabaseService.js';
 
 // Estado Local
 let allRequests = [];
-let activeTab = 'students'; // 'students' ou 'community'
+// CORREÇÃO: Padronizado para singular para bater com o dado 'type: student'
+let activeTab = 'student'; 
 
 async function init() {
     await DatabaseService.init();
@@ -22,19 +23,22 @@ async function init() {
 }
 
 function loadRequests() {
-    // Para fins de desenvolvimento/teste, vamos sempre regerar os mocks
-    // se não houver dados ou se a estrutura parecer antiga.
-    // Em produção, você removeria esse reset forçado.
-    const stored = localStorage.getItem('opencampus_requests_combined');
+    const storageKey = 'opencampus_requests_combined';
+    const stored = localStorage.getItem(storageKey);
+    
+    // Lógica de segurança: Se não tiver dados OU se tiver poucos (para forçar o teste da UI), regera.
+    let shouldRegenerate = !stored;
     
     if (stored) {
-        allRequests = JSON.parse(stored);
-    } 
-    
-    // Se a lista estiver vazia ou com poucos itens (para garantir o teste do usuário), regera
-    if (allRequests.length < 5) {
+        const parsed = JSON.parse(stored);
+        if (parsed.length < 5) shouldRegenerate = true; // Garante que temos dados suficientes para teste
+    }
+
+    if (shouldRegenerate) {
         allRequests = generateMockData();
         saveRequests();
+    } else {
+        allRequests = JSON.parse(stored);
     }
 
     updateBadges();
@@ -44,10 +48,10 @@ function loadRequests() {
 function generateMockData() {
     const user = DatabaseService.getCurrentUser();
     const allProjects = DatabaseService.getAllProjects();
-    // Pega um projeto do professor ou usa um genérico
     const myProject = allProjects.find(p => p.professor.id === user.id) || { title: "Inclusão Digital", id: 1 };
 
     // --- 4 Solicitações de ALUNOS (Internos) ---
+    // Note: type: 'student' (singular)
     const students = [
         {
             id: 101, type: 'student', status: 'pending',
@@ -88,12 +92,13 @@ function generateMockData() {
     ];
 
     // --- 4 Solicitações da COMUNIDADE (Externos) ---
+    // Note: type: 'community'
     const community = [
         {
             id: 201, type: 'community', status: 'pending',
             projectId: myProject.id, projectTitle: myProject.title,
             applicantName: "Maria da Silva",
-            info: "", // Sem info extra para externos
+            info: "", 
             phone: "(46) 98888-9999", email: "maria.silva@gmail.com",
             reason: "Me disseram que ensinam a usar celular. Preciso aprender a usar o banco.",
             date: new Date().toISOString()
@@ -134,10 +139,11 @@ function renderList() {
     const container = document.getElementById('requests-container');
     
     // Filtra por ABA ATIVA e STATUS PENDENTE
+    // Aqui estava o erro: antes 'activeTab' era 'students' mas o dado era 'student'
     const visibleRequests = allRequests.filter(r => r.type === activeTab && r.status === 'pending');
 
     if (visibleRequests.length === 0) {
-        const emptyMsg = activeTab === 'students' ? 'Nenhum aluno aguardando.' : 'Nenhuma solicitação externa.';
+        const emptyMsg = activeTab === 'student' ? 'Nenhum aluno aguardando.' : 'Nenhuma solicitação externa.';
         container.innerHTML = `
             <div class="card p-5 text-center" style="border: 1px dashed var(--border-color); background: transparent;">
                 <div style="width: 50px; height: 50px; background: var(--bg-ground); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: var(--text-secondary);">
@@ -164,6 +170,7 @@ function renderList() {
 }
 
 function updateBadges() {
+    // Conta exatamente quantos itens 'pending' existem para cada tipo
     const studentCount = allRequests.filter(r => r.type === 'student' && r.status === 'pending').length;
     const communityCount = allRequests.filter(r => r.type === 'community' && r.status === 'pending').length;
 

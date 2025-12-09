@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagens - Professor</title>
+    
+    <script>
+        (function() {
+            const saved = localStorage.getItem('opencampus-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div id="modal-overlay-container" class="modal-overlay"></div>
+
+    <div id="app-sidebar-mobile"></div>
+    <div id="app-header"></div>
+
+    <main class="professor-container">
+        
+        <div class="mb-4">
+            <h2 class="font-bold" style="font-size: 1.5rem;">Caixa de Entrada</h2>
+            <p class="text-secondary">Dúvidas de alunos e participantes externos.</p>
+        </div>
+
+        <section class="center-col" style="max-width: 800px; margin: 0 auto;">
+            <div id="conversations-container" class="conversation-list">
+                <div class="card p-3 text-center">
+                    <div class="spinner"></div>
+                    <p class="text-secondary mt-2">Carregando conversas...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="app-footer"></div>
+
+    <script type="module" src="../../js/professor/messages-professor.js"></script>
+</body>
+</html>

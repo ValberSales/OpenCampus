@@ -13,7 +13,14 @@ export function HeaderComponent(activePage = 'dashboard') {
     <nav class="topbar flex justify-between align-center">
         <div class="flex align-center gap-2">
             <button class="menu-toggle btn-icon" id="btn-menu-toggle"><i class="ph ph-list"></i></button>
-            <a href="dashboard.html" class="logo"><i class="ph ph-graduation-cap"></i> OpenCampus</a>
+            
+            <a href="dashboard.html" class="logo" style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="ph ph-graduation-cap" style="font-size: 2rem;"></i>
+                <div style="display: flex; flex-direction: column; line-height: 1;">
+                    <span>OpenCampus</span>
+                    <span class="badge badge-tech" style="font-size: 0.6rem; padding: 2px 6px; width: fit-content;"> Aluno </span>
+                </div>
+            </a>
         </div>
         
         <div class="nav-links nav-links-desktop">

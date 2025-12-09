@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="../../css/main.css">
     
     <style>
-        /* Estilos inline específicos para esta página (ou mover para css) */
+        /* Estilos inline específicos para abas dessa página */
         .tab-btn-req {
             padding: 0.8rem 1rem;
             background: transparent;
@@ -34,7 +34,6 @@
         .tab-btn-req:hover { color: var(--primary); }
         .tab-btn-req.active { color: var(--primary); border-bottom-color: var(--primary); }
         
-        /* Ajuste do badge dentro da aba */
         .tab-btn-req .badge {
             font-size: 0.65rem;
             padding: 0.1rem 0.4rem;
@@ -50,17 +49,21 @@
 
     <main class="main-container">
         
-        <aside class="left-col">
-            <div class="card p-3 sticky-top">
-                <h3 class="font-bold mb-2">Gerenciar</h3>
-                <p class="text-sm text-secondary mb-3">Analise os perfis antes de aprovar.</p>
-                <div class="p-3 rounded bg-ground border">
-                    <div class="text-xs text-secondary uppercase mb-1">Dica</div>
-                    <p class="text-xs">Clique no botão de <strong>WhatsApp</strong> dentro do card para entrevistar o candidato.</p>
-                </div>
+    <aside class="left-col">
+    <div class="card p-3 sticky-top">
+        <h3 class="font-bold mb-2">Gerenciar</h3>
+        <p class="text-sm text-secondary mb-3">Analise os perfis antes de aprovar.</p>
+        
+        <div class="p-3 rounded bg-ground border">
+            <div class="text-xs text-secondary uppercase mb-1 font-bold flex align-center gap-1">
+                <i class="ph ph-lightbulb"></i> Dica
             </div>
-        </aside>
-
+            <p class="text-xs text-secondary" style="line-height: 1.5;">
+                Clique no botão de <strong>WhatsApp</strong> dentro do card para entrevistar o candidato.
+            </p>
+        </div>
+    </div>
+</aside>
         <section class="center-col" style="grid-column: span 2;">
             <div class="mb-2">
                 <h2 class="font-bold" style="font-size: 1.5rem;">Solicitações</h2>
@@ -68,7 +71,7 @@
             </div>
 
             <div class="tabs-nav mb-4" style="border-bottom: 1px solid var(--border-color); display: flex; gap: 1rem;">
-                <button class="tab-btn-req active" data-tab="students">
+                <button class="tab-btn-req active" data-tab="student">
                     Alunos da UTFPR 
                     <span id="badge-student" class="badge badge-tech" style="display: none;">0</span>
                 </button>

@@ -1,70 +1,102 @@
-/* js/aluno/messages-aluno.js */
-import { HeaderComponent } from '../components/shared/Header.js';
-import { SidebarComponent } from '../components/shared/Sidebar.js';
+/* js/professor/messages-professor.js */
+import { ProfessorHeaderComponent } from '../components/professor/ProfessorHeader.js';
+import { ProfessorSidebarComponent } from '../components/professor/ProfessorSidebar.js';
 import { FooterComponent } from '../components/shared/Footer.js';
-import { ConversationCardComponent } from '../components/shared/ConversationCard.js';
-import { ChatModalComponent, ChatBubbleComponent } from '../components/aluno/ChatModal.js';
-import { ProfileCardComponent } from '../components/aluno/ProfileCard.js';
-import { BadgeModalComponent } from '../components/aluno/BadgeModal.js';
+import { ChatModalComponent, ChatBubbleComponent } from '../components/professor/ChatModal.js';
+import { ConversationCardComponent } from '../components/shared/ConversationCard.js'; // IMPORTADO AQUI
+import { DatabaseService } from '../services/DatabaseService.js';
 
 let conversations = [];
 
 async function init() {
-    document.getElementById('app-header').innerHTML = HeaderComponent('messages');
-    document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('messages');
-    document.getElementById('profile-container').innerHTML = ProfileCardComponent();
+    await DatabaseService.init();
+
+    document.getElementById('app-header').innerHTML = ProfessorHeaderComponent('messages');
+    document.getElementById('app-sidebar-mobile').innerHTML = ProfessorSidebarComponent('messages');
     document.getElementById('app-footer').innerHTML = FooterComponent();
 
     loadConversations();
     setupEventListeners();
-    setupProfileEvents(); 
-    setupBadgeEvents();
-    loadTheme();
 }
 
 function loadConversations() {
-    const storageKey = 'opencampus_conversations';
-    conversations = JSON.parse(localStorage.getItem(storageKey)) || [];
+    const storageKey = 'opencampus_prof_conversations';
+    const stored = localStorage.getItem(storageKey);
+
+    if (stored) {
+        conversations = JSON.parse(stored);
+    } else {
+        conversations = generateMockConversations();
+        localStorage.setItem(storageKey, JSON.stringify(conversations));
+    }
+    
     conversations.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
     renderList();
 }
 
+function generateMockConversations() {
+    return [
+        {
+            id: 1,
+            projectId: 1,
+            projectTitle: "Inclusão Digital",
+            studentName: "Lucas Pereira",
+            studentAvatar: "https://ui-avatars.com/api/?name=Lucas+P&background=random",
+            lastUpdated: new Date().toISOString(),
+            messages: [
+                { sender: 'student', text: 'Professor, quando começam as aulas práticas?', timestamp: new Date(Date.now() - 3600000).toISOString() },
+                { sender: 'professor', text: 'Olá Lucas! Começam na próxima terça-feira.', timestamp: new Date(Date.now() - 1800000).toISOString() },
+                { sender: 'student', text: 'Perfeito, estarei lá. Obrigado!', timestamp: new Date().toISOString() }
+            ]
+        },
+        {
+            id: 2,
+            projectId: 2,
+            projectTitle: "Robótica nas Escolas",
+            studentName: "Fernanda Costa",
+            studentAvatar: "https://ui-avatars.com/api/?name=Fernanda+C&background=random",
+            lastUpdated: new Date(Date.now() - 86400000).toISOString(),
+            messages: [
+                { sender: 'student', text: 'Tenho uma dúvida sobre o kit de robótica.', timestamp: new Date(Date.now() - 90000000).toISOString() }
+            ]
+        }
+    ];
+}
+
 function renderList() {
     const container = document.getElementById('conversations-container');
+    
     if (conversations.length === 0) {
-        container.innerHTML = `
-            <div class="card p-3 text-center">
-                <p class="text-secondary mb-2">Você ainda não iniciou nenhuma conversa.</p>
-                <a href="index.html" class="btn btn-primary">Ir para Projetos</a>
-            </div>
-        `;
+        container.innerHTML = `<div class="card p-3 text-center text-secondary">Nenhuma conversa iniciada.</div>`;
         return;
     }
+
+    // Agora usamos o componente compartilhado, assim como o aluno
     container.innerHTML = conversations.map(c => ConversationCardComponent(c)).join('');
-    
-    // Configura cliques nos Cards
+
+    // Eventos de Clique no CARD (abrir chat)
     document.querySelectorAll('.conversation-card').forEach(card => {
         card.addEventListener('click', (e) => {
-            // Se clicou na lixeira, não abre o chat
+            // Se clicou na lixeira, ignora
             if (e.target.closest('.btn-delete-conv')) return;
 
-            const projectId = parseInt(card.dataset.id);
-            openChat(projectId);
+            const id = parseInt(card.dataset.id);
+            openChat(id);
         });
     });
 
-    // Configura cliques nas Lixeiras
+    // Eventos de Clique na LIXEIRA (deletar)
     document.querySelectorAll('.btn-delete-conv').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Impede abrir o chat
+            e.stopPropagation();
             const id = parseInt(btn.dataset.deleteId);
             openDeleteModal(id);
         });
     });
 }
 
-// NOVO: Modal de Confirmação de Exclusão
-function openDeleteModal(projectId) {
+// NOVO: Modal de Deletar (Professor)
+function openDeleteModal(convId) {
     const overlay = document.getElementById('modal-overlay-container');
     
     overlay.innerHTML = `
@@ -95,20 +127,19 @@ function openDeleteModal(projectId) {
     document.getElementById('btn-cancel-del').addEventListener('click', closeModal);
     
     document.getElementById('btn-confirm-del').addEventListener('click', () => {
-        deleteConversation(projectId);
+        deleteConversation(convId);
         closeModal();
     });
 }
 
-function deleteConversation(projectId) {
-    conversations = conversations.filter(c => c.projectId !== projectId);
-    localStorage.setItem('opencampus_conversations', JSON.stringify(conversations));
+function deleteConversation(convId) {
+    conversations = conversations.filter(c => c.id !== convId);
+    localStorage.setItem('opencampus_prof_conversations', JSON.stringify(conversations));
     renderList();
-    // Feedback visual opcional? Alert simples resolve.
 }
 
-function openChat(projectId) {
-    const conversation = conversations.find(c => c.projectId === projectId);
+function openChat(convId) {
+    const conversation = conversations.find(c => c.id === convId);
     if (!conversation) return;
 
     const overlay = document.getElementById('modal-overlay-container');
@@ -117,6 +148,7 @@ function openChat(projectId) {
 
     const msgContainer = document.getElementById('chat-messages-container');
     msgContainer.innerHTML = conversation.messages.map(msg => ChatBubbleComponent(msg)).join('');
+    
     msgContainer.scrollTop = msgContainer.scrollHeight;
 
     document.getElementById('btn-close-chat').addEventListener('click', closeModal);
@@ -127,7 +159,7 @@ function openChat(projectId) {
     const handleSend = () => {
         const text = input.value.trim();
         if (text) {
-            sendMessage(projectId, text);
+            sendMessage(convId, text);
             input.value = '';
             input.focus();
         }
@@ -141,24 +173,26 @@ function openChat(projectId) {
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
-function sendMessage(projectId, text) {
-    const convIndex = conversations.findIndex(c => c.projectId === projectId);
+function sendMessage(convId, text) {
+    const idx = conversations.findIndex(c => c.id === convId);
+    if (idx === -1) return;
+
     const newMessage = {
-        id: Date.now(),
-        sender: 'student',
+        sender: 'professor',
         text: text,
         timestamp: new Date().toISOString()
     };
 
-    conversations[convIndex].messages.push(newMessage);
-    conversations[convIndex].lastUpdated = new Date().toISOString();
-
-    localStorage.setItem('opencampus_conversations', JSON.stringify(conversations));
+    conversations[idx].messages.push(newMessage);
+    conversations[idx].lastUpdated = new Date().toISOString();
+    
+    localStorage.setItem('opencampus_prof_conversations', JSON.stringify(conversations));
 
     const msgContainer = document.getElementById('chat-messages-container');
     msgContainer.insertAdjacentHTML('beforeend', ChatBubbleComponent(newMessage));
     msgContainer.scrollTop = msgContainer.scrollHeight;
-    renderList(); 
+    
+    renderList();
 }
 
 function closeModal() {
@@ -167,43 +201,18 @@ function closeModal() {
     setTimeout(() => overlay.innerHTML = '', 300);
 }
 
-// Configurações Comuns (Menus, Temas)
 function setupEventListeners() {
     const btnMenu = document.getElementById('btn-menu-toggle');
     const overlay = document.getElementById('overlay');
-    if(btnMenu) btnMenu.addEventListener('click', toggleMenu);
-    if(overlay) overlay.addEventListener('click', toggleMenu);
+    if (btnMenu) btnMenu.addEventListener('click', toggleMenu);
+    if (overlay) overlay.addEventListener('click', toggleMenu);
     document.getElementById('btn-close-sidebar')?.addEventListener('click', toggleMenu);
     document.getElementById('header-theme-btn')?.addEventListener('click', toggleTheme);
     document.getElementById('sidebar-theme-btn')?.addEventListener('click', toggleTheme);
+    loadTheme();
 }
-function setupProfileEvents() {
-    const profileCard = document.getElementById('profile-card-component');
-    if (profileCard) {
-        profileCard.addEventListener('click', () => {
-            if (window.innerWidth <= 1024) profileCard.classList.toggle('expanded');
-        });
-    }
-}
-function setupBadgeEvents() {
-    const badges = document.querySelectorAll('.trophy-trigger');
-    badges.forEach(badge => {
-        badge.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const level = badge.dataset.level;
-            openBadgeModal(level);
-        });
-    });
-}
-function openBadgeModal(level) {
-    const overlay = document.getElementById('modal-overlay-container');
-    overlay.innerHTML = BadgeModalComponent(level);
-    requestAnimationFrame(() => overlay.classList.add('active'));
-    document.getElementById('btn-modal-close').addEventListener('click', closeModal);
-    document.getElementById('btn-modal-close-action').addEventListener('click', closeModal);
-    overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
-}
-function toggleMenu() {
+
+function toggleMenu() { 
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     if(sidebar) sidebar.classList.toggle('active');

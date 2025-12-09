@@ -144,7 +144,7 @@ export function ProjectManagementModal(project) {
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <span class="badge badge-tech">${classes.length} Aulas</span>
+                        <span class="badge badge-tech">${classes.length} Atividades</span>
                     </div>
                 </div>
 

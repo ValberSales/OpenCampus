@@ -139,6 +139,7 @@ function openCreateModal() {
     const closeBtns = overlay.querySelectorAll('#btn-close-create, #btn-cancel-create');
     closeBtns.forEach(btn => btn.addEventListener('click', closeModal));
     
+    // Configura fechar ao clicar fora
     overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
 }
 
@@ -195,6 +196,11 @@ function openManagementModal(project) {
 
     const closeBtns = overlay.querySelectorAll('#btn-modal-close, #btn-modal-cancel, #btn-header-close');
     closeBtns.forEach(btn => btn.addEventListener('click', closeModal));
+
+    // NOVO: Fechar ao clicar fora
+    overlay.onclick = (e) => { 
+        if (e.target === overlay) closeModal(); 
+    };
 
     const scrollBody = document.getElementById('modal-scroll-body');
     const stickyHeader = document.getElementById('pm-sticky-header');
@@ -270,6 +276,11 @@ function openAttendanceForm(project, classData) {
 
     const closeForm = () => dOverlay.remove();
     
+    // NOVO: Fechar ao clicar fora (no modal de Chamada)
+    dOverlay.addEventListener('click', (e) => {
+        if (e.target === dOverlay) closeForm();
+    });
+
     dOverlay.querySelectorAll('.btn-close-secondary').forEach(btn => 
         btn.addEventListener('click', closeForm)
     );

@@ -3,7 +3,6 @@ export function ProfessorProjectCardComponent(project) {
     const availableStudents = project.vacancies.students.available;
     const enrolledStudents = totalStudents - availableStudents;
 
-    // Removemos os botões de ação direta para focar no clique do card inteiro
     return `
     <div class="card project-card cursor-pointer hover-scale" data-id="${project.id}" style="cursor: pointer; position: relative; transition: all 0.2s ease;">
         <div class="project-img-container">
@@ -20,14 +19,14 @@ export function ProfessorProjectCardComponent(project) {
             
             <h3 class="project-title mb-1">${project.title}</h3>
             
-            <div class="flex gap-2 text-sm text-secondary mt-auto mb-2">
+            <div class="flex gap-2 text-sm text-secondary mt-auto mb-3">
                 <div><i class="ph ph-student"></i> <strong>${enrolledStudents}/${totalStudents}</strong> Alunos</div>
                 ${project.openToCommunity ? `<div><i class="ph ph-users"></i> <strong>${project.vacancies.community.total - project.vacancies.community.available}</strong> Externos</div>` : ''}
             </div>
 
-            <p class="text-xs text-primary font-bold mt-2 flex align-center gap-1">
-                Gerenciar Projeto <i class="ph ph-arrow-right"></i>
-            </p>
+            <button class="btn btn-primary w-full justify-center">
+                Gerenciar Projeto
+            </button>
         </div>
     </div>
     `;

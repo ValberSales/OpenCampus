@@ -1,40 +1,63 @@
+/* css/shared/ConversationCard.css */
+
 .conversation-list {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
 }
+
+/* Nota: A classe .card (do style.css) já fornece:
+   - background-color
+   - border
+   - border-radius
+   - box-shadow
+   - padding (1.5rem)
+*/
 
 .conversation-card {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.5rem;
     cursor: pointer;
     transition: var(--transition);
-    border-left: 4px solid transparent; /* Indicador visual */
+    
+    /* Borda esquerda transparente para reservar espaço para o hover */
+    border-left: 4px solid transparent;
+    
+    position: relative;
+    /* Padding, sombra e fundo vêm da classe .card */
 }
 
 .conversation-card:hover {
     transform: translateX(5px);
+    
+    /* Pinta a borda esquerda e a geral */
+    border-left-color: var(--primary); 
     border-color: var(--primary);
+    
+    /* A sombra padrão já existe, não precisamos redeclarar */
 }
 
 .conversation-avatar {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .conversation-info {
     flex: 1;
+    min-width: 0;
 }
 
 .conversation-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.25rem;
+    align-items: center;
 }
 
 .conversation-proj-title {
@@ -42,6 +65,7 @@
     text-transform: uppercase;
     color: var(--primary);
     font-weight: 700;
+    margin-bottom: 2px;
 }
 
 .conversation-time {
@@ -52,9 +76,43 @@
 .conversation-last-msg {
     color: var(--text-secondary);
     font-size: 0.9rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
-    -webkit-box-orient: vertical;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Botão de Excluir */
+.btn-delete-conv {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: 0.2s;
+    background: transparent;
+    border: 1px solid transparent;
+    margin-left: 0.5rem;
+    pointer-events: none; /* Evita cliques acidentais quando invisível */
+}
+
+
+
+.btn-delete-conv:hover {
+    background-color: #fee2e2;
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+/* Responsividade Mobile: Botão sempre visível (pois não tem hover) */
+@media (max-width: 1024px) {
+    .btn-delete-conv {
+        opacity: 1;
+        pointer-events: auto;
+        background-color: var(--bg-ground); /* Fundo sutil para destacar */
+    }
 }

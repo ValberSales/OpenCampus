@@ -34,3 +34,5 @@
 @import url('./professor/professor.css');
 @import url('./professor/ProjectManagementModal.css');
 @import url('./professor/CreateProjectModal.css');
+@import url('./professor/messages.css');
+@import url('./professor/validation.css');

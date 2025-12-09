@@ -3,7 +3,7 @@ export function ProfessorSidebarComponent(activePage = 'dashboard') {
     <div class="overlay" id="overlay"></div>
     <div class="sidebar-mobile" id="sidebar">
         <div class="flex justify-between align-center mb-4">
-            <div class="logo"><i class="ph ph-graduation-cap"></i> OpenCampus <small>Prof</small></div>
+            <div class="logo"><i class="ph ph-graduation-cap"></i> OpenCampus </div>
             <button class="btn-icon" id="btn-close-sidebar"><i class="ph ph-x"></i></button>
         </div>
         <ul class="flex-column gap-2">
@@ -20,6 +20,11 @@ export function ProfessorSidebarComponent(activePage = 'dashboard') {
             <li>
                 <a href="solicitacoes.html" class="nav-item ${activePage === 'requests' ? 'active' : ''}">
                     <i class="ph ph-user-plus"></i> Solicitações
+                </a>
+            </li>
+            <li>
+                <a href="mensagens.html" class="nav-item ${activePage === 'messages' ? 'active' : ''}">
+                    <i class="ph ph-chat-circle-text"></i> Mensagens
                 </a>
             </li>
             <li>
