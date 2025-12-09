@@ -1,278 +1,256 @@
-import { ProfessorHeaderComponent } from '../components/professor/ProfessorHeader.js';
-import { ProfessorSidebarComponent } from '../components/professor/ProfessorSidebar.js';
-import { FooterComponent } from '../components/shared/Footer.js';
-import { ProfessorProjectCardComponent } from '../components/professor/ProfessorProjectCard.js';
-import { ProjectManagementModal } from '../components/professor/ProjectManagementModal.js';
-// IMPORTAÇÃO NOVA: Modais de Chamada/Diário
-import { ClassLogModal, AttendanceFormModal } from '../components/professor/AttendanceModal.js';
-import { DatabaseService } from '../services/DatabaseService.js';
+import { DatabaseService } from '../../services/DatabaseService.js';
 
-async function init() {
-    await DatabaseService.init();
+export function ProjectManagementModal(project) {
+    const enrolledStudents = DatabaseService.getProjectStudents(project.id);
+    const classes = DatabaseService.getProjectClasses(project.id);
     
-    document.getElementById('app-header').innerHTML = ProfessorHeaderComponent('projects');
-    document.getElementById('app-sidebar-mobile').innerHTML = ProfessorSidebarComponent('projects');
-    document.getElementById('app-footer').innerHTML = FooterComponent();
-
-    loadProfessorProjects();
-    setupEventListeners();
-}
-
-function loadProfessorProjects() {
-    const user = DatabaseService.getCurrentUser();
-    const allProjects = DatabaseService.getAllProjects();
+    // Cálculos de Vagas
+    const sTotal = project.vacancies.students.total;
+    const sTaken = enrolledStudents.length;
+    const sAvail = Math.max(0, sTotal - sTaken);
     
-    // Filtra projetos onde o professor é o dono (Match por nome)
-    const myProjects = allProjects.filter(p => p.professor.name === user.name);
+    const cTotal = project.vacancies.community.total;
+    const cTaken = Math.floor(cTotal * 0.3); // Mock
     
-    const container = document.getElementById('professor-projects-grid');
-    
-    if (myProjects.length === 0) {
-        container.innerHTML = `
-            <div class="card p-3 text-center" style="grid-column: 1 / -1;">
-                <p class="text-secondary mb-2">Você ainda não possui projetos cadastrados.</p>
-            </div>`;
-        return;
-    }
+    let vacanciesHtml = '';
+    for(let i=0; i<Math.min(sTaken, 15); i++) vacanciesHtml += `<div class="dot taken" title="Ocupada"></div>`;
+    for(let i=0; i<Math.min(sAvail, 15); i++) vacanciesHtml += `<div class="dot filled" title="Disponível"></div>`;
 
-    container.innerHTML = myProjects.map(p => ProfessorProjectCardComponent(p)).join('');
-    
-    // Conecta eventos aos cards
-    setupCardActions(myProjects);
-}
+    const dateDisplay = project.date.isOneDay ? project.date.start : `${project.date.start} até ${project.date.end}`;
 
-function setupCardActions(projects) {
-    document.querySelectorAll('.btn-manage').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const card = e.target.closest('.project-card');
-            const id = parseInt(card.dataset.id);
-            const project = projects.find(p => p.id === id);
-            openManagementModal(project);
-        });
-    });
-}
-
-// --- SUPER MODAL DE GESTÃO ---
-function openManagementModal(project) {
-    const overlay = document.getElementById('modal-overlay-container');
-    overlay.innerHTML = ProjectManagementModal(project);
-    requestAnimationFrame(() => overlay.classList.add('active'));
-
-    // Fechar Modal Principal
-    document.getElementById('btn-modal-close').addEventListener('click', () => {
-        overlay.classList.remove('active');
-        // Recarrega a lista ao fechar para refletir edições (ex: imagem nova)
-        loadProfessorProjects();
-    });
-
-    setupTabs(overlay);
-    setupEditForm(overlay, project);
-
-    // Conecta o Botão "Abrir Diário / Frequência" (Aba Alunos)
-    const btnOpenDiary = overlay.querySelector('#btn-open-diary');
-    if (btnOpenDiary) {
-        btnOpenDiary.addEventListener('click', () => {
-            openClassLogModal(project);
-        });
-    }
-}
-
-function setupTabs(overlay) {
-    const tabBtns = overlay.querySelectorAll('.tab-btn');
-    const tabContents = overlay.querySelectorAll('.tab-content');
-
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.style.display = 'none');
+    return `
+    <div class="pm-modal-container" id="flip-container">
+        <div class="pm-flip-inner">
             
-            btn.classList.add('active');
-            const targetId = `tab-${btn.dataset.tab}`;
-            document.getElementById(targetId).style.display = 'block';
-        });
-    });
+            <div class="pm-flip-front">
+                <div class="pm-header-overlay">
+                    <button class="pm-close-btn" id="btn-modal-close" title="Fechar Janela"><i class="ph ph-x"></i></button>
+                </div>
+
+                <div class="pm-scroll-body" id="modal-scroll-body">
+                    
+                    <div id="view-mode-container">
+                        <img src="${project.image}" class="pm-hero-img" alt="${project.title}">
+                        
+                        <div class="pm-content-padding">
+                            <div class="flex justify-between align-center mb-2">
+                                <div class="flex gap-1">
+                                    ${project.tags.map(t => `<span class="badge ${t.class}">${t.label}</span>`).join('')}
+                                </div>
+                                <span class="badge ${project.openToCommunity ? 'badge-env' : 'badge-art'}">
+                                    ${project.openToCommunity ? 'Aberto à Comunidade' : 'Interno'}
+                                </span>
+                            </div>
+
+                            <h2 class="modal-title mb-4">${project.title}</h2>
+
+                            <div class="pm-tabs-container">
+                                <button class="pm-tab-btn active" data-tab="details">Detalhes</button>
+                                <button class="pm-tab-btn" data-tab="students">Alunos (${sTaken})</button>
+                                <button class="pm-tab-btn" data-tab="community">Externos (${cTaken})</button>
+                            </div>
+
+                            <div style="min-height: 200px;">
+                                <div id="tab-details" class="tab-content active">
+                                    <p style="line-height: 1.6; color: var(--text-secondary); margin-bottom: 1.5rem;">${project.description}</p>
+                                    <div class="modal-meta-grid" style="margin: 0; padding-top: 0; border-top: none;">
+                                        <div class="meta-item">
+                                            <div class="meta-icon"><i class="ph ph-calendar-blank"></i></div>
+                                            <div class="meta-info"><h4>Período</h4><p>${dateDisplay}</p></div>
+                                        </div>
+                                        <div class="meta-item">
+                                            <div class="meta-icon"><i class="ph ph-users-three"></i></div>
+                                            <div class="meta-info"><h4>Vagas Alunos</h4><p>${sTaken} / ${sTotal}</p><div class="vacancy-visuals">${vacanciesHtml}</div></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="tab-students" class="tab-content" style="display: none;">
+                                    <div class="flex justify-between align-center mb-3">
+                                        <h4 class="font-bold text-sm uppercase text-secondary">Alunos Inscritos</h4>
+                                        <button class="btn-icon text-primary"><i class="ph ph-plus-circle" style="font-size: 1.2rem;"></i></button>
+                                    </div>
+                                    <div class="user-list bg-card border rounded">
+                                        ${renderStudentList(enrolledStudents)}
+                                    </div>
+                                </div>
+
+                                <div id="tab-community" class="tab-content" style="display: none;">
+                                    <div class="flex justify-between align-center mb-3">
+                                        <h4 class="font-bold text-sm uppercase text-secondary">Participantes Externos</h4>
+                                        <button class="btn-icon text-primary"><i class="ph ph-plus-circle" style="font-size: 1.2rem;"></i></button>
+                                    </div>
+                                    <div class="user-list bg-card border rounded">
+                                        ${renderMockExternalList(cTaken)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="edit-mode-container" style="display: none;">
+                        <div class="pm-img-edit" id="edit-img-trigger">
+                            <img src="${project.image}" id="edit-img-preview">
+                            <div class="pm-img-edit-overlay"><i class="ph ph-camera mr-2"></i> Alterar Capa</div>
+                            <input type="file" id="edit-img-input" style="display: none;" accept="image/*">
+                        </div>
+                        <div class="pm-content-padding">
+                            <h3 class="font-bold text-lg mb-4">Editar Informações</h3>
+                            <form id="edit-project-form">
+                                <div class="form-group mb-3">
+                                    <label class="filter-label">Título</label>
+                                    <input type="text" id="edit-title" class="form-input" value="${project.title}" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="filter-label">Descrição</label>
+                                    <textarea id="edit-desc" class="form-input" rows="5" required>${project.description}</textarea>
+                                </div>
+                                <div class="flex gap-3">
+                                    <div class="w-full"><label class="filter-label">Vagas Alunos</label><input type="number" id="edit-v-students" class="form-input" value="${sTotal}"></div>
+                                    <div class="w-full"><label class="filter-label">Vagas Externos</label><input type="number" id="edit-v-community" class="form-input" value="${cTotal}"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="pm-footer">
+                    <div id="view-footer-actions" class="w-full flex justify-end gap-2">
+                        <button class="btn btn-outline" id="btn-modal-cancel">Fechar</button>
+                        <button class="btn btn-outline" id="btn-enable-edit"><i class="ph ph-pencil-simple"></i> Editar</button>
+                        <button class="btn btn-primary" id="btn-flip-diary"><i class="ph ph-notebook"></i> Diário de Atividades</button>
+                    </div>
+                    <div id="edit-footer-actions" class="w-full flex justify-between align-center" style="display: none;">
+                        <button class="btn btn-outline text-danger hover-danger" style="border-color: var(--danger); color: var(--danger);"><i class="ph ph-trash"></i> Excluir</button>
+                        <div class="flex gap-2">
+                            <button class="btn btn-outline" id="btn-cancel-edit">Cancelar</button>
+                            <button type="submit" form="edit-project-form" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pm-flip-back">
+                
+                <div class="pm-header-simple">
+                    <div class="flex align-center gap-2">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--bg-ground); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                            <i class="ph ph-notebook" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg line-height-1">Diário de Atividades</h3>
+                            <span class="text-xs text-secondary">Controle de Frequência</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="badge badge-tech">${classes.length} Aulas</span>
+                    </div>
+                </div>
+
+                <div class="pm-scroll-body pm-content-padding" style="background-color: var(--bg-ground);">
+                    ${classes.length === 0 
+                        ? `<div class="card p-5 text-center">
+                                <div style="width: 60px; height: 60px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: var(--text-secondary);">
+                                    <i class="ph ph-calendar-plus" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <h4 class="font-bold text-main">Nenhuma atividade registrada</h4>
+                                <p class="text-sm text-secondary mb-3">Comece registrando a primeira ativiade do projeto.</p>
+                                <button class="btn btn-primary" id="btn-new-class-empty">Registrar Primeira Atividade</button>
+                           </div>`
+                        : `<div class="history-list">
+                                ${renderClassLog(classes)}
+                           </div>`
+                    }
+                </div>
+
+                <div class="pm-footer pm-footer-split">
+                    <button class="btn btn-outline" id="btn-flip-back">
+                        <i class="ph ph-arrow-left"></i> Voltar
+                    </button>
+                    <button class="btn btn-primary" id="btn-new-class">
+                        <i class="ph ph-plus"></i> Registrar Nova Atividade
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    `;
 }
 
-// --- LÓGICA DE EDIÇÃO E UPLOAD (ABA 1) ---
-function setupEditForm(overlay, project) {
-    const form = overlay.querySelector('#edit-project-form');
-    const imgInput = overlay.querySelector('#edit-img-input');
-    const imgTrigger = overlay.querySelector('#edit-img-trigger');
-    const imgPreview = overlay.querySelector('#edit-img-preview');
-    
-    let currentImageBase64 = project.image;
-
-    // Upload de Imagem
-    if(imgTrigger && imgInput) {
-        imgTrigger.addEventListener('click', () => imgInput.click());
+// Helpers de Renderização
+function renderClassLog(classes) {
+    // Ordena da mais recente para a mais antiga
+    return classes.sort((a, b) => new Date(b.date) - new Date(a.date)).map(c => {
+        const d = new Date(c.date + 'T12:00:00');
+        const day = d.getDate().toString().padStart(2, '0');
+        const month = d.toLocaleString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase();
+        const presentCount = c.attendance.filter(a => a.present).length;
+        const totalCount = c.attendance.length;
+        const percent = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0;
         
-        imgInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) {
-                    alert("A imagem é muito grande! Use uma imagem menor que 2MB.");
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = (readerEvent) => {
-                    currentImageBase64 = readerEvent.target.result;
-                    imgPreview.src = currentImageBase64;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        return `
+        <div class="history-item card p-0 border-0 overflow-hidden">
+            <div class="history-date">
+                <span style="font-size: 1.1rem; font-weight: 800; line-height: 1;">${day}</span>
+                <span style="font-size: 0.65rem; font-weight: 600; color: var(--text-secondary);">${month}</span>
+            </div>
+            <div style="flex: 1;">
+                <div class="font-bold text-sm mb-1">${c.description}</div>
+                <div class="text-xs text-secondary flex align-center gap-2">
+                    <span class="badge ${percent > 70 ? 'badge-env' : 'badge-art'}" style="font-size: 0.6rem; padding: 2px 6px;">${percent}% Presente</span>
+                    <span>${presentCount}/${totalCount} Alunos</span>
+                </div>
+            </div>
+            <button class="action-btn btn-edit-class" data-id="${c.id}" title="Editar Chamada">
+                <i class="ph ph-pencil-simple"></i>
+            </button>
+        </div>`;
+    }).join('');
+}
+
+function renderStudentList(students) {
+    if (students.length === 0) return `<div class="p-4 text-center text-secondary">Nenhum aluno inscrito.</div>`;
+    
+    return students.map(u => `
+        <div class="user-item flex justify-between align-center p-3 border-bottom" style="background-color: var(--bg-card);">
+            <div class="flex align-center gap-3">
+                <img src="${u.avatar}" style="width: 40px; height: 40px; border-radius: 50%;">
+                <div>
+                    <div class="text-sm font-bold">${u.name}</div>
+                    <div class="text-xs text-secondary">${u.course}</div>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button class="action-btn" title="Enviar Mensagem"><i class="ph ph-chat-circle-text"></i></button>
+                <button class="action-btn danger" title="Remover"><i class="ph ph-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderMockExternalList(count) {
+    if (count === 0) return `<div class="p-4 text-center text-secondary">Nenhum participante externo.</div>`;
+    
+    let html = '';
+    const names = ["Carlos Silva", "Maria Oliveira", "José Santos", "Ana Paula", "Ricardo Alves"];
+    for(let i=0; i<Math.min(count, 5); i++) {
+        html += `
+        <div class="user-item flex justify-between align-center p-3 border-bottom" style="background-color: var(--bg-card);">
+            <div class="flex align-center gap-3">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-ground); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-secondary);">EX</div>
+                <div>
+                    <div class="text-sm font-bold">${names[i]}</div>
+                    <div class="text-xs text-secondary">Comunidade</div>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button class="action-btn" title="Enviar Mensagem"><i class="ph ph-chat-circle-text"></i></button>
+                <button class="action-btn danger" title="Remover"><i class="ph ph-trash"></i></button>
+            </div>
+        </div>`;
     }
-
-    // Salvar
-    if(form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            project.title = document.getElementById('edit-title').value;
-            project.description = document.getElementById('edit-desc').value;
-            project.date.start = document.getElementById('edit-date').value;
-            project.date.schedule = document.getElementById('edit-schedule').value;
-            project.vacancies.students.total = parseInt(document.getElementById('edit-v-students').value);
-            project.vacancies.community.total = parseInt(document.getElementById('edit-v-community').value);
-            project.image = currentImageBase64;
-
-            updateProjectInDb(project);
-            alert("Projeto atualizado com sucesso!");
-        });
-    }
+    return html;
 }
-
-function updateProjectInDb(updatedProject) {
-    const allProjects = DatabaseService.getAllProjects();
-    const index = allProjects.findIndex(p => p.id === updatedProject.id);
-    
-    if (index !== -1) {
-        allProjects[index] = updatedProject;
-        localStorage.setItem('opencampus_projects', JSON.stringify(allProjects));
-    }
-}
-
-// --- NOVO: LÓGICA DE DIÁRIO DE CLASSE (MODAL SECUNDÁRIO) ---
-
-function openClassLogModal(project) {
-    // Cria um overlay secundário para ficar por cima do principal
-    const diaryOverlay = document.createElement('div');
-    diaryOverlay.className = 'modal-overlay';
-    diaryOverlay.style.zIndex = '3500'; // Maior que o padrão
-    diaryOverlay.innerHTML = ClassLogModal(project);
-    document.body.appendChild(diaryOverlay);
-    
-    requestAnimationFrame(() => diaryOverlay.classList.add('active'));
-
-    const close = () => {
-        diaryOverlay.classList.remove('active');
-        setTimeout(() => diaryOverlay.remove(), 300);
-    };
-
-    diaryOverlay.querySelector('.btn-close-secondary').addEventListener('click', close);
-    diaryOverlay.addEventListener('click', (e) => { if(e.target === diaryOverlay) close(); });
-
-    // Botão "Registrar Aula"
-    const btnNewClass = diaryOverlay.querySelector('#btn-new-class');
-    if(btnNewClass) {
-        btnNewClass.addEventListener('click', () => {
-            openAttendanceForm(project, null, diaryOverlay); // null = nova aula
-        });
-    }
-
-    // Botões de Edição (Delegation)
-    diaryOverlay.addEventListener('click', (e) => {
-        const btnEdit = e.target.closest('.btn-edit-class');
-        if (btnEdit) {
-            const classId = parseInt(btnEdit.dataset.id);
-            const classData = DatabaseService.getProjectClasses(project.id).find(c => c.id === classId);
-            openAttendanceForm(project, classData, diaryOverlay);
-        }
-    });
-}
-
-function openAttendanceForm(project, classData, parentOverlay) {
-    // Substitui o conteúdo do overlay secundário pelo formulário
-    parentOverlay.innerHTML = AttendanceFormModal(project, classData);
-
-    // Botão Voltar para Lista
-    parentOverlay.querySelector('#btn-back-to-log').addEventListener('click', () => {
-        // Remove o overlay atual e reabre o Log para "resetar" a visualização
-        parentOverlay.remove();
-        openClassLogModal(project); 
-    });
-
-    // Botão Fechar Tudo
-    parentOverlay.querySelector('.btn-close-secondary').addEventListener('click', () => parentOverlay.remove());
-
-    // Submit da Chamada
-    const form = parentOverlay.querySelector('#attendance-form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Coleta dados dos checkboxes
-        const attendance = [];
-        parentOverlay.querySelectorAll('.attendance-check').forEach(chk => {
-            attendance.push({
-                studentId: parseInt(chk.dataset.id), // Mock ID
-                present: chk.checked
-            });
-        });
-
-        const newClass = {
-            id: classData ? classData.id : null,
-            projectId: project.id,
-            date: document.getElementById('class-date').value,
-            description: document.getElementById('class-desc').value,
-            attendance: attendance
-        };
-
-        DatabaseService.saveProjectClass(newClass);
-        alert("Chamada registrada com sucesso!");
-        
-        // Volta para a lista de histórico
-        parentOverlay.remove();
-        openClassLogModal(project);
-    });
-}
-
-// --- UTILS ---
-function setupEventListeners() {
-    const btnMenu = document.getElementById('btn-menu-toggle');
-    const overlay = document.getElementById('overlay');
-    
-    if(btnMenu) btnMenu.addEventListener('click', toggleMenu);
-    if(overlay) overlay.addEventListener('click', toggleMenu);
-    
-    const closeBtn = document.getElementById('btn-close-sidebar');
-    if(closeBtn) closeBtn.addEventListener('click', toggleMenu);
-
-    const btnTheme = document.getElementById('header-theme-btn');
-    if(btnTheme) btnTheme.addEventListener('click', toggleTheme);
-    
-    const btnThemeSide = document.getElementById('sidebar-theme-btn');
-    if(btnThemeSide) btnThemeSide.addEventListener('click', () => { toggleTheme(); toggleMenu(); });
-    
-    loadTheme();
-}
-
-function toggleMenu() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    if(sidebar) sidebar.classList.toggle('active');
-    if(overlay) overlay.classList.toggle('active');
-}
-
-function toggleTheme() {
-    const html = document.documentElement;
-    const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('opencampus-theme', newTheme);
-}
-
-function loadTheme() {
-    const saved = localStorage.getItem('opencampus-theme');
-    if (saved) document.documentElement.setAttribute('data-theme', saved);
-}
-
-document.addEventListener('DOMContentLoaded', init);

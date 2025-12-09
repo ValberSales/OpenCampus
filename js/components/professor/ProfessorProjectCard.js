@@ -1,15 +1,11 @@
 export function ProfessorProjectCardComponent(project) {
-    const tagsHtml = project.tags.map(tag => 
-        `<span class="badge ${tag.class}">${tag.label}</span>`
-    ).join('');
-
-    // Calcula totais para exibir no card
     const totalStudents = project.vacancies.students.total;
     const availableStudents = project.vacancies.students.available;
     const enrolledStudents = totalStudents - availableStudents;
 
+    // Removemos os botões de ação direta para focar no clique do card inteiro
     return `
-    <div class="card project-card" data-id="${project.id}">
+    <div class="card project-card cursor-pointer hover-scale" data-id="${project.id}" style="cursor: pointer; position: relative; transition: all 0.2s ease;">
         <div class="project-img-container">
             <img src="${project.image}" alt="${project.title}" class="project-img">
         </div>
@@ -22,22 +18,16 @@ export function ProfessorProjectCardComponent(project) {
                 </span>
             </div>
             
-            <h3 class="project-title">${project.title}</h3>
-            <div class="project-tags mb-2">${tagsHtml}</div>
+            <h3 class="project-title mb-1">${project.title}</h3>
             
-            <div class="flex gap-2 text-sm text-secondary mt-auto">
-                <div><i class="ph ph-student"></i> <strong>${enrolledStudents}</strong> Alunos</div>
-                <div><i class="ph ph-users"></i> <strong>${project.vacancies.community.total - project.vacancies.community.available}</strong> Externos</div>
+            <div class="flex gap-2 text-sm text-secondary mt-auto mb-2">
+                <div><i class="ph ph-student"></i> <strong>${enrolledStudents}/${totalStudents}</strong> Alunos</div>
+                ${project.openToCommunity ? `<div><i class="ph ph-users"></i> <strong>${project.vacancies.community.total - project.vacancies.community.available}</strong> Externos</div>` : ''}
             </div>
-        </div>
 
-        <div class="project-actions">
-            <button class="btn btn-primary w-full justify-center btn-manage">
-                <i class="ph ph-gear"></i> Gerenciar
-            </button>
-            <button class="btn btn-outline w-full justify-center btn-edit">
-                <i class="ph ph-pencil-simple"></i> Editar
-            </button>
+            <p class="text-xs text-primary font-bold mt-2 flex align-center gap-1">
+                Gerenciar Projeto <i class="ph ph-arrow-right"></i>
+            </p>
         </div>
     </div>
     `;

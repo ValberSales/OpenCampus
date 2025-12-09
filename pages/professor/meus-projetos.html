@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Projetos - Professor</title>
     
+    <script>
+        // Previne flash de fundo branco no dark mode
+        (function() {
+            const saved = localStorage.getItem('opencampus-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="../../css/main.css">
-    </head>
+</head>
 <body>
     <div id="modal-overlay-container" class="modal-overlay"></div>
 
@@ -23,7 +30,7 @@
                 <h2 class="font-bold" style="font-size: 1.5rem;">Meus Projetos</h2>
                 <p class="text-secondary">Gerencie suas atividades, equipe e participantes.</p>
             </div>
-            <button class="btn btn-primary" onclick="alert('Funcionalidade de criar projeto em breve!')">
+            <button class="btn btn-primary" id="btn-create-project">
                 <i class="ph ph-plus-circle"></i> Criar Novo Projeto
             </button>
         </div>

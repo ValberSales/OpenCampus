@@ -1,0 +1,224 @@
+/* css/professor/ProjectManagementModal.css */
+
+/* --- ESTRUTURA BASE --- */
+.pm-modal-container {
+    background-color: transparent;
+    width: 100%;
+    max-width: 700px;
+    height: 90vh;
+    border-radius: var(--radius);
+    position: relative;
+    perspective: 1000px;
+    margin: 0 1rem;
+}
+
+.pm-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.pm-modal-container.flipped .pm-flip-inner {
+    transform: rotateY(180deg);
+}
+
+.pm-flip-front, .pm-flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background-color: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-color);
+}
+
+.pm-flip-front { z-index: 2; transform: rotateY(0deg); }
+.pm-flip-back { transform: rotateY(180deg); }
+
+/* --- HEADER & FOOTER --- */
+.pm-header-simple {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    flex-shrink: 0;
+}
+
+.pm-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+#view-footer-actions { display: flex; width: 100%; justify-content: flex-end; gap: 0.8rem; }
+.pm-footer-split { justify-content: space-between; }
+
+/* --- CONTEÚDO --- */
+.pm-scroll-body {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    background-color: var(--bg-ground);
+}
+
+/* Lista de Histórico */
+.history-list { display: flex; flex-direction: column; gap: 0.8rem; }
+.history-item {
+    display: flex; align-items: center; gap: 1rem; padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: var(--bg-card);
+    transition: var(--transition);
+}
+.history-item:hover { border-color: var(--primary); }
+.history-date {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--bg-ground);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 50px; height: 50px; flex-shrink: 0;
+}
+
+/* --- FORMULÁRIO DE CHAMADA (Attendance) --- */
+
+/* Novo Container Arredondado */
+.attendance-list-container {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    background-color: var(--bg-card);
+}
+
+.attendance-section-header {
+    background-color: var(--bg-ground);
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+/* Botão Marcar Todos (Estilo Real) */
+.btn-mark-all {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-mark-all:hover {
+    background-color: var(--primary);
+    color: var(--primary-text); /* Texto correto no hover */
+    border-color: var(--primary);
+}
+
+.attendance-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-card);
+    transition: background-color 0.2s;
+}
+.attendance-row:hover { background-color: var(--bg-ground); }
+.attendance-row:last-child { border-bottom: none; }
+
+/* === CHECKBOX CUSTOMIZADO === */
+.custom-checkbox {
+    /* Remove estilo nativo */
+    appearance: none;
+    -webkit-appearance: none;
+    
+    /* Tamanho e Forma */
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    
+    /* Cores Dinâmicas (Tema) */
+    background-color: var(--bg-ground);
+    border: 2px solid var(--border-color);
+    
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.custom-checkbox:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Ícone de Check (Criado com CSS puro) */
+.custom-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 6px;
+    height: 10px;
+    border: solid var(--primary-text); /* Usa a cor de texto do botão primário */
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.custom-checkbox:hover {
+    border-color: var(--primary);
+}
+
+/* Botões de Ação Gerais */
+.action-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    background-color: var(--bg-ground);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    transition: var(--transition);
+    cursor: pointer;
+}
+.action-btn:hover { border-color: var(--primary); color: var(--primary); background-color: var(--bg-card); }
+.action-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+/* --- OUTROS --- */
+.pm-header-overlay { position: absolute; top: 0; left: 0; right: 0; padding: 1rem; z-index: 50; display: flex; justify-content: flex-end; pointer-events: none; }
+.pm-close-btn { pointer-events: auto; background: rgba(0,0,0,0.5); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: 0.2s; }
+.pm-close-btn:hover { background: var(--danger); }
+.pm-sticky-header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 1rem 1.5rem; position: absolute; top: 0; left: 0; right: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; opacity: 0; transition: opacity 0.3s; }
+.pm-hero-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+.pm-content-padding { padding: 1.5rem 2rem; background: var(--bg-card); }
+.pm-tabs-container { background-color: var(--bg-ground); padding: 0.5rem; border-radius: 12px; display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+.pm-tab-btn { flex: 1; padding: 0.5rem; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); background: transparent; cursor: pointer; transition: 0.2s; }
+.pm-tab-btn.active { background: var(--bg-card); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.pm-img-edit { height: 200px; position: relative; background-color: var(--bg-ground); cursor: pointer; }
+.pm-img-edit img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
+.pm-img-edit-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-main); gap: 0.5rem; }
+
+@media (max-width: 600px) {
+    .pm-modal-container { height: 100vh; margin: 0; max-width: 100%; border-radius: 0; }
+    .pm-footer { flex-direction: column-reverse; height: auto; gap: 1rem; padding: 1rem; }
+    #view-footer-actions button { width: 100%; }
+    .pm-footer-split { flex-direction: column-reverse; }
+}

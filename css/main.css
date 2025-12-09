@@ -22,7 +22,7 @@
 @import url('./aluno/MyProjectCard.css');
 @import url('./aluno/CertificateCard.css');
 
-/* 4. Componentes da Landing Page (Use APENAS estes se os arquivos existirem individualmente) */
+/* 4. Componentes da Landing Page */
 @import url('./landing/PublicHeader.css');
 @import url('./landing/Hero.css');
 @import url('./landing/Impact.css');
@@ -32,3 +32,4 @@
 
 /* 5. Área do Professor */
 @import url('./professor/professor.css');
+@import url('./professor/ProjectManagementModal.css'); /* <--- NOVO ARQUIVO */
