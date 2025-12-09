@@ -1,9 +1,16 @@
+/* css/shared/ChatModal.css */
+
 /* Layout do Modal de Chat */
 .chat-modal-content {
     background-color: var(--bg-card);
     width: 100%;
     max-width: 500px;
-    height: 80vh; /* Altura fixa para parecer app */
+    
+    /* ALTERAÇÃO 1: Controle de Altura */
+    /* Define 600px como ideal, mas nunca ultrapassa 80% da tela */
+    height: 600px; 
+    max-height: 80vh; 
+    
     display: flex;
     flex-direction: column;
     border-radius: var(--radius);
@@ -41,6 +48,14 @@
     gap: 1rem;
 }
 
+/* ALTERAÇÃO 2: Mensagens de baixo para cima */
+/* Esse pseudo-elemento empurra o conteúdo para baixo se houver poucas mensagens */
+.chat-body::before {
+    content: '';
+    flex: 1;
+    min-height: 0;
+}
+
 /* Balões de Mensagem */
 .message-bubble {
     max-width: 80%;
@@ -49,6 +64,7 @@
     font-size: 0.95rem;
     line-height: 1.4;
     position: relative;
+    word-wrap: break-word; /* Evita que palavras longas quebrem o layout */
 }
 
 .msg-sent {
@@ -86,8 +102,11 @@
 /* Ajuste mobile */
 @media (max-width: 600px) {
     .chat-modal-content {
+        /* Em mobile, forçamos tela cheia para melhor usabilidade */
         height: 100vh;
+        max-height: 100vh; 
         max-width: 100%;
         border-radius: 0;
+        transform: none; /* Remove efeito de subida no mobile */
     }
 }

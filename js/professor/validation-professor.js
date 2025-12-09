@@ -56,7 +56,7 @@ function generateMockCertificates() {
             institution: "Embrapa",
             hours: 8,
             date: "2025-11-02",
-            image: "https://images.unsplash.com/photo-1589330694653-569e2a1daa60?auto=format&fit=crop&w=800&q=80",
+            image: "https://altadefensivos.com.br/wp-content/uploads/2025/02/Design-sem-nome-1-1024x576.jpg.webp",
             status: "pending"
         },
         {

@@ -31,7 +31,8 @@ export function RequestDetailModal(request) {
                 <a href="${whatsappLink}" target="_blank" class="btn w-full justify-center" style="background-color: #25D366; color: white; border: none;">
                     <i class="ph ph-whatsapp-logo" style="font-size: 1.2rem;"></i> WhatsApp
                 </a>
-                <a href="${emailLink}" class="btn w-full justify-center" style="background-color: var(--text-main); color: white; border: none;">
+                
+                <a href="${emailLink}" class="btn w-full justify-center" style="background-color: var(--text-main); color: var(--bg-card); border: none;">
                     <i class="ph ph-envelope-simple" style="font-size: 1.2rem;"></i> Email
                 </a>
             </div>
