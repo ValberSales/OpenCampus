@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,25 +8,27 @@
 
     <script>
         // Previne flash de fundo branco no dark mode
-        (function() {
+        (function () {
             const saved = localStorage.getItem('opencampus-theme');
             if (saved) document.documentElement.setAttribute('data-theme', saved);
         })();
     </script>
-    
+
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
 </head>
+
 <body>
     <div id="app-sidebar-mobile"></div>
     <div id="app-header"></div>
 
     <main class="main-container">
-        
+
         <aside class="left-col">
             <div class="card p-3 text-center">
-                <div style="width: 80px; height: 80px; margin: 0 auto 1rem; border-radius: 50%; overflow: hidden; border: 3px solid var(--primary);">
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1rem; border-radius: 50%; overflow: hidden; border: 3px solid var(--primary);">
                     <img id="prof-avatar-img" src="" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <h3 class="font-bold" id="prof-name-display">Professor</h3>
@@ -49,9 +52,11 @@
                 <p class="text-secondary">Acompanhe o andamento das suas atividades.</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
                 <div class="card p-3 flex align-center gap-2">
-                    <div class="btn-icon" style="background: #dbeafe; color: #1e40af;"><i class="ph ph-user-plus"></i></div>
+                    <div class="btn-icon" style="background: #dbeafe; color: #1e40af;"><i class="ph ph-user-plus"></i>
+                    </div>
                     <div>
                         <div class="text-xs text-secondary uppercase">Solicitações</div>
                         <div class="font-bold text-lg" id="stat-pending-requests">0</div>
@@ -69,7 +74,7 @@
             <h3 class="font-bold mb-3">Ações Rápidas</h3>
             <div class="card p-3">
                 <div class="flex gap-2">
-                    <a href="meus-projetos.html" class="btn btn-primary flex-1 justify-center">
+                    <a href="meus-projetos.html?action=new" class="btn btn-primary flex-1 justify-center">
                         <i class="ph ph-plus"></i> Novo Projeto
                     </a>
                     <a href="solicitacoes.html" class="btn btn-outline flex-1 justify-center">
@@ -87,4 +92,5 @@
 
     <script type="module" src="../../js/professor/dashboard-professor.js"></script>
 </body>
+
 </html>

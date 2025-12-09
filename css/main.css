@@ -32,4 +32,5 @@
 
 /* 5. Área do Professor */
 @import url('./professor/professor.css');
-@import url('./professor/ProjectManagementModal.css'); /* <--- NOVO ARQUIVO */
+@import url('./professor/ProjectManagementModal.css');
+@import url('./professor/CreateProjectModal.css');

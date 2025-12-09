@@ -39,7 +39,7 @@ export const DatabaseService = {
             } catch (e) { console.error('Erro ao carregar projects:', e); }
         }
 
-        // Carrega ENROLLMENTS (ATUALIZADO)
+        // Carrega ENROLLMENTS
         if (!localStorage.getItem(DB_KEYS.ENROLLMENTS)) {
             try {
                 const res = await fetch(`${basePath}enrollments.json`);
@@ -58,9 +58,11 @@ export const DatabaseService = {
 
     // --- QUERY ---
     getAllProjects() {
+        // Recupera projetos e usuários do localStorage
         const projects = JSON.parse(localStorage.getItem(DB_KEYS.PROJECTS)) || [];
         const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS)) || [];
 
+        // "Hidrata" o projeto adicionando os dados completos do professor
         return projects.map(p => {
             const prof = users.find(u => u.id === p.professorId) || { name: "Desconhecido", avatar: "", email: "" };
             return {
@@ -79,6 +81,62 @@ export const DatabaseService = {
         return this.getAllProjects().find(p => p.id === id);
     },
 
+    // --- NOVO MÉTODO: CRIAR PROJETO ---
+    createProject(projectData) {
+        try {
+            const rawProjects = JSON.parse(localStorage.getItem(DB_KEYS.PROJECTS)) || [];
+            
+            // 1. Gera novo ID
+            const newId = rawProjects.length > 0 ? Math.max(...rawProjects.map(p => p.id)) + 1 : 1;
+            
+            // 2. Identifica o Professor
+            const currentUser = this.getCurrentUser();
+            if (!currentUser) {
+                alert("Erro: Você precisa estar logado para criar um projeto.");
+                return false;
+            }
+
+            // 3. Monta o Objeto
+            const newProject = {
+                id: newId,
+                professorId: currentUser.id,
+                title: projectData.title,
+                description: projectData.description,
+                image: projectData.image, // A imagem já deve vir comprimida do controller
+                date: projectData.date,
+                location: projectData.location,
+                hours: projectData.hours,
+                tags: projectData.tags,
+                openToCommunity: projectData.openToCommunity,
+                shifts: ["Matutino"],
+                vacancies: {
+                    students: { 
+                        total: parseInt(projectData.vacancies.students), 
+                        available: parseInt(projectData.vacancies.students) 
+                    },
+                    community: { 
+                        total: parseInt(projectData.vacancies.community), 
+                        available: parseInt(projectData.vacancies.community) 
+                    }
+                }
+            };
+
+            // 4. Tenta Salvar
+            rawProjects.push(newProject);
+            localStorage.setItem(DB_KEYS.PROJECTS, JSON.stringify(rawProjects));
+            return true;
+
+        } catch (e) {
+            if (e.name === 'QuotaExceededError') {
+                alert("ERRO DE ARMAZENAMENTO: O limite do navegador foi atingido.\n\nTente usar imagens menores ou limpe dados antigos.");
+            } else {
+                console.error("Erro ao salvar projeto:", e);
+                alert("Ocorreu um erro ao salvar o projeto.");
+            }
+            return false;
+        }
+    },
+    
     getUsers() {
         return JSON.parse(localStorage.getItem(DB_KEYS.USERS)) || [];
     },
@@ -96,6 +154,7 @@ export const DatabaseService = {
             u.role === credentials.role
         );
 
+        // Cria usuário mock se for aluno e não existir
         if (!user && credentials.role === 'student') {
             user = {
                 id: Date.now(),
@@ -109,7 +168,7 @@ export const DatabaseService = {
         }
 
         if (!user && credentials.role === 'professor') {
-            alert("Professor não encontrado.");
+            alert("Professor não encontrado. Tente 'Dr. Ana Souza' ou verifique users.json");
             return false;
         }
 
@@ -160,10 +219,27 @@ export const DatabaseService = {
         localStorage.setItem(DB_KEYS.ENROLLMENTS, JSON.stringify(enrollments));
     },
     
+    // --- OUTROS ---
     getCertificates() { return JSON.parse(localStorage.getItem(DB_KEYS.CERTIFICATES)) || []; },
-    saveCertificate(cert) { /* Lógica mantida */ return true; },
-    saveCommunityApplication(application) { /* Lógica mantida */ return true; },
-    savePartnershipRequest(request) { /* Lógica mantida */ return true; },
+    saveCertificate(cert) { 
+        const certs = this.getCertificates();
+        certs.unshift(cert);
+        localStorage.setItem(DB_KEYS.CERTIFICATES, JSON.stringify(certs));
+        return true; 
+    },
+    saveCommunityApplication(application) { 
+        const apps = JSON.parse(localStorage.getItem(DB_KEYS.COMMUNITY_REQUESTS)) || [];
+        application.status = 'pending';
+        apps.push(application);
+        localStorage.setItem(DB_KEYS.COMMUNITY_REQUESTS, JSON.stringify(apps));
+        return true; 
+    },
+    savePartnershipRequest(request) { 
+        const reqs = JSON.parse(localStorage.getItem(DB_KEYS.PARTNERSHIP_REQUESTS)) || [];
+        reqs.push(request);
+        localStorage.setItem(DB_KEYS.PARTNERSHIP_REQUESTS, JSON.stringify(reqs));
+        return true; 
+    },
     
     getProjectClasses(projectId) {
         const allClasses = JSON.parse(localStorage.getItem(DB_KEYS.CLASSES)) || [];

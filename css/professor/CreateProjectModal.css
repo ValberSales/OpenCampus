@@ -1,0 +1,113 @@
+/* css/professor/CreateProjectModal.css */
+
+.create-modal-content {
+    max-width: 700px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.create-modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    background-color: var(--bg-card);
+    z-index: 10;
+}
+
+.create-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+}
+
+/* Área de Upload de Imagem */
+.create-img-upload-box {
+    border-radius: 12px;
+    overflow: hidden;
+    height: 200px;
+    border: 2px dashed var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-ground);
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s;
+}
+
+.create-img-upload-box:hover {
+    border-color: var(--primary);
+}
+
+.create-img-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+.create-img-placeholder {
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Grid de Formulário (2 colunas) */
+.form-grid-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Card de Vagas Específico */
+.vagas-card {
+    background: var(--bg-ground);
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+}
+
+/* Checkbox Customizado */
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox-custom {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+/* Footer Fixo */
+.create-modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-ground);
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    z-index: 10;
+}
+
+/* Responsividade Mobile */
+@media (max-width: 600px) {
+    .create-modal-content {
+        max-height: 100vh;
+        border-radius: 0;
+    }
+    .form-grid-row {
+        grid-template-columns: 1fr;
+    }
+}

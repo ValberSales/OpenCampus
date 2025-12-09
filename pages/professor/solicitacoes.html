@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitações - Professor</title>
+
+    <script>
+        (function() {
+            const saved = localStorage.getItem('opencampus-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
+    
+    <style>
+        /* Estilos inline específicos para esta página (ou mover para css) */
+        .tab-btn-req {
+            padding: 0.8rem 1rem;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tab-btn-req:hover { color: var(--primary); }
+        .tab-btn-req.active { color: var(--primary); border-bottom-color: var(--primary); }
+        
+        /* Ajuste do badge dentro da aba */
+        .tab-btn-req .badge {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="modal-overlay-container" class="modal-overlay"></div>
+
+    <div id="app-sidebar-mobile"></div>
+    <div id="app-header"></div>
+
+    <main class="main-container">
+        
+        <aside class="left-col">
+            <div class="card p-3 sticky-top">
+                <h3 class="font-bold mb-2">Gerenciar</h3>
+                <p class="text-sm text-secondary mb-3">Analise os perfis antes de aprovar.</p>
+                <div class="p-3 rounded bg-ground border">
+                    <div class="text-xs text-secondary uppercase mb-1">Dica</div>
+                    <p class="text-xs">Clique no botão de <strong>WhatsApp</strong> dentro do card para entrevistar o candidato.</p>
+                </div>
+            </div>
+        </aside>
+
+        <section class="center-col" style="grid-column: span 2;">
+            <div class="mb-2">
+                <h2 class="font-bold" style="font-size: 1.5rem;">Solicitações</h2>
+                <p class="text-secondary">Gerencie os pedidos de participação.</p>
+            </div>
+
+            <div class="tabs-nav mb-4" style="border-bottom: 1px solid var(--border-color); display: flex; gap: 1rem;">
+                <button class="tab-btn-req active" data-tab="students">
+                    Alunos da UTFPR 
+                    <span id="badge-student" class="badge badge-tech" style="display: none;">0</span>
+                </button>
+                <button class="tab-btn-req" data-tab="community">
+                    Comunidade Externa
+                    <span id="badge-community" class="badge badge-env" style="display: none;">0</span>
+                </button>
+            </div>
+
+            <div id="requests-container" class="conversation-list">
+                <div class="card p-3 text-center">
+                    <div class="spinner"></div>
+                    <p class="text-secondary mt-2">Carregando...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="app-footer"></div>
+
+    <script type="module" src="../../js/professor/requests-professor.js"></script>
+</body>
+</html>
