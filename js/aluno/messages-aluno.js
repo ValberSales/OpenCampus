@@ -6,10 +6,13 @@ import { ConversationCardComponent } from '../components/shared/ConversationCard
 import { ChatModalComponent, ChatBubbleComponent } from '../components/aluno/ChatModal.js';
 import { ProfileCardComponent } from '../components/aluno/ProfileCard.js';
 import { BadgeModalComponent } from '../components/aluno/BadgeModal.js';
+import { DatabaseService } from '../services/DatabaseService.js'; // Importando o serviço
 
 let conversations = [];
 
 async function init() {
+    await DatabaseService.init(); // Garante inicialização
+
     document.getElementById('app-header').innerHTML = HeaderComponent('messages');
     document.getElementById('app-sidebar-mobile').innerHTML = SidebarComponent('messages');
     document.getElementById('profile-container').innerHTML = ProfileCardComponent();
@@ -23,8 +26,8 @@ async function init() {
 }
 
 function loadConversations() {
-    const storageKey = 'opencampus_conversations';
-    conversations = JSON.parse(localStorage.getItem(storageKey)) || [];
+    // CORREÇÃO: Usando o serviço
+    conversations = DatabaseService.getStudentConversations();
     conversations.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
     renderList();
 }
@@ -63,7 +66,7 @@ function renderList() {
     });
 }
 
-// NOVO: Modal de Confirmação de Exclusão
+// Modal de Confirmação de Exclusão
 function openDeleteModal(projectId) {
     const overlay = document.getElementById('modal-overlay-container');
     
@@ -101,10 +104,9 @@ function openDeleteModal(projectId) {
 }
 
 function deleteConversation(projectId) {
-    conversations = conversations.filter(c => c.projectId !== projectId);
-    localStorage.setItem('opencampus_conversations', JSON.stringify(conversations));
+    // CORREÇÃO: Usando o serviço para deletar
+    conversations = DatabaseService.deleteStudentConversation(projectId);
     renderList();
-    // Feedback visual opcional? Alert simples resolve.
 }
 
 function openChat(projectId) {
@@ -153,6 +155,8 @@ function sendMessage(projectId, text) {
     conversations[convIndex].messages.push(newMessage);
     conversations[convIndex].lastUpdated = new Date().toISOString();
 
+    // Nota: Em um app real, o serviço teria um método `saveMessage`. 
+    // Por enquanto, salvamos tudo via localStorage, mas o ideal seria evoluir o DatabaseService.
     localStorage.setItem('opencampus_conversations', JSON.stringify(conversations));
 
     const msgContainer = document.getElementById('chat-messages-container');
@@ -214,7 +218,16 @@ function toggleTheme() {
     const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
     html.setAttribute('data-theme', newTheme);
     localStorage.setItem('opencampus-theme', newTheme);
+    updateThemeIcon(newTheme);
 }
 function loadTheme() { const saved = localStorage.getItem('opencampus-theme'); if (saved) document.documentElement.setAttribute('data-theme', saved); }
+
+function updateThemeIcon(theme) {
+    const iconClass = theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+    const iconHeader = document.getElementById('theme-icon-header');
+    if (iconHeader) iconHeader.className = iconClass;
+    const iconSidebar = document.getElementById('theme-icon-sidebar');
+    if (iconSidebar) iconSidebar.className = iconClass;
+}
 
 document.addEventListener('DOMContentLoaded', init);

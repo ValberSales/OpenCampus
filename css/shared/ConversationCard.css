@@ -7,14 +7,6 @@
     width: 100%;
 }
 
-/* Nota: A classe .card (do style.css) já fornece:
-   - background-color
-   - border
-   - border-radius
-   - box-shadow
-   - padding (1.5rem)
-*/
-
 .conversation-card {
     display: flex;
     align-items: center;
@@ -22,21 +14,21 @@
     cursor: pointer;
     transition: var(--transition);
     
-    /* Borda esquerda transparente para reservar espaço para o hover */
+    /* Borda e espaçamento */
     border-left: 4px solid transparent;
+    padding: 1.5rem;
+    background-color: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
     
     position: relative;
-    /* Padding, sombra e fundo vêm da classe .card */
 }
 
 .conversation-card:hover {
     transform: translateX(5px);
-    
-    /* Pinta a borda esquerda e a geral */
     border-left-color: var(--primary); 
     border-color: var(--primary);
-    
-    /* A sombra padrão já existe, não precisamos redeclarar */
 }
 
 .conversation-avatar {
@@ -84,7 +76,7 @@
     text-overflow: ellipsis;
 }
 
-/* Botão de Excluir */
+/* --- CORREÇÃO DO BOTÃO DE EXCLUIR --- */
 .btn-delete-conv {
     width: 32px;
     height: 32px;
@@ -93,26 +85,35 @@
     align-items: center;
     justify-content: center;
     color: var(--text-secondary);
-    transition: 0.2s;
+    transition: all 0.2s ease;
     background: transparent;
     border: 1px solid transparent;
     margin-left: 0.5rem;
-    pointer-events: none; /* Evita cliques acidentais quando invisível */
+    
+    /* Estado Padrão (Desktop): Invisível e inativo */
+    opacity: 0; 
+    pointer-events: none; 
 }
 
-
+/* IMPORTANTE: Ao passar o mouse no CARD, ativa o botão */
+.conversation-card:hover .btn-delete-conv {
+    opacity: 1;
+    pointer-events: auto; /* Torna clicável novamente */
+}
 
 .btn-delete-conv:hover {
     background-color: #fee2e2;
     color: var(--danger);
     border-color: var(--danger);
+    transform: scale(1.1);
 }
 
-/* Responsividade Mobile: Botão sempre visível (pois não tem hover) */
+/* Responsividade Mobile: Botão sempre visível e clicável */
 @media (max-width: 1024px) {
     .btn-delete-conv {
         opacity: 1;
         pointer-events: auto;
-        background-color: var(--bg-ground); /* Fundo sutil para destacar */
+        background-color: var(--bg-ground); /* Fundo sutil para toque */
+        border-color: var(--border-color);
     }
 }

@@ -1,9 +1,12 @@
+// js/services/DatabaseService.js
+
 const DB_KEYS = {
     PROJECTS: 'opencampus_projects',
     USERS: 'opencampus_users',
     ENROLLMENTS: 'opencampus_enrollments',
     CERTIFICATES: 'opencampus_certificates',
-    CONVERSATIONS: 'opencampus_conversations',
+    CONVERSATIONS: 'opencampus_conversations', // Aluno
+    PROF_CONVERSATIONS: 'opencampus_prof_conversations', // Professor (NOVO)
     CURRENT_USER: 'opencampus_current_user',
     COMMUNITY_REQUESTS: 'opencampus_community_requests',
     PARTNERSHIP_REQUESTS: 'opencampus_partnership_requests',
@@ -58,11 +61,9 @@ export const DatabaseService = {
 
     // --- QUERY ---
     getAllProjects() {
-        // Recupera projetos e usuários do localStorage
         const projects = JSON.parse(localStorage.getItem(DB_KEYS.PROJECTS)) || [];
         const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS)) || [];
 
-        // "Hidrata" o projeto adicionando os dados completos do professor
         return projects.map(p => {
             const prof = users.find(u => u.id === p.professorId) || { name: "Desconhecido", avatar: "", email: "" };
             return {
@@ -81,28 +82,23 @@ export const DatabaseService = {
         return this.getAllProjects().find(p => p.id === id);
     },
 
-    // --- NOVO MÉTODO: CRIAR PROJETO ---
     createProject(projectData) {
         try {
             const rawProjects = JSON.parse(localStorage.getItem(DB_KEYS.PROJECTS)) || [];
-            
-            // 1. Gera novo ID
             const newId = rawProjects.length > 0 ? Math.max(...rawProjects.map(p => p.id)) + 1 : 1;
-            
-            // 2. Identifica o Professor
             const currentUser = this.getCurrentUser();
+            
             if (!currentUser) {
                 alert("Erro: Você precisa estar logado para criar um projeto.");
                 return false;
             }
 
-            // 3. Monta o Objeto
             const newProject = {
                 id: newId,
                 professorId: currentUser.id,
                 title: projectData.title,
                 description: projectData.description,
-                image: projectData.image, // A imagem já deve vir comprimida do controller
+                image: projectData.image,
                 date: projectData.date,
                 location: projectData.location,
                 hours: projectData.hours,
@@ -121,18 +117,13 @@ export const DatabaseService = {
                 }
             };
 
-            // 4. Tenta Salvar
             rawProjects.push(newProject);
             localStorage.setItem(DB_KEYS.PROJECTS, JSON.stringify(rawProjects));
             return true;
 
         } catch (e) {
-            if (e.name === 'QuotaExceededError') {
-                alert("ERRO DE ARMAZENAMENTO: O limite do navegador foi atingido.\n\nTente usar imagens menores ou limpe dados antigos.");
-            } else {
-                console.error("Erro ao salvar projeto:", e);
-                alert("Ocorreu um erro ao salvar o projeto.");
-            }
+            console.error("Erro ao salvar projeto:", e);
+            alert("Ocorreu um erro ao salvar o projeto.");
             return false;
         }
     },
@@ -141,20 +132,17 @@ export const DatabaseService = {
         return JSON.parse(localStorage.getItem(DB_KEYS.USERS)) || [];
     },
 
-    // --- AUTH ---
     getCurrentUser() {
         return JSON.parse(localStorage.getItem(DB_KEYS.CURRENT_USER));
     },
 
     login(credentials) {
         const allUsers = JSON.parse(localStorage.getItem(DB_KEYS.USERS)) || [];
-        
         let user = allUsers.find(u => 
             u.name.toLowerCase().includes(credentials.name.toLowerCase()) && 
             u.role === credentials.role
         );
 
-        // Cria usuário mock se for aluno e não existir
         if (!user && credentials.role === 'student') {
             user = {
                 id: Date.now(),
@@ -191,7 +179,6 @@ export const DatabaseService = {
     getProjectStudents(projectId) {
         const enrollments = JSON.parse(localStorage.getItem(DB_KEYS.ENROLLMENTS)) || [];
         const users = this.getUsers();
-        
         const projectEnrollments = enrollments.filter(e => e.projectId === projectId);
         
         return projectEnrollments.map(e => {
@@ -219,6 +206,31 @@ export const DatabaseService = {
         localStorage.setItem(DB_KEYS.ENROLLMENTS, JSON.stringify(enrollments));
     },
     
+    // --- CONVERSATIONS (STUDENT) ---
+    getStudentConversations() {
+        return JSON.parse(localStorage.getItem(DB_KEYS.CONVERSATIONS)) || [];
+    },
+
+    deleteStudentConversation(projectId) {
+        let conversations = this.getStudentConversations();
+        conversations = conversations.filter(c => c.projectId !== projectId);
+        localStorage.setItem(DB_KEYS.CONVERSATIONS, JSON.stringify(conversations));
+        return conversations;
+    },
+
+    // --- CONVERSATIONS (PROFESSOR) ---
+    // Métodos novos adicionados para o professor
+    getProfessorConversations() {
+        return JSON.parse(localStorage.getItem(DB_KEYS.PROF_CONVERSATIONS)) || [];
+    },
+
+    deleteProfessorConversation(id) {
+        let conversations = this.getProfessorConversations();
+        conversations = conversations.filter(c => c.id !== id);
+        localStorage.setItem(DB_KEYS.PROF_CONVERSATIONS, JSON.stringify(conversations));
+        return conversations;
+    },
+
     // --- OUTROS ---
     getCertificates() { return JSON.parse(localStorage.getItem(DB_KEYS.CERTIFICATES)) || []; },
     saveCertificate(cert) { 

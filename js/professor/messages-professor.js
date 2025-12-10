@@ -3,8 +3,8 @@ import { ProfessorHeaderComponent } from '../components/professor/ProfessorHeade
 import { ProfessorSidebarComponent } from '../components/professor/ProfessorSidebar.js';
 import { FooterComponent } from '../components/shared/Footer.js';
 import { ChatModalComponent, ChatBubbleComponent } from '../components/professor/ChatModal.js';
-import { ConversationCardComponent } from '../components/shared/ConversationCard.js'; // IMPORTADO AQUI
-import { DatabaseService } from '../services/DatabaseService.js';
+import { ConversationCardComponent } from '../components/shared/ConversationCard.js';
+import { DatabaseService } from '../services/DatabaseService.js'; // Importando
 
 let conversations = [];
 
@@ -20,14 +20,14 @@ async function init() {
 }
 
 function loadConversations() {
-    const storageKey = 'opencampus_prof_conversations';
-    const stored = localStorage.getItem(storageKey);
+    // CORREÇÃO: Usando DatabaseService em vez de localStorage direto
+    conversations = DatabaseService.getProfessorConversations();
 
-    if (stored) {
-        conversations = JSON.parse(stored);
-    } else {
+    // Se estiver vazio, gera dados de exemplo (Mock) para não ficar em branco no teste
+    if (conversations.length === 0) {
         conversations = generateMockConversations();
-        localStorage.setItem(storageKey, JSON.stringify(conversations));
+        // Salva o mock para persistir
+        localStorage.setItem('opencampus_prof_conversations', JSON.stringify(conversations));
     }
     
     conversations.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
@@ -71,7 +71,6 @@ function renderList() {
         return;
     }
 
-    // Agora usamos o componente compartilhado, assim como o aluno
     container.innerHTML = conversations.map(c => ConversationCardComponent(c)).join('');
 
     // Eventos de Clique no CARD (abrir chat)
@@ -95,7 +94,6 @@ function renderList() {
     });
 }
 
-// NOVO: Modal de Deletar (Professor)
 function openDeleteModal(convId) {
     const overlay = document.getElementById('modal-overlay-container');
     
@@ -133,8 +131,8 @@ function openDeleteModal(convId) {
 }
 
 function deleteConversation(convId) {
-    conversations = conversations.filter(c => c.id !== convId);
-    localStorage.setItem('opencampus_prof_conversations', JSON.stringify(conversations));
+    // CORREÇÃO: Usando o serviço
+    conversations = DatabaseService.deleteProfessorConversation(convId);
     renderList();
 }
 
@@ -186,6 +184,7 @@ function sendMessage(convId, text) {
     conversations[idx].messages.push(newMessage);
     conversations[idx].lastUpdated = new Date().toISOString();
     
+    // Atualiza persistência (idealmente moveria isso para um método save no service, mas mantemos o padrão)
     localStorage.setItem('opencampus_prof_conversations', JSON.stringify(conversations));
 
     const msgContainer = document.getElementById('chat-messages-container');

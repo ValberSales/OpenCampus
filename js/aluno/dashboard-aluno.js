@@ -121,7 +121,8 @@ function setupModalEvents() {
 }
 
 function openProjectModal(project) { 
-    const subscriptions = JSON.parse(localStorage.getItem('opencampus_subscriptions')) || [];
+    // CORREÇÃO: Usar o DatabaseService para verificar inscrições reais
+    const subscriptions = DatabaseService.getSubscriptions();
     const isSubscribed = subscriptions.includes(project.id);
 
     const overlay = document.getElementById('modal-overlay-container');
@@ -142,9 +143,12 @@ function openProjectModal(project) {
     const btnSub = document.getElementById('btn-confirm-sub');
     if(btnSub) {
         btnSub.addEventListener('click', () => {
-            subscriptions.push(project.id);
-            localStorage.setItem('opencampus_subscriptions', JSON.stringify(subscriptions));
+            // CORREÇÃO: Usar o DatabaseService para realizar a inscrição
+            DatabaseService.toggleSubscription(project.id);
+            
             alert(`Parabéns! Você se inscreveu em "${project.title}".`);
+            
+            // Reabre o modal para atualizar o estado do botão (agora aparecerá como "Inscrito")
             openProjectModal(project);
         });
     }
